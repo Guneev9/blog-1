@@ -2,21 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>krohitm&#39;s blog</title>
-    <link>/</link>
+    <link>/www.krohitm.netlify.com/</link>
     <description>Recent content on krohitm&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 05 May 2016 21:48:51 -0700</lastBuildDate>
     
-	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/www.krohitm.netlify.com/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>About</title>
-      <link>/about/</link>
+      <link>/www.krohitm.netlify.com/about/</link>
       <pubDate>Thu, 05 May 2016 21:48:51 -0700</pubDate>
       
-      <guid>/about/</guid>
+      <guid>/www.krohitm.netlify.com/about/</guid>
       <description>This is a &amp;ldquo;hello world&amp;rdquo; example website for the blogdown package. The theme was forked from @jrutheiser/hugo-lithium-theme and modified by Yihui Xie.</description>
     </item>
     
