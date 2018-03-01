@@ -6,9 +6,37 @@
     <description>Recent content in Tags on krohitm&#39;s blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
+    <lastBuildDate>Wed, 28 Feb 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Data Analysis</title>
+      <link>/tags/data-analysis/</link>
+      <pubDate>Wed, 28 Feb 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/data-analysis/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Rstats</title>
+      <link>/tags/rstats/</link>
+      <pubDate>Wed, 28 Feb 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/rstats/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Statistics</title>
+      <link>/tags/statistics/</link>
+      <pubDate>Wed, 28 Feb 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/statistics/</guid>
+      <description></description>
+    </item>
     
   </channel>
 </rss>

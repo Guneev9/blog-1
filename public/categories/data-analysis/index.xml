@@ -12,6 +12,16 @@
     
     
     <item>
+      <title>Exploratory Data Analysis</title>
+      <link>/2018/02/28/exploratory-data-analysis/</link>
+      <pubDate>Wed, 28 Feb 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/2018/02/28/exploratory-data-analysis/</guid>
+      <description>library(ggplot2) library(extraDistr) library(tidyverse) ## Loading tidyverse: tibble ## Loading tidyverse: tidyr ## Loading tidyverse: readr ## Loading tidyverse: purrr ## Loading tidyverse: dplyr ## Conflicts with tidy packages ---------------------------------------------- ## filter(): dplyr, stats ## lag(): dplyr, stats ## rdunif(): purrr, extraDistr #library(plotly) The data source is obtained from https://www.cdc.gov/nchs/nsfg/nsfg_cycle6.htm This contains fixed width files, and stata dictionaries consisting of columns for the data files
+#helper function to parse Stata dictionary dct.</description>
+    </item>
+    
+    <item>
       <title>Global Terrorism analysis</title>
       <link>/2018/02/28/global-terrorism-analysis/</link>
       <pubDate>Wed, 28 Feb 2018 00:00:00 +0000</pubDate>
