@@ -1,4 +1,4 @@
-baseurl = "krohitm.netlify.com"
+baseurl = "https://krohitm.netlify.com"
 languageCode = "en-us"
 title = "krohitm's blog"
 theme = "hugo-lithium-theme"
