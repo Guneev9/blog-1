@@ -10,9 +10,20 @@ tags:
   - rstats
   - statistics
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
+
+```{r setup, include=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(ggplot2)
+library(extraDistr)
+library(tidyverse)
+#library(plotly)
+```
 
 ## Distributions
 ```{r}
