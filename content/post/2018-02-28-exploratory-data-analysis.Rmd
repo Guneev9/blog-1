@@ -10,9 +10,14 @@ tags:
   - rstats
   - statistics
 output:
-  #pdf_document: default
   html_document: default
+  #pdf_document: default
 ---
+
+Since 1973 the U.S. Centers for Disease Control and Prevention (CDC) have conducted the National Survey of Family Growth (NSFG), which is intended to gather information on family life, marriage and divorce, pregnancy, infertility, use of contraception, and men's and women's health. The survey results are used to plan health services and health education programs, and to do statistical studies of families, fertility, and health." See http://cdc.gov/nchs/nsfg.htm.
+We will use data collected by this survey to investigate whether first babies tend to come late, and other questions. In order to use this data effectively, we have to understand the design of the study.
+The NSFG is a cross-sectional study, which means that it captures a snapshot of a group at a point in time. The most common alternative is a longitudinal study, which observes a group repeatedly over a period of time.
+The NSFG has been conducted seven times; each deployment is called a cycle. We will use data from Cycle 6, which was conducted from January 2002 to March 2003.
 
 ```{r setup, include=FALSE, message=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -129,7 +134,7 @@ We can see a lot of missing values. We'll clean the data for the columns that we
 
 1. agepreg contains the mother's age at the end of the pregnancy. In the data file, agepreg is encoded as an integer number of centiyears. So the first line divides each element of agepreg by 100, yielding a floating-point value in years.
 
-2. birthwgt_lb and birthwgt_oz contain the weight of the baby, in pounds and ounces, for pregnancies that end in live birth. In addition it uses several special codes:
+2. birthwgt_lb and birthwgt_oz contain the weight of the baby, in pounds and ounces, for pregnancies that end in live birth. In addition it uses several special codes: \n
   97 NOT ASCERTAINED
   98 REFUSED
   99 DONT KNOW

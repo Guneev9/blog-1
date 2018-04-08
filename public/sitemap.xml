@@ -5,25 +5,7 @@
     
     <url>
     
-      <loc>/post/distributions/</loc>
-      <lastmod>2018-02-28T00:00:00+00:00</lastmod>
-    </url>
-    
-  
-    
-    
-    <url>
-    
       <loc>/post/exploratory-data-analysis/</loc>
-      <lastmod>2018-02-28T00:00:00+00:00</lastmod>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>/post/global-terrorism-analysis/</loc>
       <lastmod>2018-02-28T00:00:00+00:00</lastmod>
     </url>
     
@@ -77,24 +59,6 @@
     
     <url>
     
-      <loc>/project/deep-learning/</loc>
-      <lastmod>2016-04-27T00:00:00+00:00</lastmod>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>/project/example-external-project/</loc>
-      <lastmod>2016-04-27T00:00:00+00:00</lastmod>
-    </url>
-    
-  
-    
-    
-    <url>
-    
       <loc>/publication/person-re-identification/</loc>
       <lastmod>2015-09-01T00:00:00+00:00</lastmod>
     </url>
@@ -122,16 +86,6 @@
     
     <url>
     
-      <loc>/categories/data-analysis/</loc>
-      <lastmod>2018-02-28T00:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    
-    <url>
-    
       <loc>/tags/data-analysis/</loc>
       <lastmod>2018-02-28T00:00:00+00:00</lastmod>
       <priority>0</priority>
@@ -142,18 +96,8 @@
     
     <url>
     
-      <loc>/tags/deep-learning/</loc>
-      <lastmod>2016-04-27T00:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>/tags/demo/</loc>
-      <lastmod>2016-04-27T00:00:00+00:00</lastmod>
+      <loc>/categories/data-analysis/</loc>
+      <lastmod>2018-02-28T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -164,16 +108,6 @@
     
       <loc>/</loc>
       <lastmod>2017-10-15T00:00:00-04:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>/project/</loc>
-      <lastmod>2016-04-27T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -204,16 +138,6 @@
     
       <loc>/tags/</loc>
       <lastmod>2017-01-01T00:00:00+00:00</lastmod>
-      <priority>0</priority>
-    </url>
-    
-  
-    
-    
-    <url>
-    
-      <loc>/categories/terrorism/</loc>
-      <lastmod>2018-02-28T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     

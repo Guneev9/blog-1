@@ -1,0 +1,469 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Kumar&#39;s blog on Kumar&#39;s blog</title>
+    <link>/</link>
+    <description>Recent content in Kumar&#39;s blog on Kumar&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2018</copyright>
+    <lastBuildDate>Sun, 15 Oct 2017 00:00:00 -0400</lastBuildDate>
+    <atom:link href="/" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Exploratory Data Analysis</title>
+      <link>/post/exploratory-data-analysis/</link>
+      <pubDate>Wed, 28 Feb 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/post/exploratory-data-analysis/</guid>
+      <description>&lt;p&gt;Since 1973 the U.S. Centers for Disease Control and Prevention (CDC) have conducted the National Survey of Family Growth (NSFG), which is intended to gather information on family life, marriage and divorce, preg- nancy, infertility, use of contraception, and men’s and women’s health. The survey results are used … to plan health services and health education pro- grams, and to do statistical studies of families, fertility, and health.&amp;quot; See &lt;a href=&#34;http://cdc.gov/nchs/nsfg.htm&#34; class=&#34;uri&#34;&gt;http://cdc.gov/nchs/nsfg.htm&lt;/a&gt;. We will use data collected by this survey to investigate whether rst babies tend to come late, and other questions. In order to use this data eectively, we have to understand the design of the study. The NSFG is a cross-sectional study, which means that it captures a snap- shot of a group at a point in time. The most common alternative is a lon- gitudinal study, which observes a group repeatedly over a period of time. The NSFG has been conducted seven times; each deployment is called a cycle. We will use data from Cycle 6, which was conducted from January 2002 to March 2003.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(ggplot2)
+library(extraDistr)
+library(tidyverse)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## ── Attaching packages ─────────────────────────────────────────────────────────── tidyverse 1.2.1 ──&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## ✔ tibble  1.4.2     ✔ purrr   0.2.4
+## ✔ tidyr   0.8.0     ✔ dplyr   0.7.4
+## ✔ readr   1.1.1     ✔ stringr 1.3.0
+## ✔ tibble  1.4.2     ✔ forcats 0.3.0&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## ── Conflicts ────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
+## ✖ purrr::rdunif() masks extraDistr::rdunif()
+## ✖ dplyr::vars()   masks ggplot2::vars()&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#library(plotly)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The data source is obtained from &lt;a href=&#34;https://www.cdc.gov/nchs/nsfg/nsfg_cycle6.htm&#34; class=&#34;uri&#34;&gt;https://www.cdc.gov/nchs/nsfg/nsfg_cycle6.htm&lt;/a&gt; This contains fixed width files, and stata dictionaries consisting of columns for the data files&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#helper function to parse Stata dictionary
+dct.parser &amp;lt;- function(dct, includes = c(&amp;quot;StartPos&amp;quot;, &amp;quot;StorageType&amp;quot;, &amp;quot;ColName&amp;quot;, 
+                                         &amp;quot;ColWidth&amp;quot;, &amp;quot;VarLabel&amp;quot;),
+                       preview = FALSE) {
+  temp &amp;lt;- readLines(dct)
+  temp &amp;lt;- temp[grepl(&amp;quot;_column&amp;quot;, temp)]
+  
+  if (isTRUE(preview)) {
+    head(temp)
+  } else {
+    possibilities &amp;lt;- c(&amp;quot;StartPos&amp;quot;, &amp;quot;StorageType&amp;quot;, 
+                       &amp;quot;ColName&amp;quot;, &amp;quot;ColWidth&amp;quot;, &amp;quot;VarLabel&amp;quot;)
+    classes &amp;lt;- c(&amp;quot;numeric&amp;quot;, &amp;quot;character&amp;quot;, &amp;quot;
+                 character&amp;quot;, &amp;quot;numeric&amp;quot;, &amp;quot;character&amp;quot;)
+    pattern &amp;lt;- c(StartPos = &amp;quot;.*\\(([0-9 ]+)\\)&amp;quot;,
+                 StorageType = &amp;quot;(byte|int|long|float|double|str[0-9]+)&amp;quot;,
+                 ColName = &amp;quot;(.*)&amp;quot;,
+                 ColWidth = &amp;quot;%([0-9.]+)[a-z]+&amp;quot;,
+                 VarLabel = &amp;quot;(.*)&amp;quot;)
+    
+    mymatch &amp;lt;- match(includes, possibilities)
+    
+    pattern &amp;lt;- paste(paste(pattern[mymatch], 
+                           collapse =&amp;quot;\\s+&amp;quot;), &amp;quot;$&amp;quot;, sep = &amp;quot;&amp;quot;)    
+    
+    metadata &amp;lt;- setNames(lapply(seq_along(mymatch), function(x) {
+      out &amp;lt;- gsub(pattern, paste(&amp;quot;\\&amp;quot;, x, sep = &amp;quot;&amp;quot;), temp)
+      out &amp;lt;- gsub(&amp;quot;^\\s+|\\s+$&amp;quot;, &amp;quot;&amp;quot;, out)
+      out &amp;lt;- gsub(&amp;#39;\&amp;quot;&amp;#39;, &amp;quot;&amp;quot;, out, fixed = TRUE)
+      class(out) &amp;lt;- classes[mymatch][x] ; out }), 
+                         possibilities[mymatch])
+    
+    implicit.dec &amp;lt;- grepl(&amp;quot;\\.[1-9]&amp;quot;, metadata[[&amp;quot;ColWidth&amp;quot;]])
+    if (any(implicit.dec)) {
+      message(&amp;quot;Some variables may need to be corrected for implicit decimals. 
+              Try &amp;#39;MESSAGES(output_from_dct.parser)&amp;#39; for more details.&amp;quot;)
+      metadata[[&amp;quot;Decimals&amp;quot;]] &amp;lt;- rep(NA, length(metadata[[&amp;quot;ColWidth&amp;quot;]]))
+      metadata[[&amp;quot;Decimals&amp;quot;]][implicit.dec] &amp;lt;-
+        as.numeric(gsub(&amp;quot;[0-9]+\\.&amp;quot;, &amp;quot;&amp;quot;, 
+                        metadata[[&amp;quot;ColWidth&amp;quot;]][implicit.dec]))
+      metadata[[&amp;quot;ColWidth&amp;quot;]] &amp;lt;- floor(as.numeric(metadata[[&amp;quot;ColWidth&amp;quot;]]))
+    }
+    
+    metadata[[&amp;quot;ColName&amp;quot;]] &amp;lt;- make.names(
+      gsub(&amp;quot;\\s&amp;quot;, &amp;quot;&amp;quot;, metadata[[&amp;quot;ColName&amp;quot;]]))
+    
+    metadata &amp;lt;- data.frame(metadata)
+    
+    if (&amp;quot;StorageType&amp;quot; %in% includes) {
+      metadata &amp;lt;- 
+        within(metadata, {
+          colClasses &amp;lt;- ifelse(
+            StorageType == &amp;quot;byte&amp;quot;, &amp;quot;raw&amp;quot;,
+            ifelse(StorageType %in% c(&amp;quot;double&amp;quot;, &amp;quot;long&amp;quot;, &amp;quot;float&amp;quot;), 
+                   &amp;quot;numeric&amp;quot;, 
+                   ifelse(StorageType == &amp;quot;int&amp;quot;, &amp;quot;integer&amp;quot;,
+                          ifelse(substr(StorageType, 1, 3) == &amp;quot;str&amp;quot;, 
+                                 &amp;quot;character&amp;quot;, NA))))
+        })
+    }
+    if (any(implicit.dec)) {
+      attr(metadata, &amp;quot;MESSAGE&amp;quot;) &amp;lt;- c(sprintf(&amp;quot;%s&amp;quot;, paste(
+        &amp;quot;Some variables might need to be corrected for implicit decimals. 
+        A variable, &amp;#39;Decimals&amp;#39;, has been created in the metadata that
+        indicates the number of decimal places the variable should hold. 
+        To correct the output, try (where your stored output is &amp;#39;mydf&amp;#39;): 
+        
+        lapply(seq_along(mydf[!is.na(Decimals)]), 
+        function(x) mydf[!is.na(Decimals)][x]
+        / 10^Decimals[!is.na(Decimals)][x])
+        
+        The variables in question are:
+        &amp;quot;)), sprintf(&amp;quot;%s&amp;quot;, metadata[[&amp;quot;ColName&amp;quot;]][!is.na(metadata[[&amp;quot;Decimals&amp;quot;]])]))
+            class(attr(metadata, &amp;quot;MESSAGE&amp;quot;)) &amp;lt;- c(
+                &amp;quot;MESSAGE&amp;quot;, class(attr(metadata, &amp;quot;MESSAGE&amp;quot;)))
+        }
+        attr(metadata, &amp;quot;original.dictionary&amp;quot;) &amp;lt;- 
+            c(dct, basename(dct))
+        metadata
+    }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We can read the coulmns from 2002FemPreg.dct and use those columns to import the data from the fixed width file 2002FemPreg.dat&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;femPreg2002columns &amp;lt;- dct.parser(&amp;#39;~/Documents/CodeWork/ThinkStats2/code/2002FemPreg.dct&amp;#39;)
+femPreg2002 &amp;lt;- read.fwf(&amp;#39;~/Documents/CodeWork/ThinkStats2/code/2002FemPreg.dat&amp;#39;, widths = femPreg2002columns$ColWidth, col.names = femPreg2002columns$ColName)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Taking a look at the data&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;head(femPreg2002)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   caseid pregordr howpreg_n howpreg_p moscurrp nowprgdk pregend1 pregend2
+## 1      1        1        NA        NA       NA       NA        6       NA
+## 2      1        2        NA        NA       NA       NA        6       NA
+## 3      2        1        NA        NA       NA       NA        5       NA
+## 4      2        2        NA        NA       NA       NA        6       NA
+## 5      2        3        NA        NA       NA       NA        6       NA
+## 6      6        1        NA        NA       NA       NA        6       NA
+##   nbrnaliv multbrth cmotpreg prgoutcome cmprgend flgdkmo1 cmprgbeg
+## 1        1       NA       NA          1     1093       NA     1084
+## 2        1       NA       NA          1     1166       NA     1157
+## 3        3        5       NA          1     1156       NA     1147
+## 4        1       NA       NA          1     1198       NA     1189
+## 5        1       NA       NA          1     1204       NA     1195
+## 6        1       NA       NA          1     1074       NA     1065
+##   ageatend hpageend gestasun_m gestasun_w wksgest mosgest dk1gest dk2gest
+## 1       NA       NA          9          0      39       9      NA      NA
+## 2       NA       NA          9          0      39       9      NA      NA
+## 3       NA       NA          0         39      39       9      NA      NA
+## 4       NA       NA          0         39      39       9      NA      NA
+## 5       NA       NA          0         39      39       9      NA      NA
+## 6       NA       NA          0         38      38       9      NA      NA
+##   dk3gest bpa_bdscheck1 bpa_bdscheck2 bpa_bdscheck3 babysex birthwgt_lb
+## 1      NA             0            NA            NA       1           8
+## 2      NA             0            NA            NA       2           7
+## 3      NA             0            NA            NA       1           9
+## 4      NA             0            NA            NA       2           7
+## 5      NA             0            NA            NA       2           6
+## 6      NA             0            NA            NA       1           8
+##   birthwgt_oz lobthwgt babysex2 birthwgt_lb2 birthwgt_oz2 lobthwgt2
+## 1          13       NA       NA           NA           NA        NA
+## 2          14       NA       NA           NA           NA        NA
+## 3           2       NA        2            2            0        NA
+## 4           0       NA       NA           NA           NA        NA
+## 5           3       NA       NA           NA           NA        NA
+## 6           9       NA       NA           NA           NA        NA
+##   babysex3 birthwgt_lb3 birthwgt_oz3 lobthwgt3 cmbabdob kidage hpagelb
+## 1       NA           NA           NA        NA     1093    138      37
+## 2       NA           NA           NA        NA     1166     65      42
+## 3        1            1            4        NA     1156     75      24
+## 4       NA           NA           NA        NA     1198     33      25
+## 5       NA           NA           NA        NA     1204     27      25
+## 6       NA           NA           NA        NA     1074    157      27
+##   birthplc paybirth1 paybirth2 paybirth3 knewpreg trimestr ltrimest
+## 1       NA        NA        NA        NA       NA       NA       NA
+## 2        1         1         2        NA        2       NA       NA
+## 3       NA        NA        NA        NA       NA       NA       NA
+## 4        1         3        NA        NA        3       NA       NA
+## 5        1         3        NA        NA        2       NA       NA
+## 6       NA        NA        NA        NA       NA       NA       NA
+##   priorsmk postsmks npostsmk getprena bgnprena pnctrim lpnctri workpreg
+## 1       NA       NA       NA       NA       NA      NA      NA       NA
+## 2        0        5       NA        1        4      NA      NA        5
+## 3       NA       NA       NA       NA       NA      NA      NA       NA
+## 4        0        5       NA        1        4      NA      NA        5
+## 5        0        5       NA        1        4      NA      NA        1
+## 6       NA       NA       NA       NA       NA      NA      NA       NA
+##   workborn didwork matweeks weeksdk matleave matchfound livehere alivenow
+## 1       NA      NA       NA      NA       NA          1       NA       NA
+## 2       NA      NA       NA      NA       NA          5        1       NA
+## 3       NA      NA       NA      NA       NA          5        1       NA
+## 4       NA      NA       NA      NA       NA          5        5        1
+## 5        5       2       NA      NA       NA          5        5        1
+## 6       NA      NA       NA      NA       NA          1       NA       NA
+##   cmkidied cmkidlft lastage wherenow legagree parenend anynurse fedsolid
+## 1       NA       NA      NA       NA       NA       NA        5       NA
+## 2       NA       NA      NA       NA       NA       NA        1       NA
+## 3       NA       NA      NA       NA       NA       NA        5       NA
+## 4       NA     1205       7        2       NA        1        5       NA
+## 5       NA     1221      17        2       NA        1        5       NA
+## 6       NA       NA      NA       NA       NA       NA        1       NA
+##   frsteatd_n frsteatd_p frsteatd quitnurs ageqtnur_n ageqtnur_p ageqtnur
+## 1         NA         NA       NA       NA         NA         NA       NA
+## 2          4          1        4       NA         20          1       20
+## 3         NA         NA       NA       NA         NA         NA       NA
+## 4         NA         NA       NA       NA         NA         NA       NA
+## 5         NA         NA       NA       NA         NA         NA       NA
+## 6          1          1        1       NA          2          1        2
+##   matchfound2 livehere2 alivenow2 cmkidied2 cmkidlft2 lastage2 wherenow2
+## 1          NA        NA        NA        NA        NA       NA        NA
+## 2          NA        NA        NA        NA        NA       NA        NA
+## 3           5         5         5      1156        NA        0        NA
+## 4          NA        NA        NA        NA        NA       NA        NA
+## 5          NA        NA        NA        NA        NA       NA        NA
+## 6          NA        NA        NA        NA        NA       NA        NA
+##   legagree2 parenend2 anynurse2 fedsolid2 frsteatd_n2 frsteatd_p2
+## 1        NA        NA        NA        NA          NA          NA
+## 2        NA        NA        NA        NA          NA          NA
+## 3        NA        NA        NA        NA          NA          NA
+## 4        NA        NA        NA        NA          NA          NA
+## 5        NA        NA        NA        NA          NA          NA
+## 6        NA        NA        NA        NA          NA          NA
+##   frsteatd2 quitnurs2 ageqtnur_n2 ageqtnur_p2 ageqtnur2 matchfound3
+## 1        NA        NA          NA          NA        NA          NA
+## 2        NA        NA          NA          NA        NA          NA
+## 3        NA        NA          NA          NA        NA           5
+## 4        NA        NA          NA          NA        NA          NA
+## 5        NA        NA          NA          NA        NA          NA
+## 6        NA        NA          NA          NA        NA          NA
+##   livehere3 alivenow3 cmkidied3 cmkidlft3 lastage3 wherenow3 legagree3
+## 1        NA        NA        NA        NA       NA        NA        NA
+## 2        NA        NA        NA        NA       NA        NA        NA
+## 3         5         5      1156        NA        0        NA        NA
+## 4        NA        NA        NA        NA       NA        NA        NA
+## 5        NA        NA        NA        NA       NA        NA        NA
+## 6        NA        NA        NA        NA       NA        NA        NA
+##   parenend3 anynurse3 fedsolid3 frsteatd_n3 frsteatd_p3 frsteatd3
+## 1        NA        NA        NA          NA          NA        NA
+## 2        NA        NA        NA          NA          NA        NA
+## 3        NA        NA        NA          NA          NA        NA
+## 4        NA        NA        NA          NA          NA        NA
+## 5        NA        NA        NA          NA          NA        NA
+## 6        NA        NA        NA          NA          NA        NA
+##   quitnurs3 ageqtnur_n3 ageqtnur_p3 ageqtnur3 cmlastlb cmfstprg cmlstprg
+## 1        NA          NA          NA        NA     1166     1093     1166
+## 2        NA          NA          NA        NA     1166     1093     1166
+## 3        NA          NA          NA        NA     1204     1156     1204
+## 4        NA          NA          NA        NA     1204     1156     1204
+## 5        NA          NA          NA        NA     1204     1156     1204
+## 6        NA          NA          NA        NA     1112     1074     1112
+##   cmintstr cmintfin cmintstrop cmintfinop cmintstrcr cmintfincr evuseint
+## 1      920     1093         NA         NA         NA         NA        1
+## 2     1093     1166       1166       1231         NA         NA        1
+## 3     1153     1156         NA         NA         NA         NA        5
+## 4     1156     1198         NA         NA         NA         NA       NA
+## 5     1198     1204       1204       1231         NA         NA       NA
+## 6     1032     1074         NA         NA         NA         NA        1
+##   stopduse whystopd whatmeth01 whatmeth02 whatmeth03 whatmeth04 resnouse
+## 1        1        1         NA         NA         NA         NA       NA
+## 2        1        1         NA         NA         NA         NA       NA
+## 3       NA       NA         NA         NA         NA         NA        5
+## 4       NA       NA          4         NA         NA         NA       NA
+## 5       NA       NA          4         NA         NA         NA       NA
+## 6        5       NA          1         NA         NA         NA       NA
+##   wantbold probbabe cnfrmno wantbld2 timingok toosoon_n toosoon_p wthpart1
+## 1       NA       NA      NA       NA        3        NA        NA        1
+## 2       NA       NA      NA       NA        3        NA        NA        1
+## 3        5       NA      NA       NA       NA        NA        NA       NA
+## 4        5       NA      NA       NA       NA        NA        NA       NA
+## 5        5       NA      NA       NA       NA        NA        NA       NA
+## 6        1       NA      NA       NA        2        NA        NA        1
+##   wthpart2 feelinpg hpwnold timokhp cohpbeg cohpend tellfath whentell
+## 1       NA       NA       1       2      NA      NA        1        1
+## 2       NA       NA       1       4      NA      NA        1        1
+## 3        4       NA       5      NA       5       5        1        1
+## 4        4        3       1       1       5       5        1        1
+## 5        4        5       5      NA       1       1       NA       NA
+## 6       NA       NA       1       1      NA      NA        1        1
+##   tryscale wantscal whyprg1 whyprg2 whynouse1 whynouse2 whynouse3 anyusint
+## 1       NA       NA      NA      NA        NA        NA        NA        5
+## 2       NA       NA      NA      NA        NA        NA        NA        5
+## 3       NA       NA      NA      NA        NA        NA        NA        5
+## 4        2        3       2      NA        NA        NA        NA        1
+## 5        4        4       2      NA        NA        NA        NA        1
+## 6       NA       NA      NA      NA        NA        NA        NA        5
+##   prglngth outcome birthord datend agepreg datecon agecon fmarout5
+## 1       39       1        1   1093    3316    1084   3241        1
+## 2       39       1        2   1166    3925    1157   3850        1
+## 3       39       1        1   1156    1433    1147   1358        5
+## 4       39       1        2   1198    1783    1189   1708        5
+## 5       39       1        3   1204    1833    1195   1758        5
+## 6       38       1        1   1074    2700    1065   2625        1
+##   pmarpreg rmarout6 fmarcon5 learnprg pncarewk paydeliv lbw1 bfeedwks
+## 1        2        1        1       NA       NA       NA    2      995
+## 2        2        1        1        2        4        3    2       87
+## 3        1        6        5       NA       NA       NA    2      995
+## 4        1        6        5        3        4        4    2      995
+## 5        1        6        5        2        4        4    2      995
+## 6        2        1        1       NA       NA       NA    2        9
+##   maternlv oldwantr oldwantp wantresp wantpart cmbirth ager agescrn
+## 1       NA        1        2        1        2     695   44      44
+## 2        0        1        4        1        4     695   44      44
+## 3       NA        5        5        5        5     984   20      20
+## 4        0        5        3        5        3     984   20      20
+## 5        3        5        5        5        5     984   20      20
+## 6       NA        2        3        2        3     750   40      40
+##   fmarital rmarital educat hieduc race hispanic hisprace rcurpreg pregnum
+## 1        1        1     16     12    2        2        2        2       2
+## 2        1        1     16     12    2        2        2        2       2
+## 3        5        6     11      7    1        2        3        2       3
+## 4        5        6     11      7    1        2        3        2       3
+## 5        5        6     11      7    1        2        3        2       3
+## 6        1        1     18     12    2        2        2        2       3
+##   parity insuranc pubassis poverty laborfor religion metro brnout yrstrus
+## 1      2        2        2     469        3        2     1      5      NA
+## 2      2        2        2     469        3        2     1      5      NA
+## 3      5        3        2     100        2        3     1      5      NA
+## 4      5        3        2     100        2        3     1      5      NA
+## 5      5        3        2     100        2        3     1      5      NA
+## 6      3        2        2     216        7        3     1      5      NA
+##   prglngth_i outcome_i birthord_i datend_i agepreg_i datecon_i agecon_i
+## 1          0         0          0        0         0         0        0
+## 2          0         0          0        0         0         0        0
+## 3          0         0          0        0         0         0        0
+## 4          0         0          0        0         0         0        0
+## 5          0         0          0        0         0         0        0
+## 6          0         0          0        0         0         0        0
+##   fmarout5_i pmarpreg_i rmarout6_i fmarcon5_i learnprg_i pncarewk_i
+## 1          0          0          0          0          0          0
+## 2          0          0          0          0          0          0
+## 3          0          0          0          0          0          0
+## 4          0          0          0          0          0          0
+## 5          0          0          0          0          0          0
+## 6          0          0          0          0          0          0
+##   paydeliv_i lbw1_i bfeedwks_i maternlv_i oldwantr_i oldwantp_i wantresp_i
+## 1          0      0          0          0          0          0          0
+## 2          0      0          0          0          0          0          0
+## 3          0      0          0          0          0          0          0
+## 4          0      0          0          0          0          0          0
+## 5          0      0          0          0          0          0          0
+## 6          0      0          0          0          0          0          0
+##   wantpart_i ager_i fmarital_i rmarital_i educat_i hieduc_i race_i
+## 1          0      0          0          0        0        0      0
+## 2          0      0          0          0        0        0      0
+## 3          0      0          0          0        0        0      0
+## 4          0      0          0          0        0        0      0
+## 5          0      0          0          0        0        0      0
+## 6          0      0          0          0        0        0      0
+##   hispanic_i hisprace_i rcurpreg_i pregnum_i parity_i insuranc_i
+## 1          0          0          0         0        0          0
+## 2          0          0          0         0        0          0
+## 3          0          0          0         0        0          0
+## 4          0          0          0         0        0          0
+## 5          0          0          0         0        0          0
+## 6          0          0          0         0        0          0
+##   pubassis_i poverty_i laborfor_i religion_i metro_i  basewgt
+## 1          0         0          0          0       0 3410.389
+## 2          0         0          0          0       0 3410.389
+## 3          0         0          0          0       0 7226.302
+## 4          0         0          0          0       0 7226.302
+## 5          0         0          0          0       0 7226.302
+## 6          0         0          0          0       0 4870.926
+##   adj_mod_basewgt  finalwgt secu_p sest cmintvw
+## 1        3869.350  6448.271      2    9    1231
+## 2        3869.350  6448.271      2    9    1231
+## 3        8567.549 12999.542      2   12    1231
+## 4        8567.549 12999.542      2   12    1231
+## 5        8567.549 12999.542      2   12    1231
+## 6        5325.197  8874.441      1   23    1231&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We can see a lot of missing values. We’ll clean the data for the columns that we want to analyze.&lt;/p&gt;
+&lt;div id=&#34;transformation&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Transformation&lt;/h2&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;&lt;p&gt;agepreg contains the mother’s age at the end of the pregnancy. In the data file, agepreg is encoded as an integer number of centiyears. So the first line divides each element of agepreg by 100, yielding a floating-point value in years.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;birthwgt_lb and birthwgt_oz contain the weight of the baby, in pounds and ounces, for pregnancies that end in live birth. In addition it uses several special codes: 97 NOT ASCERTAINED 98 REFUSED 99 DONT KNOW Special values encoded as numbers are dangerous because if they are not handled properly, they can generate bogus results, like a 99-pound baby. Assuming that a baby can’t be generally more than 20 lb at birth, we will replace all other values with NA, as they are NOT ASCERTAINED(97), REFUSED(98), DONT KNOW(99), or invalid values. Similarly, the age of father has these similar special codes, which we will replace by NA&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cleanFemPreg &amp;lt;- function(data){
+  # mother&amp;#39;s age is encoded in centiyears; convert to years
+  data[&amp;#39;agepreg&amp;#39;] &amp;lt;-  data[&amp;#39;agepreg&amp;#39;]/100.0
+  
+  # birthwgt_lb contains at least one bogus value (51 lbs)
+  # replace with NaN
+  data$birthwgt_lb[data$birthwgt_lb &amp;gt; 20] &amp;lt;- NA
+  
+  # replace &amp;#39;not ascertained&amp;#39;, &amp;#39;refused&amp;#39;, &amp;#39;don&amp;#39;t know&amp;#39; with NA
+  na_vals = c(97, 98, 99)
+  data$birthwgt_oz[data$birthwgt_oz %in% na_vals] &amp;lt;- NA
+  data$hpagelb[data$hpagelb %in% na_vals] &amp;lt;- NA
+  
+  # birthweight is stored in two columns, lbs and oz.
+  # convert to a single column in lb
+  data[&amp;#39;totalwgt_lb&amp;#39;] &amp;lt;- data$birthwgt_lb + (data$birthwgt_oz / 16.0)
+  
+  return (data)
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;femPregCleaned &amp;lt;- cleanFemPreg(femPreg2002)&lt;/code&gt;&lt;/pre&gt;
+&lt;div id=&#34;validation&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Validation&lt;/h3&gt;
+&lt;p&gt;One way to validate data is to compute basic statistics and compare them with published results. For example, the NSFG codebook includes tables that summarize each variable. Here is the table for outcome, which encodes the outcome of each pregnancy: value label Total 1 LIVE BIRTH 9148 2 INDUCED ABORTION 1862 3 STILLBIRTH 120 4 MISCARRIAGE 1921 5 ECTOPIC PREGNANCY 190 6 CURRENT PREGNANCY 352&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;femPreg2002 %&amp;gt;%
+  group_by(outcome) %&amp;gt;%
+  summarise(Total = length(outcome))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Warning: package &amp;#39;bindrcpp&amp;#39; was built under R version 3.4.4&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 6 x 2
+##   outcome Total
+##     &amp;lt;int&amp;gt; &amp;lt;int&amp;gt;
+## 1       1  9148
+## 2       2  1862
+## 3       3   120
+## 4       4  1921
+## 5       5   190
+## 6       6   352&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Comparing the results with the published table, it looks like the values in outcome are correct. Similarly, here is the published table for birthwgt_lb value label Total . INAPPLICABLE 4449 0-5 UNDER 6 POUNDS 1125 6 6 POUNDS 2223 7 7 POUNDS 3049 8 8 POUNDS 1889 9-95 9 POUNDS OR MORE 799&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;femPreg2002 %&amp;gt;%
+  group_by(birthwgt_lb) %&amp;gt;%
+  summarise(Total = length(birthwgt_lb))&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## # A tibble: 21 x 2
+##    birthwgt_lb Total
+##          &amp;lt;int&amp;gt; &amp;lt;int&amp;gt;
+##  1           0     8
+##  2           1    40
+##  3           2    53
+##  4           3    98
+##  5           4   229
+##  6           5   697
+##  7           6  2223
+##  8           7  3049
+##  9           8  1889
+## 10           9   623
+## # ... with 11 more rows&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The counts for 6, 7, and 8 pounds check out, and if you add up the counts for 0-5 and 9-95, they check out, too. But if you look more closely, you will notice one value that has to be an error, a 51 pound baby! This has been cleaned in the cleanFemPreg function.&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;interpretation&#34; class=&#34;section level3&#34;&gt;
+&lt;h3&gt;Interpretation&lt;/h3&gt;
+&lt;p&gt;To work with data effectively, you have to think on two levels at the same time: the level of statistics and the level of context. As an example, let’s look at the sequence of outcomes for a few respondents. This example looks up one respondent and prints a list of outcomes for her pregnancies:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;CASEID = 10229
+femPregCleaned %&amp;gt;%
+  filter(caseid==CASEID) %&amp;gt;%
+  .$outcome&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 4 4 4 4 4 4 1&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The outcome code 1 indicates a live birth. Code 4 indicates a miscarriage; that is, a pregnancy that ended spontaneously, usually with no known medical cause.&lt;/p&gt;
+&lt;p&gt;Statistically this respondent is not unusual. Miscarriages are common and there are other respondents who reported as many or more. But remembering the context, this data tells the story of a woman who was pregnant six times, each time ending in miscarriage. Her seventh and most recent pregnancy ended in a live birth. If we consider this data with empathy, it is natural to be moved by the story it tells.&lt;/p&gt;
+&lt;p&gt;Each record in the NSFG dataset represents a person who provided honest answers to many personal and difficult questions. We can use this data to answer statistical questions about family life, reproduction, and health. At the same time, we have an obligation to consider the people represented by the data, and to afford them respect and gratitude.&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Example Talk</title>
+      <link>/talk/example-talk/</link>
+      <pubDate>Sun, 01 Jan 2017 00:00:00 -0500</pubDate>
+      
+      <guid>/talk/example-talk/</guid>
+      <description>&lt;p&gt;Embed your slides or video here using &lt;a href=&#34;https://sourcethemes.com/academic/post/writing-markdown-latex/&#34; target=&#34;_blank&#34;&gt;shortcodes&lt;/a&gt;. Further details can easily be added using &lt;em&gt;Markdown&lt;/em&gt; and $\rm \LaTeX$ math code.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>A Person Re-Identification System For Mobile Devices</title>
+      <link>/publication/person-re-identification/</link>
+      <pubDate>Tue, 01 Sep 2015 00:00:00 +0000</pubDate>
+      
+      <guid>/publication/person-re-identification/</guid>
+      <description>&lt;p&gt;More detail can easily be written here using &lt;em&gt;Markdown&lt;/em&gt; and $\rm \LaTeX$ math code.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Mobile visual clothing search</title>
+      <link>/publication/clothing-search/</link>
+      <pubDate>Mon, 01 Jul 2013 00:00:00 +0000</pubDate>
+      
+      <guid>/publication/clothing-search/</guid>
+      <description>&lt;p&gt;More detail can easily be written here using &lt;em&gt;Markdown&lt;/em&gt; and $\rm \LaTeX$ math code.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
