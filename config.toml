@@ -220,7 +220,7 @@ defaultContentLanguageInSubdir = false
     icon = "envelope"
     icon_pack = "fa"
     link = "mailto:krohitm@gmail.com"
-  
+
   [[params.social]]
     icon = "linkedin"
     icon_pack = "fa"
@@ -264,7 +264,7 @@ defaultContentLanguageInSubdir = false
   name = "Projects"
   url = "#projects"
   weight = 3
-  
+
 #[[menu.main]]
 #  name = "Publications"
 #  url = "#publications_selected"
