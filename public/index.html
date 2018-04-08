@@ -451,8 +451,7 @@
   </h3>
   <div class="article-style" itemprop="articleBody">
     
-    knitr::opts_chunk$set(echo = TRUE)  library(ggplot2) library(extraDistr) library(tidyverse) #library(plotly)  The data source is obtained from https://www.cdc.gov/nchs/nsfg/nsfg_cycle6.htm This contains fixed width files, and stata dictionaries consisting of columns for the data files
-#helper function to parse Stata dictionary dct.parser &lt;- function(dct, includes = c(&quot;StartPos&quot;, &quot;StorageType&quot;, &quot;ColName&quot;, &quot;ColWidth&quot;, &quot;VarLabel&quot;), preview = FALSE) { temp &lt;- readLines(dct) temp &lt;- temp[grepl(&quot;_column&quot;, temp)] if (isTRUE(preview)) { head(temp) } else { possibilities &lt;- c(&quot;StartPos&quot;, &quot;StorageType&quot;, &quot;ColName&quot;, &quot;ColWidth&quot;, &quot;VarLabel&quot;) classes &lt;- c(&quot;numeric&quot;, &quot;character&quot;, &quot; character&quot;, &quot;numeric&quot;, &quot;character&quot;) pattern &lt;- c(StartPos = &quot;.
+
     
   </div>
   <p class="read-more" itemprop="mainEntityOfPage">
