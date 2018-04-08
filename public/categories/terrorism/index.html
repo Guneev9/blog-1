@@ -249,16 +249,6 @@
     </div>
   </div>
   
-  <div>
-    <h2><a href="/post/global-terrorism-analysis/">Global Terrorism analysis</a></h2>
-    <div class="article-style">
-      
-      knitr::opts_chunk$set(echo=FALSE, error=FALSE, fig.path = &quot;README_figs/README-&quot;, warning = FALSE, message=FALSE)  options(warn=-1)  library(tidyr) library(dplyr) library(plotly) library(rworldmap) library(maps) library(ggmap) library(reshape2) library(raster) library(rgdal) library(rgeos)  terr = read.csv(&rsquo;~/Downloads/globalterrorismdb_0617dist.csv&rsquo;, check.names = FALSE, header = TRUE, stringsAsFactors = FALSE)  c(ncol(terr),nrow(terr)) sum(is.na(terr))#/(ncol(data)*nrow(data))  terr=rename(terr, id=eventid, year=iyear, nation=country_txt, Region=region_txt, attack=attacktype1_txt, target=targtype1_txt, weapon=weaptype1_txt, Killed=nkill, wounded=nwound)  Data cleaning We clean the data
-terr$Killed=as.integer(terr$Killed) terr$wounded=as.integer(terr$wounded) terr$Killed[which(is.na(terr$Killed))] = 0 terr$wounded[which(is.na(terr$wounded))] = 0 terr$nation[terr$nation==&quot;United States&quot;] &lt;- &quot;USA&quot; terr$nation[terr$nation==&quot;United Kingdom&quot;] &lt;- &quot;UK&quot; terr$nation[terr$nation==&quot;People&rsquo;s Republic of the Congo&quot;] &lt;- &quot;Republic of Congo&quot; terr$nation[terr$nation==&quot;Bosnia-Herzegovina&quot;] &lt;- &quot;Bosnia and Herzegovina&quot; terr$nation[terr$nation==&quot;Slovak Republic&quot;] &lt;- &quot;Slovakia&quot;  global_t &lt;- terr %&gt;% group_by(year,nation,Region) %&gt;% summarize(Total=n()) global_y &lt;- global_t%&gt;%group_by(year)%&gt;%summarize(Total=sum(Total)) global_attacks &lt;- global_t %&gt;% group_by(nation) %&gt;% summarize(Total=sum(Total)) %&gt;% arrange(desc(Total)) #%&gt;%filter(Total&gt;300) #global_attacks$Total[which(is.
-      
-    </div>
-  </div>
-  
 
   
 

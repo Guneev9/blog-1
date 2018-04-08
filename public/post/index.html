@@ -304,7 +304,7 @@
   
   <span class="middot-divider"></span>
   <span class="article-reading-time">
-    5 min read
+    16 min read
   </span>
   
 
@@ -340,8 +340,8 @@
   </h3>
   <div class="article-style" itemprop="articleBody">
     
-    knitr::opts_chunk$set(echo = TRUE)  library(ggplot2) library(extraDistr) library(tidyverse) #library(plotly)  The data source is obtained from https://www.cdc.gov/nchs/nsfg/nsfg_cycle6.htm This contains fixed width files, and stata dictionaries consisting of columns for the data files
-#helper function to parse Stata dictionary dct.parser &lt;- function(dct, includes = c(&quot;StartPos&quot;, &quot;StorageType&quot;, &quot;ColName&quot;, &quot;ColWidth&quot;, &quot;VarLabel&quot;), preview = FALSE) { temp &lt;- readLines(dct) temp &lt;- temp[grepl(&quot;_column&quot;, temp)] if (isTRUE(preview)) { head(temp) } else { possibilities &lt;- c(&quot;StartPos&quot;, &quot;StorageType&quot;, &quot;ColName&quot;, &quot;ColWidth&quot;, &quot;VarLabel&quot;) classes &lt;- c(&quot;numeric&quot;, &quot;character&quot;, &quot; character&quot;, &quot;numeric&quot;, &quot;character&quot;) pattern &lt;- c(StartPos = &quot;.
+    library(ggplot2) library(extraDistr) library(tidyverse) ## Loading tidyverse: tibble ## Loading tidyverse: tidyr ## Loading tidyverse: readr ## Loading tidyverse: purrr ## Loading tidyverse: dplyr ## Conflicts with tidy packages ---------------------------------------------- ## filter(): dplyr, stats ## lag(): dplyr, stats ## rdunif(): purrr, extraDistr #library(plotly) The data source is obtained from https://www.cdc.gov/nchs/nsfg/nsfg_cycle6.htm This contains fixed width files, and stata dictionaries consisting of columns for the data files
+#helper function to parse Stata dictionary dct.
     
   </div>
   <p class="read-more" itemprop="mainEntityOfPage">
@@ -428,78 +428,6 @@
 ~group: NA","type":"scatter","mode":"lines","line":{"width":1.88976377952756,"color":"rgba(255,255,255,1)","dash":"solid"},"fill":"toself","fillcolor":"rgba(225,238,195,1)","hoveron":"fills","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[-25.02734375,-25.0315437316895,-25.08837890625,-25.159912109375,-25.1983871459961,-25.1635246276855,-25.0829105377197,-25.0443363189697,-25.02734375,-25.02734375,null,-25.6489734649658,-25.5854969024658,-25.2666015625,-25.1819343566895,-25.1907234191895,-25.2511234283447,-25.4390144348145,-25.7344722747803,-25.8336906433105,-25.8478527069092,-25.8458976745605,-25.7837409973145,-25.6489734649658,-25.6489734649658,null,-28.1472663879395,-28.0647945404053,-28.1897468566895,-28.2311534881592,-28.3324222564697,-28.4544925689697,-28.5311527252197,-28.548828125,-28.51025390625,-28.4021472930908,-28.1472663879395,-28.1472663879395,null,-28.6413097381592,-28.7438468933105,-28.842041015625,-28.69775390625,-28.6554203033447,-28.6242179870605,-28.6058101654053,-28.6413097381592,-28.6413097381592,null,-27.7784671783447,-27.8258781433105,-28.0923347473145,-28.187255859375,-28.3106441497803,-27.962646484375,-27.7784671783447,-27.7784671783447,null,-27.0752429962158,-27.0953121185303,-27.3028316497803,-27.3619136810303,-27.3859367370605,-27.3510265350342,-27.2596683502197,-27.1270008087158,-27.0419425964355,-27.0419921875,-27.0752429962158,-27.0752429962158,null,-31.1371078491211,-31.1813468933105,-31.2576160430908,-31.282958984375,-31.2608394622803,-31.1998538970947,-31.1386241912842,-31.1371078491211,-31.1371078491211],"y":[36.9599609375,36.9415512084961,36.9488792419434,36.943359375,36.9965324401855,37.0185546875,37.0240249633789,37.0001983642578,36.9599609375,36.9599609375,null,37.8409194946289,37.8340339660645,37.8486328125,37.837890625,37.7643547058105,37.7350082397461,37.71533203125,37.7628898620605,37.8260765075684,37.8724136352539,37.89404296875,37.9111328125,37.8409194946289,37.8409194946289,null,38.4526824951172,38.4127464294434,38.4041481018066,38.3846702575684,38.4128913879395,38.4086418151855,38.4625511169434,38.5185546875,38.5530281066895,38.5533676147461,38.4526824951172,38.4526824951172,null,38.5249977111816,38.5223617553711,38.5984382629395,38.6384773254395,38.6140594482422,38.5863265991211,38.5507316589355,38.5249977111816,38.5249977111816,null,38.5556144714355,38.5435523986816,38.6205558776855,38.6553688049316,38.743896484375,38.6363258361816,38.5556144714355,38.5556144714355,null,38.6434593200684,38.634033203125,38.6610374450684,38.6978492736816,38.7658195495605,38.7889671325684,38.8026885986328,38.7898445129395,38.7412109375,38.6789054870605,38.6434593200684,38.6434593200684,null,39.4069328308105,39.3589324951172,39.3759765625,39.3940925598145,39.4967765808105,39.5208511352539,39.4794425964355,39.4069328308105,39.4069328308105],"text":"~region: Azores
 ~Total: 0
 ~group: NA","type":"scatter","mode":"lines","line":{"width":1.88976377952756,"color":"rgba(255,255,255,1)","dash":"solid"},"fill":"toself","fillcolor":"rgba(225,238,195,1)","hoveron":"fills","showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[-61.7471160888672,-61.7620124816895,-61.8437957763672,-61.8687477111816,-61.8661613464355,-61.8524436950684,-61.8199195861816,-61.7767601013184,-61.7496109008789,-61.7471160888672,-61.7471160888672],"y":[17.574951171875,17.5486812591553,17.5961418151855,17.6854496002197,17.7042961120605,17.7140617370605,17.6968746185303,17.6904792785645,17.6613292694092,17.574951171875,17.574951171875],"text":"~region: Barbuda
-    
-  </div>
-  <p class="read-more" itemprop="mainEntityOfPage">
-    <a href="/post/global-terrorism-analysis/" class="btn btn-primary btn-outline">
-      CONTINUE READING
-    </a>
-  </p>
-</div>
-
-  
-    
-    
-
-<div class="card-simple" itemscope itemprop="blogPost" itemtype="http://schema.org/BlogPosting">
-  
-
-<div class="article-metadata">
-
-  <span class="article-date">
-    
-    <time datetime="2018-02-28 00:00:00 &#43;0000 UTC" itemprop="datePublished dateModified">
-      Feb 28, 2018
-    </time>
-  </span>
-  <span itemscope itemprop="author publisher" itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Kumar Rohit Malhotra">
-  </span>
-
-  
-  <span class="middot-divider"></span>
-  <span class="article-reading-time">
-    6 min read
-  </span>
-  
-
-  
-  
-  <span class="middot-divider"></span>
-  <a href="/post/global-terrorism-analysis/#disqus_thread"></a>
-  
-
-  
-  
-  
-  <span class="middot-divider"></span>
-  <span class="article-categories">
-    <i class="fa fa-folder"></i>
-    
-    <a href="/categories/terrorism">terrorism</a
-    >, 
-    
-    <a href="/categories/data-analysis">data analysis</a
-    >
-    
-  </span>
-  
-  
-
-  
-
-</div>
-
-
-  
-  
-  <h3 class="article-title" itemprop="headline">
-    <a href="/post/global-terrorism-analysis/" itemprop="url">Global Terrorism analysis</a>
-  </h3>
-  <div class="article-style" itemprop="articleBody">
-    
-    knitr::opts_chunk$set(echo=FALSE, error=FALSE, fig.path = &quot;README_figs/README-&quot;, warning = FALSE, message=FALSE)  options(warn=-1)  library(tidyr) library(dplyr) library(plotly) library(rworldmap) library(maps) library(ggmap) library(reshape2) library(raster) library(rgdal) library(rgeos)  terr = read.csv('~/Downloads/globalterrorismdb_0617dist.csv', check.names = FALSE, header = TRUE, stringsAsFactors = FALSE)  c(ncol(terr),nrow(terr)) sum(is.na(terr))#/(ncol(data)*nrow(data))  terr=rename(terr, id=eventid, year=iyear, nation=country_txt, Region=region_txt, attack=attacktype1_txt, target=targtype1_txt, weapon=weaptype1_txt, Killed=nkill, wounded=nwound)  Data cleaning We clean the data
-terr$Killed=as.integer(terr$Killed) terr$wounded=as.integer(terr$wounded) terr$Killed[which(is.na(terr$Killed))] = 0 terr$wounded[which(is.na(terr$wounded))] = 0 terr$nation[terr$nation==&quot;United States&quot;] &lt;- &quot;USA&quot; terr$nation[terr$nation==&quot;United Kingdom&quot;] &lt;- &quot;UK&quot; terr$nation[terr$nation==&quot;People's Republic of the Congo&quot;] &lt;- &quot;Republic of Congo&quot; terr$nation[terr$nation==&quot;Bosnia-Herzegovina&quot;] &lt;- &quot;Bosnia and Herzegovina&quot; terr$nation[terr$nation==&quot;Slovak Republic&quot;] &lt;- &quot;Slovakia&quot;  global_t &lt;- terr %&gt;% group_by(year,nation,Region) %&gt;% summarize(Total=n()) global_y &lt;- global_t%&gt;%group_by(year)%&gt;%summarize(Total=sum(Total)) global_attacks &lt;- global_t %&gt;% group_by(nation) %&gt;% summarize(Total=sum(Total)) %&gt;% arrange(desc(Total)) #%&gt;%filter(Total&gt;300) #global_attacks$Total[which(is.
     
   </div>
   <p class="read-more" itemprop="mainEntityOfPage">

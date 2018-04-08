@@ -235,8 +235,8 @@
     <h2><a href="/post/exploratory-data-analysis/">Exploratory Data Analysis</a></h2>
     <div class="article-style">
       
-      knitr::opts_chunk$set(echo = TRUE)  library(ggplot2) library(extraDistr) library(tidyverse) #library(plotly)  The data source is obtained from <a href="https://www.cdc.gov/nchs/nsfg/nsfg_cycle6.htm" target="_blank">https://www.cdc.gov/nchs/nsfg/nsfg_cycle6.htm</a> This contains fixed width files, and stata dictionaries consisting of columns for the data files
-#helper function to parse Stata dictionary dct.parser &lt;- function(dct, includes = c(&quot;StartPos&quot;, &quot;StorageType&quot;, &quot;ColName&quot;, &quot;ColWidth&quot;, &quot;VarLabel&quot;), preview = FALSE) { temp &lt;- readLines(dct) temp &lt;- temp[grepl(&quot;_column&quot;, temp)] if (isTRUE(preview)) { head(temp) } else { possibilities &lt;- c(&quot;StartPos&quot;, &quot;StorageType&quot;, &quot;ColName&quot;, &quot;ColWidth&quot;, &quot;VarLabel&quot;) classes &lt;- c(&quot;numeric&quot;, &quot;character&quot;, &quot; character&quot;, &quot;numeric&quot;, &quot;character&quot;) pattern &lt;- c(StartPos = &quot;.
+      library(ggplot2) library(extraDistr) library(tidyverse) ## Loading tidyverse: tibble ## Loading tidyverse: tidyr ## Loading tidyverse: readr ## Loading tidyverse: purrr ## Loading tidyverse: dplyr ## Conflicts with tidy packages &mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;&mdash;- ## filter(): dplyr, stats ## lag(): dplyr, stats ## rdunif(): purrr, extraDistr #library(plotly) The data source is obtained from <a href="https://www.cdc.gov/nchs/nsfg/nsfg_cycle6.htm" target="_blank">https://www.cdc.gov/nchs/nsfg/nsfg_cycle6.htm</a> This contains fixed width files, and stata dictionaries consisting of columns for the data files
+#helper function to parse Stata dictionary dct.
       
     </div>
   </div>
