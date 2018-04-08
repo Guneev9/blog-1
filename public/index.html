@@ -366,6 +366,13 @@
     <h1>Recent Posts</h1>
     
     
+    <p class="view-all">
+      <a href="/post/">
+        More Posts
+        <i class="fa fa-angle-double-right"></i>
+      </a>
+    </p>
+    
 
   </div>
   <div class="col-xs-12 col-md-8">
@@ -376,6 +383,93 @@
       
 
       
+      
+
+        
+
+        
+        
+
+        
+        
+          
+      
+          
+      
+          
+      
+
+      
+      
+        
+        
+
+<div class="card-simple" itemscope itemprop="blogPost" itemtype="http://schema.org/BlogPosting">
+  
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    
+    <time datetime="2018-02-28 00:00:00 &#43;0000 UTC" itemprop="datePublished dateModified">
+      Feb 28, 2018
+    </time>
+  </span>
+  <span itemscope itemprop="author publisher" itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Kumar Rohit Malhotra">
+  </span>
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    0 min read
+  </span>
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <a href="/post/distributions/#disqus_thread"></a>
+  
+
+  
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fa fa-folder"></i>
+    
+    <a href="/categories/data-analysis">data analysis</a
+    >
+    
+  </span>
+  
+  
+
+  
+
+</div>
+
+
+  
+  
+  <h3 class="article-title" itemprop="headline">
+    <a href="/post/distributions/" itemprop="url">Distributions</a>
+  </h3>
+  <div class="article-style" itemprop="articleBody">
+    
+    
+    
+  </div>
+  <p class="read-more" itemprop="mainEntityOfPage">
+    <a href="/post/distributions/" class="btn btn-primary btn-outline">
+      CONTINUE READING
+    </a>
+  </p>
+</div>
+
+      
+
       
 
         
@@ -451,7 +545,8 @@
   </h3>
   <div class="article-style" itemprop="articleBody">
     
-
+    knitr::opts_chunk$set(echo = TRUE)  library(ggplot2) library(extraDistr) library(tidyverse) #library(plotly)  The data source is obtained from https://www.cdc.gov/nchs/nsfg/nsfg_cycle6.htm This contains fixed width files, and stata dictionaries consisting of columns for the data files
+#helper function to parse Stata dictionary dct.parser &lt;- function(dct, includes = c(&quot;StartPos&quot;, &quot;StorageType&quot;, &quot;ColName&quot;, &quot;ColWidth&quot;, &quot;VarLabel&quot;), preview = FALSE) { temp &lt;- readLines(dct) temp &lt;- temp[grepl(&quot;_column&quot;, temp)] if (isTRUE(preview)) { head(temp) } else { possibilities &lt;- c(&quot;StartPos&quot;, &quot;StorageType&quot;, &quot;ColName&quot;, &quot;ColWidth&quot;, &quot;VarLabel&quot;) classes &lt;- c(&quot;numeric&quot;, &quot;character&quot;, &quot; character&quot;, &quot;numeric&quot;, &quot;character&quot;) pattern &lt;- c(StartPos = &quot;.
     
   </div>
   <p class="read-more" itemprop="mainEntityOfPage">
@@ -563,91 +658,6 @@
       
 
       
-
-        
-
-        
-        
-
-        
-        
-
-      
-      
-        
-        
-
-<div class="card-simple" itemscope itemprop="blogPost" itemtype="http://schema.org/BlogPosting">
-  
-
-<div class="article-metadata">
-
-  <span class="article-date">
-    
-    <time datetime="2018-02-28 00:00:00 &#43;0000 UTC" itemprop="datePublished dateModified">
-      Feb 28, 2018
-    </time>
-  </span>
-  <span itemscope itemprop="author publisher" itemtype="http://schema.org/Person">
-    <meta itemprop="name" content="Kumar Rohit Malhotra">
-  </span>
-
-  
-  <span class="middot-divider"></span>
-  <span class="article-reading-time">
-    6 min read
-  </span>
-  
-
-  
-  
-  <span class="middot-divider"></span>
-  <a href="/post/global-terrorism-analysis/#disqus_thread"></a>
-  
-
-  
-  
-  
-  <span class="middot-divider"></span>
-  <span class="article-categories">
-    <i class="fa fa-folder"></i>
-    
-    <a href="/categories/terrorism">terrorism</a
-    >, 
-    
-    <a href="/categories/data-analysis">data analysis</a
-    >
-    
-  </span>
-  
-  
-
-  
-
-</div>
-
-
-  
-  
-  <h3 class="article-title" itemprop="headline">
-    <a href="/post/global-terrorism-analysis/" itemprop="url">Global Terrorism analysis</a>
-  </h3>
-  <div class="article-style" itemprop="articleBody">
-    
-    knitr::opts_chunk$set(echo=FALSE, error=FALSE, fig.path = &quot;README_figs/README-&quot;, warning = FALSE, message=FALSE)  options(warn=-1)  library(tidyr) library(dplyr) library(plotly) library(rworldmap) library(maps) library(ggmap) library(reshape2) library(raster) library(rgdal) library(rgeos)  terr = read.csv('~/Downloads/globalterrorismdb_0617dist.csv', check.names = FALSE, header = TRUE, stringsAsFactors = FALSE)  c(ncol(terr),nrow(terr)) sum(is.na(terr))#/(ncol(data)*nrow(data))  terr=rename(terr, id=eventid, year=iyear, nation=country_txt, Region=region_txt, attack=attacktype1_txt, target=targtype1_txt, weapon=weaptype1_txt, Killed=nkill, wounded=nwound)  Data cleaning We clean the data
-terr$Killed=as.integer(terr$Killed) terr$wounded=as.integer(terr$wounded) terr$Killed[which(is.na(terr$Killed))] = 0 terr$wounded[which(is.na(terr$wounded))] = 0 terr$nation[terr$nation==&quot;United States&quot;] &lt;- &quot;USA&quot; terr$nation[terr$nation==&quot;United Kingdom&quot;] &lt;- &quot;UK&quot; terr$nation[terr$nation==&quot;People's Republic of the Congo&quot;] &lt;- &quot;Republic of Congo&quot; terr$nation[terr$nation==&quot;Bosnia-Herzegovina&quot;] &lt;- &quot;Bosnia and Herzegovina&quot; terr$nation[terr$nation==&quot;Slovak Republic&quot;] &lt;- &quot;Slovakia&quot;  global_t &lt;- terr %&gt;% group_by(year,nation,Region) %&gt;% summarize(Total=n()) global_y &lt;- global_t%&gt;%group_by(year)%&gt;%summarize(Total=sum(Total)) global_attacks &lt;- global_t %&gt;% group_by(nation) %&gt;% summarize(Total=sum(Total)) %&gt;% arrange(desc(Total)) #%&gt;%filter(Total&gt;300) #global_attacks$Total[which(is.
-    
-  </div>
-  <p class="read-more" itemprop="mainEntityOfPage">
-    <a href="/post/global-terrorism-analysis/" class="btn btn-primary btn-outline">
-      CONTINUE READING
-    </a>
-  </p>
-</div>
-
-      
-
-      
     
 
   </div>
@@ -690,7 +700,7 @@ terr$Killed=as.integer(terr$Killed) terr$wounded=as.integer(terr$wounded) terr$K
           
           
           
-          <a href="/tags/data-analysis" style="font-size:0.8rem">data analysis</a>
+          <a href="/tags/data-analysis" style="font-size:1.8725805810714777rem">data analysis</a>
         
           
           
@@ -711,14 +721,14 @@ terr$Killed=as.integer(terr$Killed) terr$wounded=as.integer(terr$wounded) terr$K
           
           
           
-          <a href="/tags/rstats" style="font-size:0.8rem">rstats</a>
+          <a href="/tags/rstats" style="font-size:1.8725805810714777rem">rstats</a>
         
           
           
           
           
           
-          <a href="/tags/statistics" style="font-size:0.8rem">statistics</a>
+          <a href="/tags/statistics" style="font-size:1.8725805810714777rem">statistics</a>
         
       </div>
     
