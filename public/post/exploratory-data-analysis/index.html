@@ -74,8 +74,8 @@
   
 
   
-  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Kumar&#39;s blog">
-  <link rel="feed" href="/index.xml" type="application/rss+xml" title="Kumar&#39;s blog">
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Did you say data?">
+  <link rel="feed" href="/index.xml" type="application/rss+xml" title="Did you say data?">
   
 
   <link rel="manifest" href="/site.webmanifest">
@@ -89,9 +89,9 @@
   <meta property="twitter:site" content="@krohitm">
   <meta property="twitter:creator" content="@krohitm">
   
-  <meta property="og:site_name" content="Kumar&#39;s blog">
+  <meta property="og:site_name" content="Did you say data?">
   <meta property="og:url" content="/post/exploratory-data-analysis/">
-  <meta property="og:title" content="Exploratory Data Analysis | Kumar&#39;s blog">
+  <meta property="og:title" content="Exploratory Data Analysis | Did you say data?">
   <meta property="og:description" content="Since 1973 the U.S. Centers for Disease Control and Prevention (CDC) have conducted the National Survey of Family Growth (NSFG), which is intended to gather information on family life, marriage and divorce, pregnancy, infertility, use of contraception, and men’s and women’s health. The survey results are used to plan health services and health education programs, and to do statistical studies of families, fertility, and health.&quot; See http://cdc.gov/nchs/nsfg.htm. We will use data collected by this survey to investigate whether first babies tend to come late, and other questions.">
   <meta property="og:locale" content="en-us">
   
@@ -102,7 +102,7 @@
 
   
 
-  <title>Exploratory Data Analysis | Kumar&#39;s blog</title>
+  <title>Exploratory Data Analysis | Did you say data?</title>
 
 </head>
 <body id="top" data-spy="scroll" data-target="#toc" data-offset="71" >
@@ -121,7 +121,7 @@
         <span class="icon-bar"></span>
       </button>
       
-      <a class="navbar-brand" href="/">Kumar&#39;s blog</a>
+      <a class="navbar-brand" href="/">Did you say data?</a>
     </div>
 
     
@@ -223,7 +223,7 @@
   
   <span class="middot-divider"></span>
   <span class="article-reading-time">
-    17 min read
+    26 min read
   </span>
   
 
@@ -296,14 +296,14 @@
 
     <div class="article-style" itemprop="articleBody">
       <p>Since 1973 the U.S. Centers for Disease Control and Prevention (CDC) have conducted the National Survey of Family Growth (NSFG), which is intended to gather information on family life, marriage and divorce, pregnancy, infertility, use of contraception, and men’s and women’s health. The survey results are used to plan health services and health education programs, and to do statistical studies of families, fertility, and health.&quot; See <a href="http://cdc.gov/nchs/nsfg.htm" class="uri">http://cdc.gov/nchs/nsfg.htm</a>. We will use data collected by this survey to investigate whether first babies tend to come late, and other questions. In order to use this data effectively, we have to understand the design of the study. The NSFG is a cross-sectional study, which means that it captures a snapshot of a group at a point in time. The most common alternative is a longitudinal study, which observes a group repeatedly over a period of time. The NSFG has been conducted seven times; each deployment is called a cycle. We will use data from Cycle 6, which was conducted from January 2002 to March 2003.</p>
-<pre class="r"><code>library(ggplot2)
+<pre class="r"><code>#library(ggplot2)
 library(extraDistr)
 library(tidyverse)</code></pre>
 <pre><code>## ── Attaching packages ─────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
-<pre><code>## ✔ tibble  1.4.2     ✔ purrr   0.2.4
-## ✔ tidyr   0.8.0     ✔ dplyr   0.7.4
-## ✔ readr   1.1.1     ✔ stringr 1.3.0
-## ✔ tibble  1.4.2     ✔ forcats 0.3.0</code></pre>
+<pre><code>## ✔ ggplot2 2.2.1.9000     ✔ purrr   0.2.4     
+## ✔ tibble  1.4.2          ✔ dplyr   0.7.4     
+## ✔ tidyr   0.8.0          ✔ stringr 1.3.0     
+## ✔ readr   1.1.1          ✔ forcats 0.3.0</code></pre>
 <pre><code>## ── Conflicts ────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()
@@ -396,245 +396,505 @@ dct.parser &lt;- function(dct, includes = c(&quot;StartPos&quot;, &quot;StorageT
 <pre class="r"><code>femPreg2002columns &lt;- dct.parser(&#39;~/Documents/CodeWork/ThinkStats2/code/2002FemPreg.dct&#39;)
 femPreg2002 &lt;- read.fwf(&#39;~/Documents/CodeWork/ThinkStats2/code/2002FemPreg.dat&#39;, widths = femPreg2002columns$ColWidth, col.names = femPreg2002columns$ColName)</code></pre>
 <p>Taking a look at the data</p>
-<pre class="r"><code>head(femPreg2002)</code></pre>
-<pre><code>##   caseid pregordr howpreg_n howpreg_p moscurrp nowprgdk pregend1 pregend2
-## 1      1        1        NA        NA       NA       NA        6       NA
-## 2      1        2        NA        NA       NA       NA        6       NA
-## 3      2        1        NA        NA       NA       NA        5       NA
-## 4      2        2        NA        NA       NA       NA        6       NA
-## 5      2        3        NA        NA       NA       NA        6       NA
-## 6      6        1        NA        NA       NA       NA        6       NA
-##   nbrnaliv multbrth cmotpreg prgoutcome cmprgend flgdkmo1 cmprgbeg
-## 1        1       NA       NA          1     1093       NA     1084
-## 2        1       NA       NA          1     1166       NA     1157
-## 3        3        5       NA          1     1156       NA     1147
-## 4        1       NA       NA          1     1198       NA     1189
-## 5        1       NA       NA          1     1204       NA     1195
-## 6        1       NA       NA          1     1074       NA     1065
-##   ageatend hpageend gestasun_m gestasun_w wksgest mosgest dk1gest dk2gest
-## 1       NA       NA          9          0      39       9      NA      NA
-## 2       NA       NA          9          0      39       9      NA      NA
-## 3       NA       NA          0         39      39       9      NA      NA
-## 4       NA       NA          0         39      39       9      NA      NA
-## 5       NA       NA          0         39      39       9      NA      NA
-## 6       NA       NA          0         38      38       9      NA      NA
-##   dk3gest bpa_bdscheck1 bpa_bdscheck2 bpa_bdscheck3 babysex birthwgt_lb
-## 1      NA             0            NA            NA       1           8
-## 2      NA             0            NA            NA       2           7
-## 3      NA             0            NA            NA       1           9
-## 4      NA             0            NA            NA       2           7
-## 5      NA             0            NA            NA       2           6
-## 6      NA             0            NA            NA       1           8
-##   birthwgt_oz lobthwgt babysex2 birthwgt_lb2 birthwgt_oz2 lobthwgt2
-## 1          13       NA       NA           NA           NA        NA
-## 2          14       NA       NA           NA           NA        NA
-## 3           2       NA        2            2            0        NA
-## 4           0       NA       NA           NA           NA        NA
-## 5           3       NA       NA           NA           NA        NA
-## 6           9       NA       NA           NA           NA        NA
-##   babysex3 birthwgt_lb3 birthwgt_oz3 lobthwgt3 cmbabdob kidage hpagelb
-## 1       NA           NA           NA        NA     1093    138      37
-## 2       NA           NA           NA        NA     1166     65      42
-## 3        1            1            4        NA     1156     75      24
-## 4       NA           NA           NA        NA     1198     33      25
-## 5       NA           NA           NA        NA     1204     27      25
-## 6       NA           NA           NA        NA     1074    157      27
-##   birthplc paybirth1 paybirth2 paybirth3 knewpreg trimestr ltrimest
-## 1       NA        NA        NA        NA       NA       NA       NA
-## 2        1         1         2        NA        2       NA       NA
-## 3       NA        NA        NA        NA       NA       NA       NA
-## 4        1         3        NA        NA        3       NA       NA
-## 5        1         3        NA        NA        2       NA       NA
-## 6       NA        NA        NA        NA       NA       NA       NA
-##   priorsmk postsmks npostsmk getprena bgnprena pnctrim lpnctri workpreg
-## 1       NA       NA       NA       NA       NA      NA      NA       NA
-## 2        0        5       NA        1        4      NA      NA        5
-## 3       NA       NA       NA       NA       NA      NA      NA       NA
-## 4        0        5       NA        1        4      NA      NA        5
-## 5        0        5       NA        1        4      NA      NA        1
-## 6       NA       NA       NA       NA       NA      NA      NA       NA
-##   workborn didwork matweeks weeksdk matleave matchfound livehere alivenow
-## 1       NA      NA       NA      NA       NA          1       NA       NA
-## 2       NA      NA       NA      NA       NA          5        1       NA
-## 3       NA      NA       NA      NA       NA          5        1       NA
-## 4       NA      NA       NA      NA       NA          5        5        1
-## 5        5       2       NA      NA       NA          5        5        1
-## 6       NA      NA       NA      NA       NA          1       NA       NA
-##   cmkidied cmkidlft lastage wherenow legagree parenend anynurse fedsolid
-## 1       NA       NA      NA       NA       NA       NA        5       NA
-## 2       NA       NA      NA       NA       NA       NA        1       NA
-## 3       NA       NA      NA       NA       NA       NA        5       NA
-## 4       NA     1205       7        2       NA        1        5       NA
-## 5       NA     1221      17        2       NA        1        5       NA
-## 6       NA       NA      NA       NA       NA       NA        1       NA
-##   frsteatd_n frsteatd_p frsteatd quitnurs ageqtnur_n ageqtnur_p ageqtnur
-## 1         NA         NA       NA       NA         NA         NA       NA
-## 2          4          1        4       NA         20          1       20
-## 3         NA         NA       NA       NA         NA         NA       NA
-## 4         NA         NA       NA       NA         NA         NA       NA
-## 5         NA         NA       NA       NA         NA         NA       NA
-## 6          1          1        1       NA          2          1        2
-##   matchfound2 livehere2 alivenow2 cmkidied2 cmkidlft2 lastage2 wherenow2
-## 1          NA        NA        NA        NA        NA       NA        NA
-## 2          NA        NA        NA        NA        NA       NA        NA
-## 3           5         5         5      1156        NA        0        NA
-## 4          NA        NA        NA        NA        NA       NA        NA
-## 5          NA        NA        NA        NA        NA       NA        NA
-## 6          NA        NA        NA        NA        NA       NA        NA
-##   legagree2 parenend2 anynurse2 fedsolid2 frsteatd_n2 frsteatd_p2
-## 1        NA        NA        NA        NA          NA          NA
-## 2        NA        NA        NA        NA          NA          NA
-## 3        NA        NA        NA        NA          NA          NA
-## 4        NA        NA        NA        NA          NA          NA
-## 5        NA        NA        NA        NA          NA          NA
-## 6        NA        NA        NA        NA          NA          NA
-##   frsteatd2 quitnurs2 ageqtnur_n2 ageqtnur_p2 ageqtnur2 matchfound3
-## 1        NA        NA          NA          NA        NA          NA
-## 2        NA        NA          NA          NA        NA          NA
-## 3        NA        NA          NA          NA        NA           5
-## 4        NA        NA          NA          NA        NA          NA
-## 5        NA        NA          NA          NA        NA          NA
-## 6        NA        NA          NA          NA        NA          NA
-##   livehere3 alivenow3 cmkidied3 cmkidlft3 lastage3 wherenow3 legagree3
-## 1        NA        NA        NA        NA       NA        NA        NA
-## 2        NA        NA        NA        NA       NA        NA        NA
-## 3         5         5      1156        NA        0        NA        NA
-## 4        NA        NA        NA        NA       NA        NA        NA
-## 5        NA        NA        NA        NA       NA        NA        NA
-## 6        NA        NA        NA        NA       NA        NA        NA
-##   parenend3 anynurse3 fedsolid3 frsteatd_n3 frsteatd_p3 frsteatd3
-## 1        NA        NA        NA          NA          NA        NA
-## 2        NA        NA        NA          NA          NA        NA
-## 3        NA        NA        NA          NA          NA        NA
-## 4        NA        NA        NA          NA          NA        NA
-## 5        NA        NA        NA          NA          NA        NA
-## 6        NA        NA        NA          NA          NA        NA
-##   quitnurs3 ageqtnur_n3 ageqtnur_p3 ageqtnur3 cmlastlb cmfstprg cmlstprg
-## 1        NA          NA          NA        NA     1166     1093     1166
-## 2        NA          NA          NA        NA     1166     1093     1166
-## 3        NA          NA          NA        NA     1204     1156     1204
-## 4        NA          NA          NA        NA     1204     1156     1204
-## 5        NA          NA          NA        NA     1204     1156     1204
-## 6        NA          NA          NA        NA     1112     1074     1112
-##   cmintstr cmintfin cmintstrop cmintfinop cmintstrcr cmintfincr evuseint
-## 1      920     1093         NA         NA         NA         NA        1
-## 2     1093     1166       1166       1231         NA         NA        1
-## 3     1153     1156         NA         NA         NA         NA        5
-## 4     1156     1198         NA         NA         NA         NA       NA
-## 5     1198     1204       1204       1231         NA         NA       NA
-## 6     1032     1074         NA         NA         NA         NA        1
-##   stopduse whystopd whatmeth01 whatmeth02 whatmeth03 whatmeth04 resnouse
-## 1        1        1         NA         NA         NA         NA       NA
-## 2        1        1         NA         NA         NA         NA       NA
-## 3       NA       NA         NA         NA         NA         NA        5
-## 4       NA       NA          4         NA         NA         NA       NA
-## 5       NA       NA          4         NA         NA         NA       NA
-## 6        5       NA          1         NA         NA         NA       NA
-##   wantbold probbabe cnfrmno wantbld2 timingok toosoon_n toosoon_p wthpart1
-## 1       NA       NA      NA       NA        3        NA        NA        1
-## 2       NA       NA      NA       NA        3        NA        NA        1
-## 3        5       NA      NA       NA       NA        NA        NA       NA
-## 4        5       NA      NA       NA       NA        NA        NA       NA
-## 5        5       NA      NA       NA       NA        NA        NA       NA
-## 6        1       NA      NA       NA        2        NA        NA        1
-##   wthpart2 feelinpg hpwnold timokhp cohpbeg cohpend tellfath whentell
-## 1       NA       NA       1       2      NA      NA        1        1
-## 2       NA       NA       1       4      NA      NA        1        1
-## 3        4       NA       5      NA       5       5        1        1
-## 4        4        3       1       1       5       5        1        1
-## 5        4        5       5      NA       1       1       NA       NA
-## 6       NA       NA       1       1      NA      NA        1        1
-##   tryscale wantscal whyprg1 whyprg2 whynouse1 whynouse2 whynouse3 anyusint
-## 1       NA       NA      NA      NA        NA        NA        NA        5
-## 2       NA       NA      NA      NA        NA        NA        NA        5
-## 3       NA       NA      NA      NA        NA        NA        NA        5
-## 4        2        3       2      NA        NA        NA        NA        1
-## 5        4        4       2      NA        NA        NA        NA        1
-## 6       NA       NA      NA      NA        NA        NA        NA        5
-##   prglngth outcome birthord datend agepreg datecon agecon fmarout5
-## 1       39       1        1   1093    3316    1084   3241        1
-## 2       39       1        2   1166    3925    1157   3850        1
-## 3       39       1        1   1156    1433    1147   1358        5
-## 4       39       1        2   1198    1783    1189   1708        5
-## 5       39       1        3   1204    1833    1195   1758        5
-## 6       38       1        1   1074    2700    1065   2625        1
-##   pmarpreg rmarout6 fmarcon5 learnprg pncarewk paydeliv lbw1 bfeedwks
-## 1        2        1        1       NA       NA       NA    2      995
-## 2        2        1        1        2        4        3    2       87
-## 3        1        6        5       NA       NA       NA    2      995
-## 4        1        6        5        3        4        4    2      995
-## 5        1        6        5        2        4        4    2      995
-## 6        2        1        1       NA       NA       NA    2        9
-##   maternlv oldwantr oldwantp wantresp wantpart cmbirth ager agescrn
-## 1       NA        1        2        1        2     695   44      44
-## 2        0        1        4        1        4     695   44      44
-## 3       NA        5        5        5        5     984   20      20
-## 4        0        5        3        5        3     984   20      20
-## 5        3        5        5        5        5     984   20      20
-## 6       NA        2        3        2        3     750   40      40
-##   fmarital rmarital educat hieduc race hispanic hisprace rcurpreg pregnum
-## 1        1        1     16     12    2        2        2        2       2
-## 2        1        1     16     12    2        2        2        2       2
-## 3        5        6     11      7    1        2        3        2       3
-## 4        5        6     11      7    1        2        3        2       3
-## 5        5        6     11      7    1        2        3        2       3
-## 6        1        1     18     12    2        2        2        2       3
-##   parity insuranc pubassis poverty laborfor religion metro brnout yrstrus
-## 1      2        2        2     469        3        2     1      5      NA
-## 2      2        2        2     469        3        2     1      5      NA
-## 3      5        3        2     100        2        3     1      5      NA
-## 4      5        3        2     100        2        3     1      5      NA
-## 5      5        3        2     100        2        3     1      5      NA
-## 6      3        2        2     216        7        3     1      5      NA
-##   prglngth_i outcome_i birthord_i datend_i agepreg_i datecon_i agecon_i
-## 1          0         0          0        0         0         0        0
-## 2          0         0          0        0         0         0        0
-## 3          0         0          0        0         0         0        0
-## 4          0         0          0        0         0         0        0
-## 5          0         0          0        0         0         0        0
-## 6          0         0          0        0         0         0        0
-##   fmarout5_i pmarpreg_i rmarout6_i fmarcon5_i learnprg_i pncarewk_i
-## 1          0          0          0          0          0          0
-## 2          0          0          0          0          0          0
-## 3          0          0          0          0          0          0
-## 4          0          0          0          0          0          0
-## 5          0          0          0          0          0          0
-## 6          0          0          0          0          0          0
-##   paydeliv_i lbw1_i bfeedwks_i maternlv_i oldwantr_i oldwantp_i wantresp_i
-## 1          0      0          0          0          0          0          0
-## 2          0      0          0          0          0          0          0
-## 3          0      0          0          0          0          0          0
-## 4          0      0          0          0          0          0          0
-## 5          0      0          0          0          0          0          0
-## 6          0      0          0          0          0          0          0
-##   wantpart_i ager_i fmarital_i rmarital_i educat_i hieduc_i race_i
-## 1          0      0          0          0        0        0      0
-## 2          0      0          0          0        0        0      0
-## 3          0      0          0          0        0        0      0
-## 4          0      0          0          0        0        0      0
-## 5          0      0          0          0        0        0      0
-## 6          0      0          0          0        0        0      0
-##   hispanic_i hisprace_i rcurpreg_i pregnum_i parity_i insuranc_i
-## 1          0          0          0         0        0          0
-## 2          0          0          0         0        0          0
-## 3          0          0          0         0        0          0
-## 4          0          0          0         0        0          0
-## 5          0          0          0         0        0          0
-## 6          0          0          0         0        0          0
-##   pubassis_i poverty_i laborfor_i religion_i metro_i  basewgt
-## 1          0         0          0          0       0 3410.389
-## 2          0         0          0          0       0 3410.389
-## 3          0         0          0          0       0 7226.302
-## 4          0         0          0          0       0 7226.302
-## 5          0         0          0          0       0 7226.302
-## 6          0         0          0          0       0 4870.926
-##   adj_mod_basewgt  finalwgt secu_p sest cmintvw
-## 1        3869.350  6448.271      2    9    1231
-## 2        3869.350  6448.271      2    9    1231
-## 3        8567.549 12999.542      2   12    1231
-## 4        8567.549 12999.542      2   12    1231
-## 5        8567.549 12999.542      2   12    1231
-## 6        5325.197  8874.441      1   23    1231</code></pre>
+<pre class="r"><code>#head(femPreg2002)
+femPreg2002 %&gt;%
+  summary()</code></pre>
+<pre><code>##      caseid         pregordr        howpreg_n       howpreg_p    
+##  Min.   :    1   Min.   : 1.000   Min.   : 0.00   Min.   :1.000  
+##  1st Qu.: 3022   1st Qu.: 1.000   1st Qu.: 5.00   1st Qu.:1.000  
+##  Median : 6161   Median : 2.000   Median : 9.00   Median :1.000  
+##  Mean   : 6217   Mean   : 2.349   Mean   :15.14   Mean   :1.344  
+##  3rd Qu.: 9423   3rd Qu.: 3.000   3rd Qu.:23.00   3rd Qu.:2.000  
+##  Max.   :12571   Max.   :19.000   Max.   :99.00   Max.   :2.000  
+##                                   NA&#39;s   :13241   NA&#39;s   :13244  
+##     moscurrp        nowprgdk        pregend1       pregend2    
+##  Min.   :0.000   Min.   :1.000   Min.   :1.00   Min.   :1.000  
+##  1st Qu.:2.000   1st Qu.:1.000   1st Qu.:3.00   1st Qu.:3.000  
+##  Median :5.000   Median :1.000   Median :6.00   Median :4.000  
+##  Mean   :4.648   Mean   :3.667   Mean   :4.65   Mean   :4.056  
+##  3rd Qu.:7.000   3rd Qu.:5.000   3rd Qu.:6.00   3rd Qu.:6.000  
+##  Max.   :9.000   Max.   :9.000   Max.   :9.00   Max.   :6.000  
+##  NA&#39;s   :13241   NA&#39;s   :13590   NA&#39;s   :352    NA&#39;s   :13575  
+##     nbrnaliv        multbrth        cmotpreg      prgoutcome   
+##  Min.   :1.000   Min.   :1.000   Min.   : 864   Min.   :1.000  
+##  1st Qu.:1.000   1st Qu.:1.000   1st Qu.:1054   1st Qu.:1.000  
+##  Median :1.000   Median :1.000   Median :1129   Median :1.000  
+##  Mean   :1.026   Mean   :1.834   Mean   :1379   Mean   :1.351  
+##  3rd Qu.:1.000   3rd Qu.:1.000   3rd Qu.:1188   3rd Qu.:2.000  
+##  Max.   :9.000   Max.   :5.000   Max.   :9999   Max.   :3.000  
+##  NA&#39;s   :4445    NA&#39;s   :13430   NA&#39;s   :9539   NA&#39;s   :38     
+##     cmprgend       flgdkmo1       cmprgbeg       ageatend    
+##  Min.   : 833   Min.   :0.00   Min.   : 824   Min.   : 5.00  
+##  1st Qu.:1071   1st Qu.:0.00   1st Qu.:1065   1st Qu.:18.00  
+##  Median :1133   Median :0.00   Median :1127   Median :22.00  
+##  Mean   :1214   Mean   :0.35   Mean   :1116   Mean   :25.93  
+##  3rd Qu.:1185   3rd Qu.:1.00   3rd Qu.:1181   3rd Qu.:26.00  
+##  Max.   :9999   Max.   :7.00   Max.   :9997   Max.   :99.00  
+##  NA&#39;s   :390    NA&#39;s   :9537   NA&#39;s   :180    NA&#39;s   :12462  
+##     hpageend       gestasun_m       gestasun_w       wksgest     
+##  Min.   : 6.00   Min.   : 0.000   Min.   : 0.00   Min.   : 0.00  
+##  1st Qu.:21.00   1st Qu.: 0.000   1st Qu.: 0.00   1st Qu.:13.00  
+##  Median :26.00   Median : 4.000   Median : 1.00   Median :39.00  
+##  Mean   :29.95   Mean   : 5.537   Mean   :11.04   Mean   :30.01  
+##  3rd Qu.:32.00   3rd Qu.: 9.000   3rd Qu.:12.00   3rd Qu.:39.00  
+##  Max.   :99.00   Max.   :99.000   Max.   :99.00   Max.   :97.00  
+##  NA&#39;s   :9539    NA&#39;s   :390      NA&#39;s   :390     NA&#39;s   :542    
+##     mosgest          dk1gest         dk2gest         dk3gest     
+##  Min.   : 0.000   Min.   :2       Min.   :1.000   Min.   :1.00   
+##  1st Qu.: 3.000   1st Qu.:2       1st Qu.:5.000   1st Qu.:1.00   
+##  Median : 9.000   Median :2       Median :5.000   Median :1.00   
+##  Mean   : 6.858   Mean   :2       Mean   :4.657   Mean   :2.43   
+##  3rd Qu.: 9.000   3rd Qu.:2       3rd Qu.:5.000   3rd Qu.:2.00   
+##  Max.   :97.000   Max.   :2       Max.   :5.000   Max.   :9.00   
+##  NA&#39;s   :408      NA&#39;s   :13592   NA&#39;s   :13558   NA&#39;s   :13472  
+##  bpa_bdscheck1   bpa_bdscheck2   bpa_bdscheck3      babysex     
+##  Min.   :0.000   Min.   :0       Min.   :0       Min.   :1.000  
+##  1st Qu.:0.000   1st Qu.:0       1st Qu.:0       1st Qu.:1.000  
+##  Median :0.000   Median :0       Median :0       Median :1.000  
+##  Mean   :0.002   Mean   :0       Mean   :0       Mean   :1.495  
+##  3rd Qu.:0.000   3rd Qu.:0       3rd Qu.:0       3rd Qu.:2.000  
+##  Max.   :2.000   Max.   :0       Max.   :0       Max.   :9.000  
+##  NA&#39;s   :4445    NA&#39;s   :13464   NA&#39;s   :13586   NA&#39;s   :4449   
+##   birthwgt_lb      birthwgt_oz        lobthwgt        babysex2    
+##  Min.   : 0.000   Min.   : 0.000   Min.   :1.000   Min.   :1.000  
+##  1st Qu.: 6.000   1st Qu.: 3.000   1st Qu.:1.000   1st Qu.:1.000  
+##  Median : 7.000   Median : 7.000   Median :1.000   Median :1.000  
+##  Mean   : 7.431   Mean   : 7.404   Mean   :2.194   Mean   :1.607  
+##  3rd Qu.: 8.000   3rd Qu.:11.000   3rd Qu.:2.000   3rd Qu.:2.000  
+##  Max.   :99.000   Max.   :99.000   Max.   :9.000   Max.   :9.000  
+##  NA&#39;s   :4449     NA&#39;s   :4506     NA&#39;s   :13526   NA&#39;s   :13430  
+##   birthwgt_lb2     birthwgt_oz2      lobthwgt2        babysex3    
+##  Min.   : 0.000   Min.   : 0.000   Min.   :2.0     Min.   :1.00   
+##  1st Qu.: 4.000   1st Qu.: 2.000   1st Qu.:2.0     1st Qu.:1.00   
+##  Median : 5.000   Median : 7.000   Median :9.0     Median :2.00   
+##  Mean   : 7.313   Mean   : 6.862   Mean   :6.2     Mean   :2.04   
+##  3rd Qu.: 6.000   3rd Qu.:10.000   3rd Qu.:9.0     3rd Qu.:2.00   
+##  Max.   :99.000   Max.   :99.000   Max.   :9.0     Max.   :9.00   
+##  NA&#39;s   :13430    NA&#39;s   :13434    NA&#39;s   :13588   NA&#39;s   :13568  
+##   birthwgt_lb3    birthwgt_oz3      lobthwgt3        cmbabdob   
+##  Min.   : 0.00   Min.   : 0.000   Min.   :8.00    Min.   : 833  
+##  1st Qu.: 6.00   1st Qu.: 0.000   1st Qu.:8.25    1st Qu.:1076  
+##  Median : 6.00   Median : 3.500   Median :8.50    Median :1134  
+##  Mean   :13.28   Mean   : 8.125   Mean   :8.50    Mean   :1140  
+##  3rd Qu.: 8.00   3rd Qu.: 9.000   3rd Qu.:8.75    3rd Qu.:1185  
+##  Max.   :99.00   Max.   :98.000   Max.   :9.00    Max.   :9999  
+##  NA&#39;s   :13568   NA&#39;s   :13569    NA&#39;s   :13591   NA&#39;s   :4445  
+##      kidage          hpagelb         birthplc       paybirth1    
+##  Min.   :   0.0   Min.   : 6.00   Min.   :1.000   Min.   :1.000  
+##  1st Qu.:  48.0   1st Qu.:23.00   1st Qu.:1.000   1st Qu.:1.000  
+##  Median :  99.0   Median :27.00   Median :1.000   Median :1.000  
+##  Mean   : 111.9   Mean   :28.73   Mean   :1.038   Mean   :1.924  
+##  3rd Qu.: 156.0   3rd Qu.:32.00   3rd Qu.:1.000   3rd Qu.:3.000  
+##  Max.   :9997.0   Max.   :99.00   Max.   :8.000   Max.   :9.000  
+##  NA&#39;s   :4463     NA&#39;s   :4445    NA&#39;s   :10383   NA&#39;s   :10383  
+##    paybirth2       paybirth3        knewpreg        trimestr    
+##  Min.   :1.000   Min.   :2       Min.   : 0.00   Min.   :1.000  
+##  1st Qu.:2.000   1st Qu.:3       1st Qu.: 3.00   1st Qu.:1.000  
+##  Median :2.000   Median :3       Median : 4.00   Median :1.000  
+##  Mean   :2.081   Mean   :3       Mean   : 6.01   Mean   :1.308  
+##  3rd Qu.:2.000   3rd Qu.:3       3rd Qu.: 6.00   3rd Qu.:2.000  
+##  Max.   :5.000   Max.   :5       Max.   :99.00   Max.   :2.000  
+##  NA&#39;s   :12856   NA&#39;s   :13584   NA&#39;s   :9581    NA&#39;s   :13580  
+##     ltrimest        priorsmk        postsmks        npostsmk    
+##  Min.   :1.00    Min.   :0.000   Min.   :1.000   Min.   :1.000  
+##  1st Qu.:1.25    1st Qu.:0.000   1st Qu.:5.000   1st Qu.:2.000  
+##  Median :1.50    Median :0.000   Median :5.000   Median :3.000  
+##  Mean   :1.50    Mean   :0.793   Mean   :4.435   Mean   :2.695  
+##  3rd Qu.:1.75    3rd Qu.:1.000   3rd Qu.:5.000   3rd Qu.:3.000  
+##  Max.   :2.00    Max.   :8.000   Max.   :9.000   Max.   :9.000  
+##  NA&#39;s   :13591   NA&#39;s   :9581    NA&#39;s   :9581    NA&#39;s   :13025  
+##     getprena        bgnprena         pnctrim         lpnctri     
+##  Min.   :1.000   Min.   : 1.000   Min.   :1.000   Min.   :1      
+##  1st Qu.:1.000   1st Qu.: 4.000   1st Qu.:1.000   1st Qu.:1      
+##  Median :1.000   Median : 6.000   Median :1.000   Median :1      
+##  Mean   :1.333   Mean   : 7.995   Mean   :1.455   Mean   :2      
+##  3rd Qu.:1.000   3rd Qu.: 9.000   3rd Qu.:2.000   3rd Qu.:1      
+##  Max.   :8.000   Max.   :99.000   Max.   :2.000   Max.   :9      
+##  NA&#39;s   :9581    NA&#39;s   :9914     NA&#39;s   :13582   NA&#39;s   :13584  
+##     workpreg        workborn        didwork         matweeks    
+##  Min.   :1.000   Min.   :1.000   Min.   :1.000   Min.   : 0.00  
+##  1st Qu.:1.000   1st Qu.:1.000   1st Qu.:2.000   1st Qu.: 6.00  
+##  Median :1.000   Median :1.000   Median :3.000   Median : 8.00  
+##  Mean   :2.703   Mean   :2.295   Mean   :2.358   Mean   :11.22  
+##  3rd Qu.:5.000   3rd Qu.:5.000   3rd Qu.:3.000   3rd Qu.:12.00  
+##  Max.   :9.000   Max.   :9.000   Max.   :7.000   Max.   :99.00  
+##  NA&#39;s   :10407   NA&#39;s   :11756   NA&#39;s   :13000   NA&#39;s   :12348  
+##     weeksdk         matleave        matchfound       livehere    
+##  Min.   :2.000   Min.   : 0.000   Min.   :1.000   Min.   :1.000  
+##  1st Qu.:2.000   1st Qu.: 0.000   1st Qu.:1.000   1st Qu.:1.000  
+##  Median :2.000   Median : 4.000   Median :1.000   Median :1.000  
+##  Mean   :4.375   Mean   : 5.341   Mean   :2.246   Mean   :2.105  
+##  3rd Qu.:7.500   3rd Qu.: 8.000   3rd Qu.:5.000   3rd Qu.:5.000  
+##  Max.   :9.000   Max.   :99.000   Max.   :7.000   Max.   :8.000  
+##  NA&#39;s   :13585   NA&#39;s   :12348    NA&#39;s   :5390    NA&#39;s   :11038  
+##     alivenow        cmkidied        cmkidlft        lastage      
+##  Min.   :1.000   Min.   :1002    Min.   : 964    Min.   :  0.00  
+##  1st Qu.:1.000   1st Qu.:1090    1st Qu.:1149    1st Qu.: 16.75  
+##  Median :1.000   Median :1158    Median :1197    Median : 66.00  
+##  Mean   :1.523   Mean   :1842    Mean   :1563    Mean   : 87.34  
+##  3rd Qu.:1.000   3rd Qu.:1196    3rd Qu.:1220    3rd Qu.:142.25  
+##  Max.   :8.000   Max.   :9999    Max.   :9999    Max.   :997.00  
+##  NA&#39;s   :12890   NA&#39;s   :13505   NA&#39;s   :12977   NA&#39;s   :12925   
+##     wherenow        legagree        parenend        anynurse    
+##  Min.   :1.000   Min.   :1.000   Min.   :1.000   Min.   :1.000  
+##  1st Qu.:1.000   1st Qu.:1.000   1st Qu.:1.000   1st Qu.:1.000  
+##  Median :2.000   Median :1.000   Median :1.000   Median :1.000  
+##  Mean   :2.282   Mean   :2.264   Mean   :1.366   Mean   :2.686  
+##  3rd Qu.:3.000   3rd Qu.:5.000   3rd Qu.:1.000   3rd Qu.:5.000  
+##  Max.   :9.000   Max.   :9.000   Max.   :9.000   Max.   :9.000  
+##  NA&#39;s   :12977   NA&#39;s   :13373   NA&#39;s   :13060   NA&#39;s   :5488   
+##     fedsolid       frsteatd_n        frsteatd_p       frsteatd      
+##  Min.   :1.000   Min.   :  0.000   Min.   :1.000   Min.   :  0.000  
+##  1st Qu.:1.000   1st Qu.:  2.000   1st Qu.:1.000   1st Qu.:  1.000  
+##  Median :1.000   Median :  3.000   Median :1.000   Median :  3.000  
+##  Mean   :1.679   Mean   :  6.798   Mean   :1.435   Mean   :  3.253  
+##  3rd Qu.:1.000   3rd Qu.:  6.000   3rd Qu.:2.000   3rd Qu.:  5.000  
+##  Max.   :9.000   Max.   :999.000   Max.   :7.000   Max.   :997.000  
+##  NA&#39;s   :13166   NA&#39;s   :8970      NA&#39;s   :8982    NA&#39;s   :8982     
+##     quitnurs       ageqtnur_n        ageqtnur_p       ageqtnur     
+##  Min.   :1.000   Min.   :  0.000   Min.   :1.000   Min.   :  0.00  
+##  1st Qu.:1.000   1st Qu.:  3.000   1st Qu.:1.000   1st Qu.:  2.00  
+##  Median :1.000   Median :  6.000   Median :1.000   Median :  5.00  
+##  Mean   :2.028   Mean   :  8.375   Mean   :1.217   Mean   :  6.87  
+##  3rd Qu.:5.000   3rd Qu.: 10.000   3rd Qu.:1.000   3rd Qu.: 10.00  
+##  Max.   :7.000   Max.   :999.000   Max.   :7.000   Max.   :997.00  
+##  NA&#39;s   :12832   NA&#39;s   :9164      NA&#39;s   :9167    NA&#39;s   :9167    
+##   matchfound2      livehere2       alivenow2       cmkidied2    
+##  Min.   :1.000   Min.   :1.000   Min.   :1.000   Min.   :1005   
+##  1st Qu.:1.000   1st Qu.:1.000   1st Qu.:1.000   1st Qu.:1084   
+##  Median :1.000   Median :1.000   Median :1.000   Median :1150   
+##  Mean   :2.796   Mean   :2.818   Mean   :2.467   Mean   :1127   
+##  3rd Qu.:5.000   3rd Qu.:5.000   3rd Qu.:5.000   3rd Qu.:1170   
+##  Max.   :5.000   Max.   :5.000   Max.   :5.000   Max.   :1225   
+##  NA&#39;s   :13446   NA&#39;s   :13527   NA&#39;s   :13563   NA&#39;s   :13582  
+##    cmkidlft2        lastage2        wherenow2       legagree2    
+##  Min.   :1069    Min.   :  0.00   Min.   :1.000   Min.   :1.000  
+##  1st Qu.:1150    1st Qu.:  0.00   1st Qu.:1.000   1st Qu.:1.000  
+##  Median :1197    Median :  5.00   Median :2.000   Median :1.000  
+##  Mean   :3030    Mean   : 41.68   Mean   :2.316   Mean   :2.714  
+##  3rd Qu.:1230    3rd Qu.: 60.00   3rd Qu.:2.000   3rd Qu.:5.000  
+##  Max.   :9999    Max.   :184.00   Max.   :6.000   Max.   :5.000  
+##  NA&#39;s   :13574   NA&#39;s   :13568    NA&#39;s   :13574   NA&#39;s   :13586  
+##    parenend2       anynurse2       fedsolid2      frsteatd_n2    
+##  Min.   :1.000   Min.   :1.00    Min.   :1.000   Min.   : 1.000  
+##  1st Qu.:1.000   1st Qu.:1.00    1st Qu.:1.000   1st Qu.: 1.000  
+##  Median :1.000   Median :1.00    Median :1.000   Median : 3.000  
+##  Mean   :1.667   Mean   :2.91    Mean   :1.286   Mean   : 3.071  
+##  3rd Qu.:1.000   3rd Qu.:5.00    3rd Qu.:1.000   3rd Qu.: 4.000  
+##  Max.   :5.000   Max.   :9.00    Max.   :5.000   Max.   :12.000  
+##  NA&#39;s   :13575   NA&#39;s   :13459   NA&#39;s   :13579   NA&#39;s   :13523   
+##   frsteatd_p2      frsteatd2        quitnurs2      ageqtnur_n2   
+##  Min.   :1.000   Min.   : 0.000   Min.   :1.0     Min.   : 1.00  
+##  1st Qu.:1.000   1st Qu.: 0.000   1st Qu.:1.0     1st Qu.: 2.50  
+##  Median :1.000   Median : 1.000   Median :1.0     Median : 4.00  
+##  Mean   :1.629   Mean   : 2.243   Mean   :1.6     Mean   : 5.94  
+##  3rd Qu.:2.000   3rd Qu.: 3.750   3rd Qu.:1.0     3rd Qu.: 8.00  
+##  Max.   :3.000   Max.   :12.000   Max.   :5.0     Max.   :40.00  
+##  NA&#39;s   :13523   NA&#39;s   :13523    NA&#39;s   :13573   NA&#39;s   :13526  
+##   ageqtnur_p2      ageqtnur2       matchfound3      livehere3    
+##  Min.   :1.000   Min.   : 0.000   Min.   :1.000   Min.   :1.000  
+##  1st Qu.:1.000   1st Qu.: 1.500   1st Qu.:1.000   1st Qu.:1.000  
+##  Median :1.000   Median : 3.000   Median :5.000   Median :5.000  
+##  Mean   :1.194   Mean   : 5.403   Mean   :3.316   Mean   :3.545  
+##  3rd Qu.:1.000   3rd Qu.: 7.500   3rd Qu.:5.000   3rd Qu.:5.000  
+##  Max.   :3.000   Max.   :40.000   Max.   :5.000   Max.   :5.000  
+##  NA&#39;s   :13526   NA&#39;s   :13526    NA&#39;s   :13574   NA&#39;s   :13582  
+##    alivenow3       cmkidied3       cmkidlft3        lastage3    
+##  Min.   :1.000   Min.   :1156    Min.   :1231    Min.   :  0.0  
+##  1st Qu.:1.000   1st Qu.:1158    1st Qu.:5615    1st Qu.:  0.0  
+##  Median :5.000   Median :1163    Median :9999    Median :  0.0  
+##  Mean   :3.286   Mean   :1177    Mean   :7076    Mean   : 24.4  
+##  3rd Qu.:5.000   3rd Qu.:1182    3rd Qu.:9999    3rd Qu.: 12.0  
+##  Max.   :5.000   Max.   :1225    Max.   :9999    Max.   :110.0  
+##  NA&#39;s   :13586   NA&#39;s   :13589   NA&#39;s   :13590   NA&#39;s   :13588  
+##    wherenow3       legagree3       parenend3       anynurse3    
+##  Min.   :1.000   Min.   :1       Min.   :1       Min.   :1.000  
+##  1st Qu.:3.500   1st Qu.:1       1st Qu.:1       1st Qu.:5.000  
+##  Median :6.000   Median :1       Median :1       Median :5.000  
+##  Mean   :5.333   Mean   :1       Mean   :1       Mean   :4.714  
+##  3rd Qu.:7.500   3rd Qu.:1       3rd Qu.:1       3rd Qu.:5.000  
+##  Max.   :9.000   Max.   :1       Max.   :1       Max.   :5.000  
+##  NA&#39;s   :13590   NA&#39;s   :13592   NA&#39;s   :13590   NA&#39;s   :13579  
+##  fedsolid3       frsteatd_n3     frsteatd_p3      frsteatd3    
+##  Mode:logical   Min.   :2       Min.   :1       Min.   :2      
+##  NA&#39;s:13593     1st Qu.:2       1st Qu.:1       1st Qu.:2      
+##                 Median :2       Median :1       Median :2      
+##                 Mean   :2       Mean   :1       Mean   :2      
+##                 3rd Qu.:2       3rd Qu.:1       3rd Qu.:2      
+##                 Max.   :2       Max.   :1       Max.   :2      
+##                 NA&#39;s   :13592   NA&#39;s   :13592   NA&#39;s   :13592  
+##  quitnurs3       ageqtnur_n3     ageqtnur_p3      ageqtnur3    
+##  Mode:logical   Min.   :2       Min.   :1       Min.   :2      
+##  NA&#39;s:13593     1st Qu.:2       1st Qu.:1       1st Qu.:2      
+##                 Median :2       Median :1       Median :2      
+##                 Mean   :2       Mean   :1       Mean   :2      
+##                 3rd Qu.:2       3rd Qu.:1       3rd Qu.:2      
+##                 Max.   :2       Max.   :1       Max.   :2      
+##                 NA&#39;s   :13592   NA&#39;s   :13592   NA&#39;s   :13592  
+##     cmlastlb       cmfstprg       cmlstprg       cmintstr   
+##  Min.   : 893   Min.   : 833   Min.   : 893   Min.   : 762  
+##  1st Qu.:1119   1st Qu.:1015   1st Qu.:1131   1st Qu.:1020  
+##  Median :1170   Median :1085   Median :1182   Median :1090  
+##  Mean   :1166   Mean   :1091   Mean   :1216   Mean   :1221  
+##  3rd Qu.:1206   3rd Qu.:1141   3rd Qu.:1213   3rd Qu.:1149  
+##  Max.   :9999   Max.   :9999   Max.   :9999   Max.   :9999  
+##  NA&#39;s   :955    NA&#39;s   :90     NA&#39;s   :90     NA&#39;s   :9     
+##     cmintfin      cmintstrop     cmintfinop     cmintstrcr   
+##  Min.   : 833   Min.   : 893   Min.   :1225   Min.   : 919   
+##  1st Qu.:1071   1st Qu.:1123   1st Qu.:1231   1st Qu.:1169   
+##  Median :1133   Median :1178   Median :1233   Median :1200   
+##  Mean   :1213   Mean   :1219   Mean   :1233   Mean   :1258   
+##  3rd Qu.:1185   3rd Qu.:1213   3rd Qu.:1235   3rd Qu.:1217   
+##  Max.   :9999   Max.   :9999   Max.   :1239   Max.   :9999   
+##  NA&#39;s   :399    NA&#39;s   :8950   NA&#39;s   :8950   NA&#39;s   :13243  
+##    cmintfincr       evuseint        stopduse       whystopd    
+##  Min.   :1227    Min.   :1.000   Min.   :1.00   Min.   :1.000  
+##  1st Qu.:1231    1st Qu.:1.000   1st Qu.:1.00   1st Qu.:1.000  
+##  Median :1233    Median :1.000   Median :1.00   Median :1.000  
+##  Mean   :1233    Mean   :2.157   Mean   :2.71   Mean   :2.519  
+##  3rd Qu.:1235    3rd Qu.:5.000   3rd Qu.:5.00   3rd Qu.:5.000  
+##  Max.   :1239    Max.   :9.000   Max.   :9.00   Max.   :9.000  
+##  NA&#39;s   :13241   NA&#39;s   :3029    NA&#39;s   :5759   NA&#39;s   :9090   
+##    whatmeth01       whatmeth02       whatmeth03      whatmeth04   
+##  Min.   : 1.000   Min.   : 1.000   Min.   : 3.00   Min.   : 7.00  
+##  1st Qu.: 3.000   1st Qu.: 4.000   1st Qu.: 7.00   1st Qu.: 7.00  
+##  Median : 4.000   Median : 7.000   Median :10.00   Median :13.00  
+##  Mean   : 5.044   Mean   : 7.637   Mean   :10.81   Mean   :12.07  
+##  3rd Qu.: 4.000   3rd Qu.:10.000   3rd Qu.:15.00   3rd Qu.:15.00  
+##  Max.   :99.000   Max.   :21.000   Max.   :21.00   Max.   :21.00  
+##  NA&#39;s   :9432     NA&#39;s   :12851    NA&#39;s   :13465   NA&#39;s   :13578  
+##     resnouse        wantbold        probbabe        cnfrmno     
+##  Min.   :1.000   Min.   :1.000   Min.   :1.000   Min.   :1.000  
+##  1st Qu.:1.000   1st Qu.:1.000   1st Qu.:1.000   1st Qu.:1.000  
+##  Median :5.000   Median :1.000   Median :1.000   Median :1.000  
+##  Mean   :3.144   Mean   :2.423   Mean   :3.253   Mean   :1.042  
+##  3rd Qu.:5.000   3rd Qu.:5.000   3rd Qu.:5.000   3rd Qu.:1.000  
+##  Max.   :9.000   Max.   :9.000   Max.   :9.000   Max.   :2.000  
+##  NA&#39;s   :8664    NA&#39;s   :5150    NA&#39;s   :13344   NA&#39;s   :13545  
+##     wantbld2        timingok       toosoon_n       toosoon_p    
+##  Min.   :1       Min.   :1.000   Min.   :  1.0   Min.   :1.000  
+##  1st Qu.:1       1st Qu.:1.000   1st Qu.:  2.0   1st Qu.:2.000  
+##  Median :1       Median :2.000   Median :  4.0   Median :2.000  
+##  Mean   :1       Mean   :1.815   Mean   : 38.2   Mean   :2.052  
+##  3rd Qu.:1       3rd Qu.:2.000   3rd Qu.:  6.0   3rd Qu.:2.000  
+##  Max.   :1       Max.   :9.000   Max.   :999.0   Max.   :9.000  
+##  NA&#39;s   :13591   NA&#39;s   :2757    NA&#39;s   :9704    NA&#39;s   :9704   
+##     wthpart1        wthpart2        feelinpg         hpwnold     
+##  Min.   :1.000   Min.   :1.000   Min.   : 1.000   Min.   :1.000  
+##  1st Qu.:1.000   1st Qu.:1.000   1st Qu.: 5.000   1st Qu.:1.000  
+##  Median :1.000   Median :2.000   Median : 9.000   Median :1.000  
+##  Mean   :1.225   Mean   :2.513   Mean   : 8.025   Mean   :2.161  
+##  3rd Qu.:1.000   3rd Qu.:4.000   3rd Qu.:10.000   3rd Qu.:5.000  
+##  Max.   :9.000   Max.   :9.000   Max.   :99.000   Max.   :9.000  
+##  NA&#39;s   :6938    NA&#39;s   :6655    NA&#39;s   :10154                   
+##     timokhp         cohpbeg         cohpend         tellfath    
+##  Min.   :1.000   Min.   :1.000   Min.   :1.000   Min.   :1.000  
+##  1st Qu.:1.000   1st Qu.:1.000   1st Qu.:1.000   1st Qu.:1.000  
+##  Median :2.000   Median :1.000   Median :1.000   Median :1.000  
+##  Mean   :1.879   Mean   :2.852   Mean   :2.968   Mean   :1.271  
+##  3rd Qu.:2.000   3rd Qu.:5.000   3rd Qu.:5.000   3rd Qu.:1.000  
+##  Max.   :9.000   Max.   :9.000   Max.   :9.000   Max.   :9.000  
+##  NA&#39;s   :3683    NA&#39;s   :4615    NA&#39;s   :4750    NA&#39;s   :3333   
+##     whentell        tryscale         wantscal         whyprg1     
+##  Min.   :1.000   Min.   : 0.000   Min.   : 0.000   Min.   :1.000  
+##  1st Qu.:1.000   1st Qu.: 1.000   1st Qu.: 0.000   1st Qu.:1.000  
+##  Median :1.000   Median : 5.000   Median : 5.000   Median :2.000  
+##  Mean   :1.029   Mean   : 5.953   Mean   : 6.258   Mean   :1.792  
+##  3rd Qu.:1.000   3rd Qu.:10.000   3rd Qu.:10.000   3rd Qu.:2.000  
+##  Max.   :9.000   Max.   :99.000   Max.   :99.000   Max.   :9.000  
+##  NA&#39;s   :4315    NA&#39;s   :10234    NA&#39;s   :10234    NA&#39;s   :12804  
+##     whyprg2        whynouse1       whynouse2       whynouse3    
+##  Min.   :2       Min.   :1.000   Min.   :1.0     Min.   :1.000  
+##  1st Qu.:2       1st Qu.:2.000   1st Qu.:2.0     1st Qu.:5.000  
+##  Median :2       Median :2.000   Median :3.0     Median :6.000  
+##  Mean   :2       Mean   :2.884   Mean   :3.5     Mean   :4.778  
+##  3rd Qu.:2       3rd Qu.:3.000   3rd Qu.:5.0     3rd Qu.:6.000  
+##  Max.   :2       Max.   :9.000   Max.   :7.0     Max.   :6.000  
+##  NA&#39;s   :13578   NA&#39;s   :12886   NA&#39;s   :13517   NA&#39;s   :13584  
+##     anyusint       prglngth        outcome         birthord     
+##  Min.   :1.00   Min.   : 0.00   Min.   :1.000   Min.   : 1.000  
+##  1st Qu.:5.00   1st Qu.:13.00   1st Qu.:1.000   1st Qu.: 1.000  
+##  Median :5.00   Median :39.00   Median :1.000   Median : 2.000  
+##  Mean   :4.37   Mean   :29.53   Mean   :1.764   Mean   : 1.826  
+##  3rd Qu.:5.00   3rd Qu.:39.00   3rd Qu.:2.000   3rd Qu.: 2.000  
+##  Max.   :5.00   Max.   :50.00   Max.   :6.000   Max.   :10.000  
+##                                                 NA&#39;s   :4445    
+##      datend        agepreg        datecon         agecon    
+##  Min.   : 833   Min.   :1033   Min.   : 824   Min.   : 991  
+##  1st Qu.:1071   1st Qu.:2008   1st Qu.:1065   1st Qu.:1958  
+##  Median :1132   Median :2391   Median :1128   Median :2341  
+##  Mean   :1119   Mean   :2469   Mean   :1116   Mean   :2421  
+##  3rd Qu.:1184   3rd Qu.:2866   3rd Qu.:1181   3rd Qu.:2825  
+##  Max.   :1238   Max.   :4408   Max.   :1238   Max.   :4408  
+##  NA&#39;s   :352    NA&#39;s   :352                                 
+##     fmarout5        pmarpreg        rmarout6        fmarcon5    
+##  Min.   :1.000   Min.   :1.000   Min.   :1.000   Min.   :1.000  
+##  1st Qu.:1.000   1st Qu.:1.000   1st Qu.:1.000   1st Qu.:1.000  
+##  Median :2.000   Median :2.000   Median :2.000   Median :4.000  
+##  Mean   :2.876   Mean   :1.558   Mean   :3.256   Mean   :3.048  
+##  3rd Qu.:5.000   3rd Qu.:2.000   3rd Qu.:6.000   3rd Qu.:5.000  
+##  Max.   :5.000   Max.   :2.000   Max.   :6.000   Max.   :5.000  
+##  NA&#39;s   :353     NA&#39;s   :352     NA&#39;s   :352                    
+##     learnprg         pncarewk        paydeliv          lbw1      
+##  Min.   : 0.000   Min.   : 1.00   Min.   :1.000   Min.   :1.000  
+##  1st Qu.: 3.000   1st Qu.: 4.00   1st Qu.:2.000   1st Qu.:2.000  
+##  Median : 4.000   Median : 7.00   Median :3.000   Median :2.000  
+##  Mean   : 5.297   Mean   :15.06   Mean   :3.078   Mean   :1.915  
+##  3rd Qu.: 6.000   3rd Qu.:11.00   3rd Qu.:4.000   3rd Qu.:2.000  
+##  Max.   :39.000   Max.   :95.00   Max.   :5.000   Max.   :2.000  
+##  NA&#39;s   :9541     NA&#39;s   :9541    NA&#39;s   :10383   NA&#39;s   :4445   
+##     bfeedwks        maternlv        oldwantr        oldwantp    
+##  Min.   :  0.0   Min.   :0.000   Min.   :1.000   Min.   :1.000  
+##  1st Qu.: 17.0   1st Qu.:0.000   1st Qu.:2.000   1st Qu.:2.000  
+##  Median : 61.0   Median :1.000   Median :3.000   Median :2.000  
+##  Mean   :465.2   Mean   :1.011   Mean   :2.867   Mean   :3.038  
+##  3rd Qu.:995.0   3rd Qu.:1.000   3rd Qu.:3.000   3rd Qu.:5.000  
+##  Max.   :995.0   Max.   :4.000   Max.   :6.000   Max.   :6.000  
+##  NA&#39;s   :5595    NA&#39;s   :10402                                  
+##     wantresp        wantpart        cmbirth          ager      
+##  Min.   :1.000   Min.   :1.000   Min.   : 688   Min.   :15.00  
+##  1st Qu.:2.000   1st Qu.:2.000   1st Qu.: 759   1st Qu.:28.00  
+##  Median :3.000   Median :2.000   Median : 819   Median :34.00  
+##  Mean   :2.867   Mean   :3.032   Mean   : 825   Mean   :33.47  
+##  3rd Qu.:3.000   3rd Qu.:5.000   3rd Qu.: 884   3rd Qu.:39.00  
+##  Max.   :6.000   Max.   :6.000   Max.   :1050   Max.   :44.00  
+##                                                                
+##     agescrn         fmarital        rmarital         educat     
+##  Min.   :15.00   Min.   :1.000   Min.   :1.000   Min.   : 9.00  
+##  1st Qu.:28.00   1st Qu.:1.000   1st Qu.:1.000   1st Qu.:11.00  
+##  Median :34.00   Median :1.000   Median :1.000   Median :12.00  
+##  Mean   :33.47   Mean   :2.496   Mean   :2.601   Mean   :12.66  
+##  3rd Qu.:39.00   3rd Qu.:5.000   3rd Qu.:4.000   3rd Qu.:14.00  
+##  Max.   :44.00   Max.   :5.000   Max.   :6.000   Max.   :19.00  
+##                                                                 
+##      hieduc            race          hispanic        hisprace    
+##  Min.   : 5.000   Min.   :1.000   Min.   :1.000   Min.   :1.000  
+##  1st Qu.: 9.000   1st Qu.:1.000   1st Qu.:2.000   1st Qu.:2.000  
+##  Median : 9.000   Median :2.000   Median :2.000   Median :2.000  
+##  Mean   : 9.238   Mean   :1.813   Mean   :1.757   Mean   :2.086  
+##  3rd Qu.:10.000   3rd Qu.:2.000   3rd Qu.:2.000   3rd Qu.:3.000  
+##  Max.   :15.000   Max.   :3.000   Max.   :2.000   Max.   :4.000  
+##                                                                  
+##     rcurpreg       pregnum           parity          insuranc    
+##  Min.   :1.00   Min.   : 1.000   Min.   : 0.000   Min.   :1.000  
+##  1st Qu.:2.00   1st Qu.: 2.000   1st Qu.: 1.000   1st Qu.:2.000  
+##  Median :2.00   Median : 3.000   Median : 2.000   Median :2.000  
+##  Mean   :1.93   Mean   : 3.698   Mean   : 2.402   Mean   :2.142  
+##  3rd Qu.:2.00   3rd Qu.: 5.000   3rd Qu.: 3.000   3rd Qu.:3.000  
+##  Max.   :2.00   Max.   :19.000   Max.   :22.000   Max.   :4.000  
+##                                                                  
+##     pubassis       poverty         laborfor        religion    
+##  Min.   :1.00   Min.   :  7.0   Min.   :1.000   Min.   :1.000  
+##  1st Qu.:1.00   1st Qu.: 96.0   1st Qu.:1.000   1st Qu.:2.000  
+##  Median :2.00   Median :180.0   Median :2.000   Median :3.000  
+##  Mean   :1.61   Mean   :219.2   Mean   :3.436   Mean   :2.491  
+##  3rd Qu.:2.00   3rd Qu.:328.0   3rd Qu.:7.000   3rd Qu.:3.000  
+##  Max.   :2.00   Max.   :500.0   Max.   :9.000   Max.   :4.000  
+##                                                                
+##      metro           brnout         yrstrus        prglngth_i     
+##  Min.   :1.000   Min.   :1.000   Min.   :1959    Min.   :0.00000  
+##  1st Qu.:1.000   1st Qu.:5.000   1st Qu.:1981    1st Qu.:0.00000  
+##  Median :2.000   Median :5.000   Median :1990    Median :0.00000  
+##  Mean   :1.665   Mean   :4.259   Mean   :2135    Mean   :0.01832  
+##  3rd Qu.:2.000   3rd Qu.:5.000   3rd Qu.:1996    3rd Qu.:0.00000  
+##  Max.   :3.000   Max.   :9.000   Max.   :9999    Max.   :2.00000  
+##                                  NA&#39;s   :11036                    
+##    outcome_i          birthord_i          datend_i         agepreg_i      
+##  Min.   :0.000000   Min.   :0.000000   Min.   :0.00000   Min.   :0.00000  
+##  1st Qu.:0.000000   1st Qu.:0.000000   1st Qu.:0.00000   1st Qu.:0.00000  
+##  Median :0.000000   Median :0.000000   Median :0.00000   Median :0.00000  
+##  Mean   :0.005591   Mean   :0.005591   Mean   :0.01515   Mean   :0.01847  
+##  3rd Qu.:0.000000   3rd Qu.:0.000000   3rd Qu.:0.00000   3rd Qu.:0.00000  
+##  Max.   :2.000000   Max.   :2.000000   Max.   :2.00000   Max.   :2.00000  
+##                                                                           
+##    datecon_i         agecon_i         fmarout5_i        pmarpreg_i     
+##  Min.   :0.0000   Min.   :0.00000   Min.   :0.00000   Min.   :0.00000  
+##  1st Qu.:0.0000   1st Qu.:0.00000   1st Qu.:0.00000   1st Qu.:0.00000  
+##  Median :0.0000   Median :0.00000   Median :0.00000   Median :0.00000  
+##  Mean   :0.0156   Mean   :0.01589   Mean   :0.08034   Mean   :0.03517  
+##  3rd Qu.:0.0000   3rd Qu.:0.00000   3rd Qu.:0.00000   3rd Qu.:0.00000  
+##  Max.   :2.0000   Max.   :1.00000   Max.   :1.00000   Max.   :2.00000  
+##                                                                        
+##    rmarout6_i        fmarcon5_i        learnprg_i        pncarewk_i     
+##  Min.   :0.00000   Min.   :0.00000   Min.   :0.00000   Min.   :0.00000  
+##  1st Qu.:0.00000   1st Qu.:0.00000   1st Qu.:0.00000   1st Qu.:0.00000  
+##  Median :0.00000   Median :0.00000   Median :0.00000   Median :0.00000  
+##  Mean   :0.07533   Mean   :0.07555   Mean   :0.01876   Mean   :0.01118  
+##  3rd Qu.:0.00000   3rd Qu.:0.00000   3rd Qu.:0.00000   3rd Qu.:0.00000  
+##  Max.   :1.00000   Max.   :2.00000   Max.   :2.00000   Max.   :2.00000  
+##                                                                         
+##    paydeliv_i           lbw1_i           bfeedwks_i     
+##  Min.   :0.000000   Min.   :0.000000   Min.   :0.00000  
+##  1st Qu.:0.000000   1st Qu.:0.000000   1st Qu.:0.00000  
+##  Median :0.000000   Median :0.000000   Median :0.00000  
+##  Mean   :0.005812   Mean   :0.006621   Mean   :0.00721  
+##  3rd Qu.:0.000000   3rd Qu.:0.000000   3rd Qu.:0.00000  
+##  Max.   :2.000000   Max.   :2.000000   Max.   :2.00000  
+##                                                         
+##    maternlv_i         oldwantr_i        oldwantp_i         wantresp_i     
+##  Min.   :0.000000   Min.   :0.00000   Min.   :0.000000   Min.   :0.00000  
+##  1st Qu.:0.000000   1st Qu.:0.00000   1st Qu.:0.000000   1st Qu.:0.00000  
+##  Median :0.000000   Median :0.00000   Median :0.000000   Median :0.00000  
+##  Mean   :0.006915   Mean   :0.01412   Mean   :0.005812   Mean   :0.01412  
+##  3rd Qu.:0.000000   3rd Qu.:0.00000   3rd Qu.:0.000000   3rd Qu.:0.00000  
+##  Max.   :2.000000   Max.   :1.00000   Max.   :1.000000   Max.   :1.00000  
+##                                                                           
+##    wantpart_i           ager_i    fmarital_i   rmarital_i
+##  Min.   :0.000000   Min.   :0   Min.   :0    Min.   :0   
+##  1st Qu.:0.000000   1st Qu.:0   1st Qu.:0    1st Qu.:0   
+##  Median :0.000000   Median :0   Median :0    Median :0   
+##  Mean   :0.007945   Mean   :0   Mean   :0    Mean   :0   
+##  3rd Qu.:0.000000   3rd Qu.:0   3rd Qu.:0    3rd Qu.:0   
+##  Max.   :1.000000   Max.   :0   Max.   :0    Max.   :0   
+##                                                          
+##     educat_i            hieduc_i           race_i    hispanic_i       
+##  Min.   :0.0000000   Min.   :0.00000   Min.   :0   Min.   :0.0000000  
+##  1st Qu.:0.0000000   1st Qu.:0.00000   1st Qu.:0   1st Qu.:0.0000000  
+##  Median :0.0000000   Median :0.00000   Median :0   Median :0.0000000  
+##  Mean   :0.0001471   Mean   :0.00103   Mean   :0   Mean   :0.0003678  
+##  3rd Qu.:0.0000000   3rd Qu.:0.00000   3rd Qu.:0   3rd Qu.:0.0000000  
+##  Max.   :1.0000000   Max.   :2.00000   Max.   :0   Max.   :1.0000000  
+##                                                                       
+##    hisprace_i   rcurpreg_i   pregnum_i    parity_i      
+##  Min.   :0    Min.   :0    Min.   :0   Min.   :0.00000  
+##  1st Qu.:0    1st Qu.:0    1st Qu.:0   1st Qu.:0.00000  
+##  Median :0    Median :0    Median :0   Median :0.00000  
+##  Mean   :0    Mean   :0    Mean   :0   Mean   :0.02634  
+##  3rd Qu.:0    3rd Qu.:0    3rd Qu.:0   3rd Qu.:0.00000  
+##  Max.   :0    Max.   :0    Max.   :0   Max.   :2.00000  
+##                                                         
+##    insuranc_i         pubassis_i        poverty_i      
+##  Min.   :0.000000   Min.   :0.00000   Min.   :0.00000  
+##  1st Qu.:0.000000   1st Qu.:0.00000   1st Qu.:0.00000  
+##  Median :0.000000   Median :0.00000   Median :0.00000  
+##  Mean   :0.003458   Mean   :0.01221   Mean   :0.05341  
+##  3rd Qu.:0.000000   3rd Qu.:0.00000   3rd Qu.:0.00000  
+##  Max.   :2.000000   Max.   :1.00000   Max.   :1.00000  
+##                                                        
+##    laborfor_i          religion_i          metro_i     basewgt        
+##  Min.   :0.0000000   Min.   :0.000000   Min.   :0   Min.   :   64.58  
+##  1st Qu.:0.0000000   1st Qu.:0.000000   1st Qu.:0   1st Qu.: 2335.45  
+##  Median :0.0000000   Median :0.000000   Median :0   Median : 3409.65  
+##  Mean   :0.0008092   Mean   :0.003016   Mean   :0   Mean   : 4216.27  
+##  3rd Qu.:0.0000000   3rd Qu.:0.000000   3rd Qu.:0   3rd Qu.: 4869.94  
+##  Max.   :1.0000000   Max.   :2.000000   Max.   :0   Max.   :99707.83  
+##                                                                       
+##  adj_mod_basewgt       finalwgt            secu_p           sest      
+##  Min.   :    71.2   Min.   :   118.7   Min.   :1.000   Min.   : 1.00  
+##  1st Qu.:  2798.1   1st Qu.:  3841.4   1st Qu.:1.000   1st Qu.:25.00  
+##  Median :  4127.2   Median :  6256.6   Median :1.000   Median :45.00  
+##  Mean   :  5384.0   Mean   :  8196.4   Mean   :1.487   Mean   :44.08  
+##  3rd Qu.:  5795.7   3rd Qu.:  9432.4   3rd Qu.:2.000   3rd Qu.:65.00  
+##  Max.   :157143.7   Max.   :261880.0   Max.   :2.000   Max.   :84.00  
+##                                                                       
+##     cmintvw    
+##  Min.   :1225  
+##  1st Qu.:1231  
+##  Median :1233  
+##  Mean   :1233  
+##  3rd Qu.:1235  
+##  Max.   :1239  
+## </code></pre>
 <p>We can see a lot of missing values. We’ll clean the data for the columns that we want to analyze.</p>
 <div id="transformation" class="section level2">
 <h2>Transformation</h2>
@@ -668,7 +928,6 @@ femPreg2002 &lt;- read.fwf(&#39;~/Documents/CodeWork/ThinkStats2/code/2002FemPre
 <pre class="r"><code>femPreg2002 %&gt;%
   group_by(outcome) %&gt;%
   summarise(Total = length(outcome))</code></pre>
-<pre><code>## Warning: package &#39;bindrcpp&#39; was built under R version 3.4.4</code></pre>
 <pre><code>## # A tibble: 6 x 2
 ##   outcome Total
 ##     &lt;int&gt; &lt;int&gt;

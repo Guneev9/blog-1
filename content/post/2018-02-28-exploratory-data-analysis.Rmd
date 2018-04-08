@@ -19,12 +19,12 @@ We will use data collected by this survey to investigate whether first babies te
 The NSFG is a cross-sectional study, which means that it captures a snapshot of a group at a point in time. The most common alternative is a longitudinal study, which observes a group repeatedly over a period of time.
 The NSFG has been conducted seven times; each deployment is called a cycle. We will use data from Cycle 6, which was conducted from January 2002 to March 2003.
 
-```{r setup, include=FALSE, message=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r setup, include=FALSE, message=FALSE, echo=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE)
 ```
 
 ```{r}
-library(ggplot2)
+#library(ggplot2)
 library(extraDistr)
 library(tidyverse)
 #library(plotly)
@@ -125,7 +125,9 @@ femPreg2002 <- read.fwf('~/Documents/CodeWork/ThinkStats2/code/2002FemPreg.dat',
 
 Taking a look at the data
 ```{r}
-head(femPreg2002)
+#head(femPreg2002)
+femPreg2002 %>%
+  summary()
 ```
 
 We can see a lot of missing values. We'll clean the data for the columns that we want to analyze.
