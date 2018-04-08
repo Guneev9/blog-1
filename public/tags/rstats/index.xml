@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Rstats on krohitm&#39;s blog</title>
+    <title>Rstats on </title>
     <link>/tags/rstats/</link>
-    <description>Recent content in Rstats on krohitm&#39;s blog</description>
+    <description>Recent content in Rstats on </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 28 Feb 2018 00:00:00 +0000</lastBuildDate>
@@ -13,12 +13,11 @@
     
     <item>
       <title>Exploratory Data Analysis</title>
-      <link>/2018/02/28/exploratory-data-analysis/</link>
+      <link>/2018/02/exploratory-data-analysis/</link>
       <pubDate>Wed, 28 Feb 2018 00:00:00 +0000</pubDate>
       
-      <guid>/2018/02/28/exploratory-data-analysis/</guid>
-      <description>library(ggplot2) library(extraDistr) library(tidyverse) ## Loading tidyverse: tibble ## Loading tidyverse: tidyr ## Loading tidyverse: readr ## Loading tidyverse: purrr ## Loading tidyverse: dplyr ## Conflicts with tidy packages ---------------------------------------------- ## filter(): dplyr, stats ## lag(): dplyr, stats ## rdunif(): purrr, extraDistr #library(plotly) The data source is obtained from https://www.cdc.gov/nchs/nsfg/nsfg_cycle6.htm This contains fixed width files, and stata dictionaries consisting of columns for the data files
-#helper function to parse Stata dictionary dct.</description>
+      <guid>/2018/02/exploratory-data-analysis/</guid>
+      <description>library(ggplot2) library(extraDistr) library(tidyverse) ## ── Attaching packages ────────────────────────────────────────────────────────── tidyverse 1.2.1 ── ## ✔ tibble 1.4.2 ✔ purrr 0.2.4 ## ✔ tidyr 0.8.0 ✔ dplyr 0.7.4 ## ✔ readr 1.1.1 ✔ stringr 1.3.0 ## ✔ tibble 1.4.2 ✔ forcats 0.3.0 ## ── Conflicts ───────────────────────────────────────────────────────────── tidyverse_conflicts() ── ## ✖ dplyr::filter() masks stats::filter() ## ✖ dplyr::lag() masks stats::lag() ## ✖ purrr::rdunif() masks extraDistr::rdunif() ## ✖ dplyr::vars() masks ggplot2::vars() #library(plotly) The data source is obtained from https://www.</description>
     </item>
     
   </channel>

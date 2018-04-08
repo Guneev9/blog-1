@@ -74,15 +74,16 @@
       <pre class="r"><code>library(ggplot2)
 library(extraDistr)
 library(tidyverse)</code></pre>
-<pre><code>## Loading tidyverse: tibble
-## Loading tidyverse: tidyr
-## Loading tidyverse: readr
-## Loading tidyverse: purrr
-## Loading tidyverse: dplyr</code></pre>
-<pre><code>## Conflicts with tidy packages ----------------------------------------------</code></pre>
-<pre><code>## filter(): dplyr, stats
-## lag():    dplyr, stats
-## rdunif(): purrr, extraDistr</code></pre>
+<pre><code>## ── Attaching packages ────────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ✔ tibble  1.4.2     ✔ purrr   0.2.4
+## ✔ tidyr   0.8.0     ✔ dplyr   0.7.4
+## ✔ readr   1.1.1     ✔ stringr 1.3.0
+## ✔ tibble  1.4.2     ✔ forcats 0.3.0</code></pre>
+<pre><code>## ── Conflicts ───────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ✖ dplyr::filter() masks stats::filter()
+## ✖ dplyr::lag()    masks stats::lag()
+## ✖ purrr::rdunif() masks extraDistr::rdunif()
+## ✖ dplyr::vars()   masks ggplot2::vars()</code></pre>
 <pre class="r"><code>#library(plotly)</code></pre>
 <p>The data source is obtained from <a href="https://www.cdc.gov/nchs/nsfg/nsfg_cycle6.htm" class="uri">https://www.cdc.gov/nchs/nsfg/nsfg_cycle6.htm</a> This contains fixed width files, and stata dictionaries consisting of columns for the data files</p>
 <pre class="r"><code>#helper function to parse Stata dictionary
@@ -442,6 +443,7 @@ femPreg2002 &lt;- read.fwf(&#39;~/Documents/CodeWork/ThinkStats2/code/2002FemPre
 <pre class="r"><code>femPreg2002 %&gt;%
   group_by(outcome) %&gt;%
   summarise(Total = length(outcome))</code></pre>
+<pre><code>## Warning: package &#39;bindrcpp&#39; was built under R version 3.4.4</code></pre>
 <pre><code>## # A tibble: 6 x 2
 ##   outcome Total
 ##     &lt;int&gt; &lt;int&gt;

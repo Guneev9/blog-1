@@ -1,73 +1,221 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
-  <url>
-    <loc>/2018/02/28/exploratory-data-analysis/</loc>
-    <lastmod>2018-02-28T00:00:00+00:00</lastmod>
-  </url>
+    
+    
+    <url>
+    
+      <loc>/post/exploratory-data-analysis/</loc>
+      <lastmod>2018-02-28T00:00:00+00:00</lastmod>
+    </url>
+    
   
-  <url>
-    <loc>/2018/02/28/global-terrorism-analysis/</loc>
-    <lastmod>2018-02-28T00:00:00+00:00</lastmod>
-  </url>
+    
+    
+    <url>
+    
+      <loc>/post/global-terrorism-analysis/</loc>
+      <lastmod>2018-02-28T00:00:00+00:00</lastmod>
+    </url>
+    
   
-  <url>
-    <loc>/about/</loc>
-    <lastmod>2016-05-05T21:48:51-07:00</lastmod>
-  </url>
+    
+    
+    <url>
+    
+      <loc>/post/global-terrorism-analysis/</loc>
+      <lastmod>2018-02-28T00:00:00+00:00</lastmod>
+    </url>
+    
   
-  <url>
-    <loc>/categories/</loc>
-    <priority>0</priority>
-  </url>
+    
+    
+    <url>
+    
+      <loc>/talk/example-talk/</loc>
+      <lastmod>2017-01-01T00:00:00-05:00</lastmod>
+    </url>
+    
   
-  <url>
-    <loc>/tags/data-analysis/</loc>
-    <lastmod>2018-02-28T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
+    
+    
+    <url>
+    
+      <loc>/post/</loc>
+      <lastmod>2017-01-01T00:00:00-05:00</lastmod>
+    </url>
+    
   
-  <url>
-    <loc>/categories/data-analysis/</loc>
-    <lastmod>2018-02-28T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
+    
+    
+    <url>
+    
+      <loc>/tags/academic/</loc>
+      <lastmod>2017-01-01T00:00:00+00:00</lastmod>
+    </url>
+    
   
-  <url>
-    <loc>/post/</loc>
-    <lastmod>2018-02-28T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
+    
+    
+    <url>
+    
+      <loc>/publication/</loc>
+      <lastmod>2017-01-01T00:00:00+00:00</lastmod>
+    </url>
+    
   
-  <url>
-    <loc>/tags/rstats/</loc>
-    <lastmod>2018-02-28T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
+    
+    
+    <url>
+    
+      <loc>/talk/</loc>
+      <lastmod>2017-01-01T00:00:00+00:00</lastmod>
+    </url>
+    
   
-  <url>
-    <loc>/tags/statistics/</loc>
-    <lastmod>2018-02-28T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
+    
+    
+    <url>
+    
+      <loc>/project/deep-learning/</loc>
+      <lastmod>2016-04-27T00:00:00+00:00</lastmod>
+    </url>
+    
   
-  <url>
-    <loc>/tags/</loc>
-    <lastmod>2018-02-28T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
+    
+    
+    <url>
+    
+      <loc>/project/example-external-project/</loc>
+      <lastmod>2016-04-27T00:00:00+00:00</lastmod>
+    </url>
+    
   
-  <url>
-    <loc>/categories/terrorism/</loc>
-    <lastmod>2018-02-28T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
+    
+    
+    <url>
+    
+      <loc>/publication/person-re-identification/</loc>
+      <lastmod>2015-09-01T00:00:00+00:00</lastmod>
+    </url>
+    
   
-  <url>
-    <loc>/</loc>
-    <lastmod>2018-02-28T00:00:00+00:00</lastmod>
-    <priority>0</priority>
-  </url>
+    
+    
+    <url>
+    
+      <loc>/publication/clothing-search/</loc>
+      <lastmod>2013-07-01T00:00:00+00:00</lastmod>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/categories/</loc>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/tags/data-analysis/</loc>
+      <lastmod>2018-02-28T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/categories/data-analysis/</loc>
+      <lastmod>2018-02-28T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/tags/deep-learning/</loc>
+      <lastmod>2016-04-27T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/tags/demo/</loc>
+      <lastmod>2016-04-27T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/</loc>
+      <lastmod>2017-10-15T00:00:00-04:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/project/</loc>
+      <lastmod>2016-04-27T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/tags/rstats/</loc>
+      <lastmod>2018-02-28T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/tags/statistics/</loc>
+      <lastmod>2018-02-28T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/tags/</loc>
+      <lastmod>2017-01-01T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/categories/terrorism/</loc>
+      <lastmod>2018-02-28T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
   
 </urlset>

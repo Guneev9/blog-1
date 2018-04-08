@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme" content="hugo-academic">
+  <meta name="generator" content="Hugo 0.37" />
+  <meta name="author" content="Kumar Rohit Malhotra">
+
+  
+  
+  
+  
+    
+      
+    
+  
+  <meta name="description" content="knitr::opts_chunk$set(echo = TRUE)  library(ggplot2) library(extraDistr) library(tidyverse) #library(plotly)  The data source is obtained from https://www.cdc.gov/nchs/nsfg/nsfg_cycle6.htm This contains fixed width files, and stata dictionaries consisting of columns for the data files
+#helper function to parse Stata dictionary dct.parser &lt;- function(dct, includes = c(&quot;StartPos&quot;, &quot;StorageType&quot;, &quot;ColName&quot;, &quot;ColWidth&quot;, &quot;VarLabel&quot;), preview = FALSE) { temp &lt;- readLines(dct) temp &lt;- temp[grepl(&quot;_column&quot;, temp)] if (isTRUE(preview)) { head(temp) } else { possibilities &lt;- c(&quot;StartPos&quot;, &quot;StorageType&quot;, &quot;ColName&quot;, &quot;ColWidth&quot;, &quot;VarLabel&quot;) classes &lt;- c(&quot;numeric&quot;, &quot;character&quot;, &quot; character&quot;, &quot;numeric&quot;, &quot;character&quot;) pattern &lt;- c(StartPos = &quot;.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="/post/exploratory-data-analysis/">
+
+  
+
+
+  
+
+  
+  
+  <meta name="theme-color" content="#0095eb">
+  
+  
+  
+  
+    
+  
+  
+    
+    
+      
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+      
+    
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha512-6MXa8B6uaO18Hid6blRMetEIoPqHf7Ux1tnyIQdpt9qI5OACx7C+O3IVTr98vwGnlcg0LOLa02i9Y1HpVhlfiw==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.1/css/academicons.min.css" integrity="sha512-NThgw3XKQ1absAahW6to7Ey42uycrVvfNfyjqcFNgCmOCQ5AR4AO0SiXrN+8ZtYeappp56lk1WtvjVmEa+VR6A==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+  
+  
+  
+  
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Montserrat:400,700%7cRoboto:400,400italic,700%7cRoboto&#43;Mono">
+  
+  <link rel="stylesheet" href="/styles.css">
+  
+
+  
+    <script>
+      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+      ga('create', 'UA-117115991-1', 'auto');
+      ga('require', 'eventTracker');
+      ga('require', 'outboundLinkTracker');
+      ga('require', 'urlChangeTracker');
+      ga('send', 'pageview');
+    </script>
+    <script async src="//www.google-analytics.com/analytics.js"></script>
+    
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/autotrack/2.4.1/autotrack.js" integrity="sha512-HUmooslVKj4m6OBu0OgzjXXr+QuFYy/k7eLI5jdeEy/F4RSgMn6XRWRGkFi5IFaFgy7uFTkegp3Z0XnJf3Jq+g==" crossorigin="anonymous"></script>
+    
+  
+
+  
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Kumar&#39;s blog">
+  <link rel="feed" href="/index.xml" type="application/rss+xml" title="Kumar&#39;s blog">
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="/post/exploratory-data-analysis/">
+
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="twitter:site" content="@krohitm">
+  <meta property="twitter:creator" content="@krohitm">
+  
+  <meta property="og:site_name" content="Kumar&#39;s blog">
+  <meta property="og:url" content="/post/exploratory-data-analysis/">
+  <meta property="og:title" content="Exploratory Data Analysis | Kumar&#39;s blog">
+  <meta property="og:description" content="knitr::opts_chunk$set(echo = TRUE)  library(ggplot2) library(extraDistr) library(tidyverse) #library(plotly)  The data source is obtained from https://www.cdc.gov/nchs/nsfg/nsfg_cycle6.htm This contains fixed width files, and stata dictionaries consisting of columns for the data files
+#helper function to parse Stata dictionary dct.parser &lt;- function(dct, includes = c(&quot;StartPos&quot;, &quot;StorageType&quot;, &quot;ColName&quot;, &quot;ColWidth&quot;, &quot;VarLabel&quot;), preview = FALSE) { temp &lt;- readLines(dct) temp &lt;- temp[grepl(&quot;_column&quot;, temp)] if (isTRUE(preview)) { head(temp) } else { possibilities &lt;- c(&quot;StartPos&quot;, &quot;StorageType&quot;, &quot;ColName&quot;, &quot;ColWidth&quot;, &quot;VarLabel&quot;) classes &lt;- c(&quot;numeric&quot;, &quot;character&quot;, &quot; character&quot;, &quot;numeric&quot;, &quot;character&quot;) pattern &lt;- c(StartPos = &quot;.">
+  <meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2018-02-28T00:00:00&#43;00:00">
+  
+  <meta property="article:modified_time" content="2018-02-28T00:00:00&#43;00:00">
+  
+
+  
+
+  <title>Exploratory Data Analysis | Kumar&#39;s blog</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#toc" data-offset="71" >
+
+<nav class="navbar navbar-default navbar-fixed-top" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="navbar-header">
+      
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target=".navbar-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+      <a class="navbar-brand" href="/">Kumar&#39;s blog</a>
+    </div>
+
+    
+    <div class="collapse navbar-collapse">
+
+      
+      
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+        
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#about">
+            
+            <span>Home</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+        
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#posts">
+            
+            <span>Posts</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+        
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#projects">
+            
+            <span>Projects</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+        
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#contact">
+            
+            <span>Contact</span>
+            
+          </a>
+        </li>
+
+        
+        
+      
+
+      
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+  <div class="article-container">
+    <h1 itemprop="name">Exploratory Data Analysis</h1>
+
+    
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    
+    <time datetime="2018-02-28 00:00:00 &#43;0000 UTC" itemprop="datePublished dateModified">
+      Feb 28, 2018
+    </time>
+  </span>
+  <span itemscope itemprop="author publisher" itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Kumar Rohit Malhotra">
+  </span>
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    5 min read
+  </span>
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <a href="/post/exploratory-data-analysis/#disqus_thread"></a>
+  
+
+  
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fa fa-folder"></i>
+    
+    <a href="/categories/data-analysis">data analysis</a
+    >
+    
+  </span>
+  
+  
+
+  
+  
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=Exploratory%20Data%20Analysis&amp;url=%2fpost%2fexploratory-data-analysis%2f"
+         target="_blank" rel="noopener">
+        <i class="fa fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=%2fpost%2fexploratory-data-analysis%2f"
+         target="_blank" rel="noopener">
+        <i class="fa fa-facebook"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=%2fpost%2fexploratory-data-analysis%2f&amp;title=Exploratory%20Data%20Analysis"
+         target="_blank" rel="noopener">
+        <i class="fa fa-linkedin"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=%2fpost%2fexploratory-data-analysis%2f&amp;title=Exploratory%20Data%20Analysis"
+         target="_blank" rel="noopener">
+        <i class="fa fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=Exploratory%20Data%20Analysis&amp;body=%2fpost%2fexploratory-data-analysis%2f">
+        <i class="fa fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+
+    <div class="article-style" itemprop="articleBody">
+      
+
+<pre><code class="language-r setup, include=FALSE, message=FALSE">knitr::opts_chunk$set(echo = TRUE)
+</code></pre>
+
+<pre><code class="language-r">library(ggplot2)
+library(extraDistr)
+library(tidyverse)
+#library(plotly)
+</code></pre>
+
+<p>The data source is obtained from <a href="https://www.cdc.gov/nchs/nsfg/nsfg_cycle6.htm" target="_blank">https://www.cdc.gov/nchs/nsfg/nsfg_cycle6.htm</a>
+This contains fixed width files, and stata dictionaries consisting of columns for the data files</p>
+
+<pre><code class="language-r">#helper function to parse Stata dictionary
+dct.parser &lt;- function(dct, includes = c(&quot;StartPos&quot;, &quot;StorageType&quot;, &quot;ColName&quot;, 
+                                         &quot;ColWidth&quot;, &quot;VarLabel&quot;),
+                       preview = FALSE) {
+  temp &lt;- readLines(dct)
+  temp &lt;- temp[grepl(&quot;_column&quot;, temp)]
+  
+  if (isTRUE(preview)) {
+    head(temp)
+  } else {
+    possibilities &lt;- c(&quot;StartPos&quot;, &quot;StorageType&quot;, 
+                       &quot;ColName&quot;, &quot;ColWidth&quot;, &quot;VarLabel&quot;)
+    classes &lt;- c(&quot;numeric&quot;, &quot;character&quot;, &quot;
+                 character&quot;, &quot;numeric&quot;, &quot;character&quot;)
+    pattern &lt;- c(StartPos = &quot;.*\\(([0-9 ]+)\\)&quot;,
+                 StorageType = &quot;(byte|int|long|float|double|str[0-9]+)&quot;,
+                 ColName = &quot;(.*)&quot;,
+                 ColWidth = &quot;%([0-9.]+)[a-z]+&quot;,
+                 VarLabel = &quot;(.*)&quot;)
+    
+    mymatch &lt;- match(includes, possibilities)
+    
+    pattern &lt;- paste(paste(pattern[mymatch], 
+                           collapse =&quot;\\s+&quot;), &quot;$&quot;, sep = &quot;&quot;)    
+    
+    metadata &lt;- setNames(lapply(seq_along(mymatch), function(x) {
+      out &lt;- gsub(pattern, paste(&quot;\\&quot;, x, sep = &quot;&quot;), temp)
+      out &lt;- gsub(&quot;^\\s+|\\s+$&quot;, &quot;&quot;, out)
+      out &lt;- gsub('\&quot;', &quot;&quot;, out, fixed = TRUE)
+      class(out) &lt;- classes[mymatch][x] ; out }), 
+                         possibilities[mymatch])
+    
+    implicit.dec &lt;- grepl(&quot;\\.[1-9]&quot;, metadata[[&quot;ColWidth&quot;]])
+    if (any(implicit.dec)) {
+      message(&quot;Some variables may need to be corrected for implicit decimals. 
+              Try 'MESSAGES(output_from_dct.parser)' for more details.&quot;)
+      metadata[[&quot;Decimals&quot;]] &lt;- rep(NA, length(metadata[[&quot;ColWidth&quot;]]))
+      metadata[[&quot;Decimals&quot;]][implicit.dec] &lt;-
+        as.numeric(gsub(&quot;[0-9]+\\.&quot;, &quot;&quot;, 
+                        metadata[[&quot;ColWidth&quot;]][implicit.dec]))
+      metadata[[&quot;ColWidth&quot;]] &lt;- floor(as.numeric(metadata[[&quot;ColWidth&quot;]]))
+    }
+    
+    metadata[[&quot;ColName&quot;]] &lt;- make.names(
+      gsub(&quot;\\s&quot;, &quot;&quot;, metadata[[&quot;ColName&quot;]]))
+    
+    metadata &lt;- data.frame(metadata)
+    
+    if (&quot;StorageType&quot; %in% includes) {
+      metadata &lt;- 
+        within(metadata, {
+          colClasses &lt;- ifelse(
+            StorageType == &quot;byte&quot;, &quot;raw&quot;,
+            ifelse(StorageType %in% c(&quot;double&quot;, &quot;long&quot;, &quot;float&quot;), 
+                   &quot;numeric&quot;, 
+                   ifelse(StorageType == &quot;int&quot;, &quot;integer&quot;,
+                          ifelse(substr(StorageType, 1, 3) == &quot;str&quot;, 
+                                 &quot;character&quot;, NA))))
+        })
+    }
+    if (any(implicit.dec)) {
+      attr(metadata, &quot;MESSAGE&quot;) &lt;- c(sprintf(&quot;%s&quot;, paste(
+        &quot;Some variables might need to be corrected for implicit decimals. 
+        A variable, 'Decimals', has been created in the metadata that
+        indicates the number of decimal places the variable should hold. 
+        To correct the output, try (where your stored output is 'mydf'): 
+        
+        lapply(seq_along(mydf[!is.na(Decimals)]), 
+        function(x) mydf[!is.na(Decimals)][x]
+        / 10^Decimals[!is.na(Decimals)][x])
+        
+        The variables in question are:
+        &quot;)), sprintf(&quot;%s&quot;, metadata[[&quot;ColName&quot;]][!is.na(metadata[[&quot;Decimals&quot;]])]))
+            class(attr(metadata, &quot;MESSAGE&quot;)) &lt;- c(
+                &quot;MESSAGE&quot;, class(attr(metadata, &quot;MESSAGE&quot;)))
+        }
+        attr(metadata, &quot;original.dictionary&quot;) &lt;- 
+            c(dct, basename(dct))
+        metadata
+    }
+}
+</code></pre>
+
+<p>We can read the coulmns from 2002FemPreg.dct and use those columns to import the data from the fixed width file 2002FemPreg.dat</p>
+
+<pre><code class="language-r">femPreg2002columns &lt;- dct.parser('~/Documents/CodeWork/ThinkStats2/code/2002FemPreg.dct')
+femPreg2002 &lt;- read.fwf('~/Documents/CodeWork/ThinkStats2/code/2002FemPreg.dat', widths = femPreg2002columns$ColWidth, col.names = femPreg2002columns$ColName)
+</code></pre>
+
+<p>Taking a look at the data</p>
+
+<pre><code class="language-r">head(femPreg2002)
+</code></pre>
+
+<p>We can see a lot of missing values. We&rsquo;ll clean the data for the columns that we want to analyze.</p>
+
+<h2 id="transformation">Transformation</h2>
+
+<ol>
+<li><p>agepreg contains the mother&rsquo;s age at the end of the pregnancy. In the data file, agepreg is encoded as an integer number of centiyears. So the first line divides each element of agepreg by 100, yielding a floating-point value in years.</p></li>
+
+<li><p>birthwgt_lb and birthwgt_oz contain the weight of the baby, in pounds and ounces, for pregnancies that end in live birth. In addition it uses several special codes:
+97 NOT ASCERTAINED
+98 REFUSED
+99 DONT KNOW
+Special values encoded as numbers are dangerous because if they are not
+handled properly, they can generate bogus results, like a 99-pound baby. Assuming that a baby can&rsquo;t be generally more than 20 lb at birth, we will replace all other values with NA, as they are NOT ASCERTAINED(97),  REFUSED(98), DONT KNOW(99), or invalid values.
+Similarly, the age of father has these similar special codes, which we will replace by NA
+```{r}
+cleanFemPreg &lt;- function(data){</p>
+
+<h1 id="mother-s-age-is-encoded-in-centiyears-convert-to-years">mother&rsquo;s age is encoded in centiyears; convert to years</h1>
+
+<p>data[&lsquo;agepreg&rsquo;] &lt;-  data[&lsquo;agepreg&rsquo;]/100.0</p></li>
+</ol>
+
+<p># birthwgt_lb contains at least one bogus value (51 lbs)
+  # replace with NaN
+  data$birthwgt_lb[data$birthwgt_lb &gt; 20] &lt;- NA</p>
+
+<p># replace &lsquo;not ascertained&rsquo;, &lsquo;refused&rsquo;, &lsquo;don&rsquo;t know&rsquo; with NA
+  na_vals = c(97, 98, 99)
+  data$birthwgt_oz[data$birthwgt_oz %in% na_vals] &lt;- NA
+  data$hpagelb[data$hpagelb %in% na_vals] &lt;- NA</p>
+
+<p># birthweight is stored in two columns, lbs and oz.
+  # convert to a single column in lb
+  data[&lsquo;totalwgt_lb&rsquo;] &lt;- data$birthwgt_lb + (data$birthwgt_oz / 16.0)</p>
+
+<p>return (data)
+}</p>
+
+<pre><code>
+```{r}
+femPregCleaned &lt;- cleanFemPreg(femPreg2002)
+</code></pre>
+
+<h3 id="validation">Validation</h3>
+
+<p>One way to validate data is to compute basic statistics and compare them with published results. For example, the NSFG codebook includes tables that summarize each variable. Here is the table for outcome, which encodes the outcome of each pregnancy:
+value     label         Total
+1         LIVE BIRTH        9148
+2         INDUCED ABORTION  1862
+3         STILLBIRTH        120
+4         MISCARRIAGE       1921
+5         ECTOPIC PREGNANCY 190
+6         CURRENT PREGNANCY 352</p>
+
+<pre><code class="language-r">femPreg2002 %&gt;%
+  group_by(outcome) %&gt;%
+  summarise(Total = length(outcome))
+</code></pre>
+
+<p>Comparing the results with the published table, it looks like the values in
+outcome are correct. Similarly, here is the published table for birthwgt_lb
+value     label             Total
+.         INAPPLICABLE      4449
+0-5       UNDER 6 POUNDS    1125
+6         6 POUNDS          2223
+7         7 POUNDS          3049
+8         8 POUNDS          1889
+9-95      9 POUNDS OR MORE  799</p>
+
+<pre><code class="language-r">femPreg2002 %&gt;%
+  group_by(birthwgt_lb) %&gt;%
+  summarise(Total = length(birthwgt_lb))
+</code></pre>
+
+<p>The counts for 6, 7, and 8 pounds check out, and if you add up the counts
+for 0-5 and 9-95, they check out, too. But if you look more closely, you will
+notice one value that has to be an error, a 51 pound baby! This has been cleaned in the cleanFemPreg function.</p>
+
+<h3 id="interpretation">Interpretation</h3>
+
+<p>To work with data effectively, you have to think on two levels at the same time: the level of statistics and the level of context.
+As an example, let&rsquo;s look at the sequence of outcomes for a few respondents.
+This example looks up one respondent and prints a list of outcomes for her
+pregnancies:</p>
+
+<pre><code class="language-r">CASEID = 10229
+femPregCleaned %&gt;%
+  filter(caseid==CASEID) %&gt;%
+  .$outcome
+</code></pre>
+
+<p>The outcome code 1 indicates a live birth. Code 4 indicates a miscarriage; that is, a pregnancy that ended spontaneously, usually with no known medical cause.</p>
+
+<p>Statistically this respondent is not unusual. Miscarriages are common and there are other respondents who reported as many or more. But remembering the context, this data tells the story of a woman who was pregnant six times, each time ending in miscarriage. Her seventh and most recent pregnancy ended in a live birth. If we consider this data with empathy,
+it is natural to be moved by the story it tells.</p>
+
+<p>Each record in the NSFG dataset represents a person who provided honest answers to many personal and difficult questions. We can use this data to answer statistical questions about family life, reproduction, and health. At the same time, we have an obligation to consider the people represented by the data, and to afford them respect and gratitude.</p>
+
+    </div>
+
+    
+
+
+<div class="article-tags">
+  
+  <a class="btn btn-primary btn-outline" href="/tags/data-analysis">data analysis</a>
+  
+  <a class="btn btn-primary btn-outline" href="/tags/rstats">rstats</a>
+  
+  <a class="btn btn-primary btn-outline" href="/tags/statistics">statistics</a>
+  
+</div>
+
+
+
+
+    
+    
+
+    
+
+    
+<section id="comments">
+  <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "krohitm" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</section>
+
+
+
+  </div>
+</article>
+
+<footer class="site-footer">
+  <div class="container">
+    <p class="powered-by">
+
+      &copy; 2018 &middot; 
+
+      Powered by the
+      <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+      <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+      <span class="pull-right" aria-hidden="true">
+        <a href="#" id="back_to_top">
+          <span class="button_icon">
+            <i class="fa fa-chevron-up fa-2x"></i>
+          </span>
+        </a>
+      </span>
+
+    </p>
+  </div>
+</footer>
+
+
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close btn-large" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Cite</h4>
+      </div>
+      <div>
+        <pre><code class="modal-body tex"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-primary btn-outline js-copy-cite" href="#" target="_blank">
+          <i class="fa fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-primary btn-outline js-download-cite" href="#" target="_blank">
+          <i class="fa fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+    
+    <script id="dsq-count-scr" src="//krohitm.disqus.com/count.js" async></script>
+    
+
+    
+
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" integrity="sha512-3P8rXCuGJdNZOnUx/03c1jOTnMn3rP63nBip5gOP2qmUh5YAdVAvFZ1E+QLZZbC1rtMrQb+mah3AfYW11RUrWA==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.3/imagesloaded.pkgd.min.js" integrity="sha512-umsR78NN0D23AzgoZ11K7raBD+R6hqKojyBZs1w8WvYlsI+QuKRGBx3LFCwhatzBunCjDuJpDHwxD13sLMbpRA==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha512-iztkobsvnjKfAtTNdHkGVjAYTrrtlC7mGp/54c40wowO7LhURYl3gVzzcEqGl/qKXQltJ2HwMrdLcNUdo+N/RQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js" integrity="sha512-VDBOIlDbuC4VWxGJNmuFRQ0Li0SKkDpmGyuhAG5LTDLd/dJ/S0WMVxriR2Y+CyPL5gzjpN4f/6iqWVBJlht0tQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+    
+    
+    <script src="/js/hugo-academic.js"></script>
+    
+
+    
+    
+      
+      
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+      
+
+      
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/R.min.js"></script>
+      
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/python.min.js"></script>
+      
+
+      
+
+      <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+
+  </body>
+</html>
+
