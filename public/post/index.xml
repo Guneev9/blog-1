@@ -18,7 +18,8 @@
       <pubDate>Wed, 28 Feb 2018 00:00:00 +0000</pubDate>
       
       <guid>/post/exploratory-data-analysis/</guid>
-      <description>Since 1973 the U.S. Centers for Disease Control and Prevention (CDC) have conducted the National Survey of Family Growth (NSFG), which is intended to gather information on family life, marriage and divorce, pregnancy, infertility, use of contraception, and men’s and women’s health. The survey results are used to plan health services and health education programs, and to do statistical studies of families, fertility, and health.&amp;quot; See http://cdc.gov/nchs/nsfg.htm. We will use data collected by this survey to investigate whether first babies tend to come late, and other questions.</description>
+      <description>New Oxford American Dictionary defines exploration as “the action of traveling in or through an unfamiliar area in order to learn about it.” Analysis is defined as “detailed examination of the elements or structure of something, typically as a basis for discussion or interpretation.” This makes Exploratory data analysis an act of travelling through unfamiliar data for a detailed examination of its structure, for further discussion or interpretation.
+Upon reading the book “Think Stats” by Allen Downey, I loved the approach he uses for data exploration he has given in the book.</description>
     </item>
     
   </channel>

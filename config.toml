@@ -51,14 +51,14 @@ defaultContentLanguageInSubdir = false
 
   # Your details.
   name = "Kumar Rohit Malhotra"
-  role = "Research Assistant at University of Florida"
+  role = "Research Assistant at University of Florida, 2017-18"
 
   # Organizations/Affiliations.
   #   Separate multiple entries with a comma, using the form: `[ {name="Org1", url=""}, {name="Org2", url=""} ]`.
   organizations = [ { name = "Intelligent Health Lab", url = "http://www.bme.ufl.edu/labs/rashidi/" } ]
 
   gravatar = false  # Get your avatar from Gravatar.com? (true/false)
-  avatar = "portrait.png"  # Specify an avatar image (in `static/img/` folder) or delete value to disable avatar.
+  avatar = "IMG_5019.png"  # Specify an avatar image (in `static/img/` folder) or delete value to disable avatar.
   email = "krohitm@gmail.com"
   address = "NEB Room 481, University of Florida, Gainesville FL, 32608, USA"
   #office_hours = "Monday 10:00 to 13:00 or email for appointment"
@@ -260,10 +260,10 @@ defaultContentLanguageInSubdir = false
   url = "#posts"
   weight = 2
 
-#[[menu.main]]
-#  name = "Projects"
-#  url = "#projects"
-#  weight = 3
+[[menu.main]]
+  name = "Projects"
+  url = "#projects"
+  weight = 3
 
 #[[menu.main]]
 #  name = "Publications"

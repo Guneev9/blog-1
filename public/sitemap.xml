@@ -5,6 +5,15 @@
     
     <url>
     
+      <loc>/project/twitter-simulator/</loc>
+      <lastmod>2018-04-09T00:00:00+00:00</lastmod>
+    </url>
+    
+  
+    
+    
+    <url>
+    
       <loc>/post/exploratory-data-analysis/</loc>
       <lastmod>2018-02-28T00:00:00+00:00</lastmod>
     </url>
@@ -86,7 +95,7 @@
     
     <url>
     
-      <loc>/categories/data-analysis/</loc>
+      <loc>/tags/data-analysis/</loc>
       <lastmod>2018-02-28T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
@@ -96,7 +105,7 @@
     
     <url>
     
-      <loc>/tags/data-analysis/</loc>
+      <loc>/categories/data-analysis/</loc>
       <lastmod>2018-02-28T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
@@ -108,6 +117,36 @@
     
       <loc>/</loc>
       <lastmod>2017-10-15T00:00:00-04:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/tags/distributed-systems/</loc>
+      <lastmod>2018-04-09T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/tags/elixir/</loc>
+      <lastmod>2018-04-09T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/project/</loc>
+      <lastmod>2018-04-09T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     

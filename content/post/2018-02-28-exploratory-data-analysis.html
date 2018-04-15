@@ -16,7 +16,25 @@ output:
 
 
 
-<p>Since 1973 the U.S. Centers for Disease Control and Prevention (CDC) have conducted the National Survey of Family Growth (NSFG), which is intended to gather information on family life, marriage and divorce, pregnancy, infertility, use of contraception, and men’s and women’s health. The survey results are used to plan health services and health education programs, and to do statistical studies of families, fertility, and health.&quot; See <a href="http://cdc.gov/nchs/nsfg.htm" class="uri">http://cdc.gov/nchs/nsfg.htm</a>. We will use data collected by this survey to investigate whether first babies tend to come late, and other questions. In order to use this data effectively, we have to understand the design of the study. The NSFG is a cross-sectional study, which means that it captures a snapshot of a group at a point in time. The most common alternative is a longitudinal study, which observes a group repeatedly over a period of time. The NSFG has been conducted seven times; each deployment is called a cycle. We will use data from Cycle 6, which was conducted from January 2002 to March 2003.</p>
+<p>New Oxford American Dictionary defines exploration as “the action of traveling in or through an unfamiliar area in order to learn about it.” Analysis is defined as “detailed examination of the elements or structure of something, typically as a basis for discussion or interpretation.” This makes Exploratory data analysis an act of travelling through unfamiliar data for a detailed examination of its structure, for further discussion or interpretation.</p>
+<p>Upon reading the book “Think Stats” by Allen Downey, I loved the approach he uses for data exploration he has given in the book. This post and the rest in the series are highly inspired by the book, and uses the approaches and the datasets presented in the book.</p>
+<p>I have used RMarkdown to write the post,including the code, trying to stick mostly to tidyverse. The goal of this post is to reproduce the work in the book, but in R.</p>
+<p>Let’s start with an example. Your friend rated a movie a 4 star on a scale of a 10, 10 being the highest. Another user rated the movie 3 star on a similar scale. You might start thinking of skipping the movie. However, this conclusion fails because of certain reasons:</p>
+<ul>
+<li>You have only two observations to base your conclusion on. We might need more ratings to conclude if the movie is actually that bad.</li>
+<li>Selection Bias: People who gave a critique on the movie might be speaking up because they particularly hated the movie (and really want to vent it out!), while people who found the movie to be good or even okay didn’t care much to speak about it. This is called <strong>Selection Bias</strong>.</li>
+<li>Someone might have a preexisting belief that a movie won’t be good and upon its release might rate it low because of that belief. Someone who would have been loved the trailer may have a given high rating to the movie, even if thte movie might have actually not been good. This is called <strong>Confirmation Bias</strong>.</li>
+</ul>
+<p>In order to have more reliable conclusions, we need to follow a statistical approach, which includes:</p>
+<ul>
+<li>Data Collection:</li>
+<li>Descriptive Statistics</li>
+<li>Exploratory data analysis</li>
+<li>Estimation</li>
+<li>Hypothesis Testing</li>
+</ul>
+<p>quarrel with a local store cashier, and tells you how horrible the store is. Would at a local store, since she and tell you to stay away from itWhen someone asks you to give an estimate, you are most likely to make a guess upon that. (You caught my guess in that statement, didn’t you?). You would have heard of someone However, real world decisions can’t be simply made on guess or even an educated guess. The reliability of such an estimate may be questionable and hence, better methods of estimation need to be used.</p>
+<p>rn (CDC) have conducted the National Survey of Family Growth (NSFG), which is intended to gather information on family life, marriage and divorce, pregnancy, infertility, use of contraception, and men’s and women’s health. The survey results are used to plan health services and health education programs, and to do statistical studies of families, fertility, and health.&quot; See <a href="http://cdc.gov/nchs/nsfg.htm" class="uri">http://cdc.gov/nchs/nsfg.htm</a>. We will use data collected by this survey to investigate whether first babies tend to come late, and other questions. In order to use this data effectively, we have to understand the design of the study. The NSFG is a cross-sectional study, which means that it captures a snapshot of a group at a point in time. The most common alternative is a longitudinal study, which observes a group repeatedly over a period of time. The NSFG has been conducted seven times; each deployment is called a cycle. We will use data from Cycle 6, which was conducted from January 2002 to March 2003.</p>
 <pre class="r"><code>#library(ggplot2)
 library(extraDistr)
 library(tidyverse)</code></pre>

@@ -10,9 +10,9 @@ weight = 5
 # List your academic interests.
 [interests]
   interests = [
-    "Data Analysis",
-    "Machine Learning",
-    "Distributed Systems"
+    "Data Science",
+    "Distributed Systems",
+    "Reading"
   ]
 
 # List your qualifications (such as academic degrees).
@@ -30,5 +30,9 @@ weight = 5
 
 # Biography
 
-Kumar Rohit Malhotra is a graduate student at University of Florida. He is currently working as a machine learing research assistant at the Intelligent Health Lab at University of Florida. He has a prior experience of two years in business intelligence, developing ETL solutions for major clients while working for TEKsystems.
+Kumar is a data enthusiast who finds immense pleasure in analysing the hidden details in layers of data. Knowing that there is no one way of approaching a challenge, he likes viewing a problem from different perspectives yet trying to keep it as simple as possible.
+
+As a machine learing research assistant, Kumar works on tackling data challenges from different domains like activity recognition of ICU patients, or network analysis of healthcare staff to find relations with surgery outcomes. He has a prior experience of two years in business intelligence, developing ETL solutions and business reports for major clients like Canon Europe while working for TEKsystems.
+
+When he is not working, Kumar likes to read, loves to exercise and play video games. He loves meeting new people and learning new things, so feel free to say hello.
  

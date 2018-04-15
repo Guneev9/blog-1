@@ -11,12 +11,102 @@
     <atom:link href="/" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>Twitter Simulator</title>
+      <link>/project/twitter-simulator/</link>
+      <pubDate>Mon, 09 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/project/twitter-simulator/</guid>
+      <description>
+
+&lt;p&gt;Link to demo video: &lt;a href=&#34;https://youtu.be/XlY2eoI5o-8&#34; target=&#34;_blank&#34;&gt;https://youtu.be/XlY2eoI5o-8&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Part 1 of this project can be seen at &lt;a href=&#34;https://github.com/adityavhegde/Twitter-Simulator&#34; target=&#34;_blank&#34;&gt;https://github.com/adityavhegde/Twitter-Simulator&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The part 1 of our project had all the functionalities working. In part 2 we have used the exact same server that acts as an API to the Phoenix channels (check architecture section for details). This Server that acts as API can handle all the following:&lt;/p&gt;
+
+&lt;p&gt;Tweeting to followers
+Searching tweets - tweets, tweets with hashtags, tweets with mentions
+Retweet a tweet that a user receives
+We have broken down the implementation into two parts:&lt;/p&gt;
+
+&lt;p&gt;A few simple clients, that when connected to localhost, make a socket connection to the server.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Simulator&lt;/strong&gt;: A socket.js file that opens 1000 websocket connections to the server and does the job of simulating tweets, retweets and the various searches.
+Simulator:&lt;/p&gt;
+
+&lt;p&gt;Simulator runs through the sockets in a loop. That does not mean that only one socket is occupied at a time. The server actors for tweets, retweets, search are constantly running in the background and pushing payloads to active sockets. Thus, our simulation is creating sockets which are constantly active, which is also what we are trying to achieve in our simulation. The simulator opens 1000 websockets to the server, each as a new user. These users are then registered, and are given subscribers according to zipf distribution, as in part 1. After this, each of these users send tweets, search for tweets, search for hashtags, and search for mentions, choosing one of these behaviors, randomly. This cycle runs infinitely for each user/websocket.&lt;/p&gt;
+
+&lt;h4 id=&#34;client-side&#34;&gt;Client Side:&lt;/h4&gt;
+
+&lt;p&gt;The server is accessed by running localhost:4000 in the browser. This leads to creation of a websocket, which is basically a new user in our case. A new user can give its username(a new one), subscribe to another user, send tweets, query for its mentions, search for hashtags, query for tweets of users it has subscribed to, and retweet the tweets it can see in its feed. These features can be seen in Fig. 1. An example of application of these features can be seen in Fig. 2.&lt;/p&gt;
+
+&lt;p&gt;Fig. 1: Features available to the user. The user can enter a new username, send tweets, subscribe to users, search for tweets of users subscribed to, search for hashtags, search for its mentions, and retweet a tweet in its feed&lt;/p&gt;
+
+&lt;p&gt;Fig.2: The new user has given its username as aditya and subscribed to user rohit. It receives tweets by user rohit (hello world!), can retweet, gets results for query for tweets of followed users, gets tweet when mentioned, gets search results for mentions, and gets search results for hashtags(#wow).&lt;/p&gt;
+
+&lt;h4 id=&#34;running-this-project&#34;&gt;Running this project&lt;/h4&gt;
+
+&lt;p&gt;Note: please hard reload web page or turn of browser Javascript caching for changes to be visible&lt;/p&gt;
+
+&lt;h4 id=&#34;running-simulator&#34;&gt;Running Simulator:&lt;/h4&gt;
+
+&lt;p&gt;Go to assets &amp;gt; js &amp;gt; app.js
+At the bottom, comment the line import socket from &amp;ldquo;./single_socket&amp;rdquo; , and uncomment the line import socket from &amp;ldquo;./socket&amp;rdquo;. Continue if already so.
+Currently, 1000 websockets have been setup to run. To change the number of websockets, go to assets &amp;gt; js &amp;gt; socket.js. Go to line 13(let maxClients = 1000) and change the number to desired number of websockets. If you don’t want to change the number of websockets, skip this step.
+From terminal, run the command mix phx.server. Once the files have compiled, go to next step.
+Open a browser and run localhost:4000. This will start the given number of websockets in point &amp;copy;.&lt;/p&gt;
+
+&lt;h4 id=&#34;running-individual-client&#34;&gt;Running Individual client:&lt;/h4&gt;
+
+&lt;p&gt;Go to assets &amp;gt; js &amp;gt;app.js
+At the bottom, comment the line import socket from &amp;ldquo;./socket&amp;rdquo; , and uncomment the line import socket from &amp;ldquo;./single_socket&amp;rdquo;. Continue if already so.
+From terminal, run the command mix phx.server. Once the files have compiled, go to next step.
+Open a browser and run localhost:4000. You can open multiple clients by opening multiple webpages for the given server.
+Once the webpage opens, give a username to the new user.
+If you have opened multiple clients and assigned usernames to them, you can ask a user to subscribe to some existing user by entering the username of that user in the enter user to subscribe box, and press enter.
+You can type a tweet in send tweet box, and press enter to send a tweet. You can mention existing users in these tweets, and any hashtags that you want.
+When you get a tweet in your feed, you can retweet it by clicking the button retweet under that tweet. The retweeted tweet can be seen in the feed of your followers.
+You can query for tweets of users you have subscribed to, by clicking the search tweets you are subscribed to button.
+You can query for your mentions by clicking the search your mentions button.
+You can search for hashtags by entering a hashtag, with the #symbol, in the search hashtag box, and press enter.
+You can clear the screen by clicking the clear screen button.
+Performance with Web Sockets&lt;/p&gt;
+
+&lt;p&gt;How many sockets ? 1000 We connected a maximum of 1000 sockets to the server. Additionally, we were also able to run our simulations on these sockets.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Browser&lt;/strong&gt;: Safari, Chrome (limits max sockets to 250)&lt;/p&gt;
+
+&lt;h4 id=&#34;json-based-api&#34;&gt;JSON Based API:&lt;/h4&gt;
+
+&lt;p&gt;This is not really needed since Phoenix does this for us implicitly. There are two kinds of communication: Client to Server: While sending this data, we make sure it is in the JSON format Server to Client: For Phoenix to send payload to client, we need to enclose it in a map, which is implicitly converted by Phoenix in a JSON object and sent to the client&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Exploratory Data Analysis</title>
       <link>/post/exploratory-data-analysis/</link>
       <pubDate>Wed, 28 Feb 2018 00:00:00 +0000</pubDate>
       
       <guid>/post/exploratory-data-analysis/</guid>
-      <description>&lt;p&gt;Since 1973 the U.S. Centers for Disease Control and Prevention (CDC) have conducted the National Survey of Family Growth (NSFG), which is intended to gather information on family life, marriage and divorce, pregnancy, infertility, use of contraception, and men’s and women’s health. The survey results are used to plan health services and health education programs, and to do statistical studies of families, fertility, and health.&amp;quot; See &lt;a href=&#34;http://cdc.gov/nchs/nsfg.htm&#34; class=&#34;uri&#34;&gt;http://cdc.gov/nchs/nsfg.htm&lt;/a&gt;. We will use data collected by this survey to investigate whether first babies tend to come late, and other questions. In order to use this data effectively, we have to understand the design of the study. The NSFG is a cross-sectional study, which means that it captures a snapshot of a group at a point in time. The most common alternative is a longitudinal study, which observes a group repeatedly over a period of time. The NSFG has been conducted seven times; each deployment is called a cycle. We will use data from Cycle 6, which was conducted from January 2002 to March 2003.&lt;/p&gt;
+      <description>&lt;p&gt;New Oxford American Dictionary defines exploration as “the action of traveling in or through an unfamiliar area in order to learn about it.” Analysis is defined as “detailed examination of the elements or structure of something, typically as a basis for discussion or interpretation.” This makes Exploratory data analysis an act of travelling through unfamiliar data for a detailed examination of its structure, for further discussion or interpretation.&lt;/p&gt;
+&lt;p&gt;Upon reading the book “Think Stats” by Allen Downey, I loved the approach he uses for data exploration he has given in the book. This post and the rest in the series are highly inspired by the book, and uses the approaches and the datasets presented in the book.&lt;/p&gt;
+&lt;p&gt;I have used RMarkdown to write the post,including the code, trying to stick mostly to tidyverse. The goal of this post is to reproduce the work in the book, but in R.&lt;/p&gt;
+&lt;p&gt;Let’s start with an example. Your friend rated a movie a 4 star on a scale of a 10, 10 being the highest. Another user rated the movie 3 star on a similar scale. You might start thinking of skipping the movie. However, this conclusion fails because of certain reasons:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;You have only two observations to base your conclusion on. We might need more ratings to conclude if the movie is actually that bad.&lt;/li&gt;
+&lt;li&gt;Selection Bias: People who gave a critique on the movie might be speaking up because they particularly hated the movie (and really want to vent it out!), while people who found the movie to be good or even okay didn’t care much to speak about it. This is called &lt;strong&gt;Selection Bias&lt;/strong&gt;.&lt;/li&gt;
+&lt;li&gt;Someone might have a preexisting belief that a movie won’t be good and upon its release might rate it low because of that belief. Someone who would have been loved the trailer may have a given high rating to the movie, even if thte movie might have actually not been good. This is called &lt;strong&gt;Confirmation Bias&lt;/strong&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;In order to have more reliable conclusions, we need to follow a statistical approach, which includes:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Data Collection:&lt;/li&gt;
+&lt;li&gt;Descriptive Statistics&lt;/li&gt;
+&lt;li&gt;Exploratory data analysis&lt;/li&gt;
+&lt;li&gt;Estimation&lt;/li&gt;
+&lt;li&gt;Hypothesis Testing&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;quarrel with a local store cashier, and tells you how horrible the store is. Would at a local store, since she and tell you to stay away from itWhen someone asks you to give an estimate, you are most likely to make a guess upon that. (You caught my guess in that statement, didn’t you?). You would have heard of someone However, real world decisions can’t be simply made on guess or even an educated guess. The reliability of such an estimate may be questionable and hence, better methods of estimation need to be used.&lt;/p&gt;
+&lt;p&gt;rn (CDC) have conducted the National Survey of Family Growth (NSFG), which is intended to gather information on family life, marriage and divorce, pregnancy, infertility, use of contraception, and men’s and women’s health. The survey results are used to plan health services and health education programs, and to do statistical studies of families, fertility, and health.&amp;quot; See &lt;a href=&#34;http://cdc.gov/nchs/nsfg.htm&#34; class=&#34;uri&#34;&gt;http://cdc.gov/nchs/nsfg.htm&lt;/a&gt;. We will use data collected by this survey to investigate whether first babies tend to come late, and other questions. In order to use this data effectively, we have to understand the design of the study. The NSFG is a cross-sectional study, which means that it captures a snapshot of a group at a point in time. The most common alternative is a longitudinal study, which observes a group repeatedly over a period of time. The NSFG has been conducted seven times; each deployment is called a cycle. We will use data from Cycle 6, which was conducted from January 2002 to March 2003.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#library(ggplot2)
 library(extraDistr)
 library(tidyverse)&lt;/code&gt;&lt;/pre&gt;
