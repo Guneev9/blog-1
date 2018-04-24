@@ -2,29 +2,28 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Did you say data? on Did you say data?</title>
-    <link>/</link>
+    <link>https://krohitm.netlify.com/</link>
     <description>Recent content in Did you say data? on Did you say data?</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>&amp;copy; 2018</copyright>
     <lastBuildDate>Sun, 15 Oct 2017 00:00:00 -0400</lastBuildDate>
     <atom:link href="/" rel="self" type="application/rss+xml" />
     
     <item>
       <title>Autonomous detection of disruptions in the intensive care unit using deep mask RCNN</title>
-      <link>/publication/autonomus-detection/</link>
-      <pubDate>Tue, 22 May 2018 00:00:00 +0000</pubDate>
+      <link>https://krohitm.netlify.com/publication/autonomus-detection/</link>
+      <pubDate>Sun, 15 Apr 2018 00:00:00 -0400</pubDate>
       
-      <guid>/publication/autonomus-detection/</guid>
+      <guid>https://krohitm.netlify.com/publication/autonomus-detection/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Twitter Simulator</title>
-      <link>/project/twitter-simulator/</link>
+      <link>https://krohitm.netlify.com/project/twitter-simulator/</link>
       <pubDate>Mon, 09 Apr 2018 00:00:00 +0000</pubDate>
       
-      <guid>/project/twitter-simulator/</guid>
+      <guid>https://krohitm.netlify.com/project/twitter-simulator/</guid>
       <description>
 
 &lt;p&gt;Link to demo video: &lt;a href=&#34;https://youtu.be/XlY2eoI5o-8&#34; target=&#34;_blank&#34;&gt;https://youtu.be/XlY2eoI5o-8&lt;/a&gt;&lt;/p&gt;
@@ -93,10 +92,10 @@ Performance with Web Sockets&lt;/p&gt;
     
     <item>
       <title>Exploratory Data Analysis</title>
-      <link>/post/exploratory-data-analysis/</link>
+      <link>https://krohitm.netlify.com/post/exploratory-data-analysis/</link>
       <pubDate>Wed, 28 Feb 2018 00:00:00 +0000</pubDate>
       
-      <guid>/post/exploratory-data-analysis/</guid>
+      <guid>https://krohitm.netlify.com/post/exploratory-data-analysis/</guid>
       <description>&lt;p&gt;New Oxford American Dictionary defines exploration as “the action of traveling in or through an unfamiliar area in order to learn about it.” Analysis is defined as “detailed examination of the elements or structure of something, typically as a basis for discussion or interpretation.” This makes Exploratory data analysis an act of travelling through unfamiliar data for a detailed examination of its structure, for further discussion or interpretation.&lt;/p&gt;
 &lt;p&gt;Upon reading the book “Think Stats” by Allen Downey, I loved the approach he uses for data exploration he has given in the book. This post and the rest in the series are highly inspired by the book, and uses the approaches and the datasets presented in the book.&lt;/p&gt;
 &lt;p&gt;I have used RMarkdown to write the post,including the code, trying to stick mostly to tidyverse. The goal of this post is to reproduce the work in the book, but in R.&lt;/p&gt;
@@ -795,10 +794,10 @@ femPregCleaned %&amp;gt;%
     
     <item>
       <title>Example Talk</title>
-      <link>/talk/example-talk/</link>
+      <link>https://krohitm.netlify.com/talk/example-talk/</link>
       <pubDate>Sun, 01 Jan 2017 00:00:00 -0500</pubDate>
       
-      <guid>/talk/example-talk/</guid>
+      <guid>https://krohitm.netlify.com/talk/example-talk/</guid>
       <description>&lt;p&gt;Embed your slides or video here using &lt;a href=&#34;https://sourcethemes.com/academic/post/writing-markdown-latex/&#34; target=&#34;_blank&#34;&gt;shortcodes&lt;/a&gt;. Further details can easily be added using &lt;em&gt;Markdown&lt;/em&gt; and $\rm \LaTeX$ math code.&lt;/p&gt;
 </description>
     </item>

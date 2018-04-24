@@ -2,22 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Projects on Did you say data?</title>
-    <link>/project/</link>
+    <link>https://krohitm.netlify.com/project/</link>
     <description>Recent content in Projects on Did you say data?</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>&amp;copy; 2018</copyright>
     <lastBuildDate>Mon, 09 Apr 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/project/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://krohitm.netlify.com/project/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Twitter Simulator</title>
-      <link>/project/twitter-simulator/</link>
+      <link>https://krohitm.netlify.com/project/twitter-simulator/</link>
       <pubDate>Mon, 09 Apr 2018 00:00:00 +0000</pubDate>
       
-      <guid>/project/twitter-simulator/</guid>
+      <guid>https://krohitm.netlify.com/project/twitter-simulator/</guid>
       <description>Link to demo video: https://youtu.be/XlY2eoI5o-8
 Part 1 of this project can be seen at https://github.com/adityavhegde/Twitter-Simulator
 The part 1 of our project had all the functionalities working. In part 2 we have used the exact same server that acts as an API to the Phoenix channels (check architecture section for details). This Server that acts as API can handle all the following:

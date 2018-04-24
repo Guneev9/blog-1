@@ -1,6 +1,6 @@
 +++
 title = "Autonomous detection of disruptions in the intensive care unit using deep mask RCNN"
-date = "2018-05-22"
+date = 2018-04-15T00:00:00
 
 # Authors. Comma separated list, e.g. `["Bob Smith", "David Jones"]`.
 authors = ["Kumar Rohit Malhotra", "Anis Davoudi", "Scott Siegel", "Azra Bihorac", "Parisa Rashidi"]
@@ -14,10 +14,10 @@ authors = ["Kumar Rohit Malhotra", "Anis Davoudi", "Scott Siegel", "Azra Bihorac
 # 4 = Technical report
 # 5 = Book
 # 6 = Book chapter
-publication_types = ["1"]
+publication_types = [1]
 
 # Publication name and optional abbreviated version.
-publication = "2018 IEEE/CVF *Conference on Computer Vision and Pattern Recognition Workshops*."
+publication = "In 2018 IEEE/CVF *Conference on Computer Vision and Pattern Recognition Workshops*."
 publication_short = "In *CVPRW*"
 
 # Abstract and optional shortened version.

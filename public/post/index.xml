@@ -2,22 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on Did you say data?</title>
-    <link>/post/</link>
+    <link>https://krohitm.netlify.com/post/</link>
     <description>Recent content in Posts on Did you say data?</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>&amp;copy; 2018</copyright>
     <lastBuildDate>Sun, 01 Jan 2017 00:00:00 -0500</lastBuildDate>
     
-	<atom:link href="/post/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://krohitm.netlify.com/post/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Exploratory Data Analysis</title>
-      <link>/post/exploratory-data-analysis/</link>
+      <link>https://krohitm.netlify.com/post/exploratory-data-analysis/</link>
       <pubDate>Wed, 28 Feb 2018 00:00:00 +0000</pubDate>
       
-      <guid>/post/exploratory-data-analysis/</guid>
+      <guid>https://krohitm.netlify.com/post/exploratory-data-analysis/</guid>
       <description>New Oxford American Dictionary defines exploration as “the action of traveling in or through an unfamiliar area in order to learn about it.” Analysis is defined as “detailed examination of the elements or structure of something, typically as a basis for discussion or interpretation.” This makes Exploratory data analysis an act of travelling through unfamiliar data for a detailed examination of its structure, for further discussion or interpretation.
 Upon reading the book “Think Stats” by Allen Downey, I loved the approach he uses for data exploration he has given in the book.</description>
     </item>

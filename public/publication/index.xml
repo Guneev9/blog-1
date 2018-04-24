@@ -2,22 +2,21 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Publications on Did you say data?</title>
-    <link>/publication/</link>
+    <link>https://krohitm.netlify.com/publication/</link>
     <description>Recent content in Publications on Did you say data?</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>&amp;copy; 2018</copyright>
     <lastBuildDate>Sun, 01 Jan 2017 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/publication/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://krohitm.netlify.com/publication/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Autonomous detection of disruptions in the intensive care unit using deep mask RCNN</title>
-      <link>/publication/autonomus-detection/</link>
-      <pubDate>Tue, 22 May 2018 00:00:00 +0000</pubDate>
+      <link>https://krohitm.netlify.com/publication/autonomus-detection/</link>
+      <pubDate>Sun, 15 Apr 2018 00:00:00 -0400</pubDate>
       
-      <guid>/publication/autonomus-detection/</guid>
+      <guid>https://krohitm.netlify.com/publication/autonomus-detection/</guid>
       <description></description>
     </item>
     
