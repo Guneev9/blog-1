@@ -59,8 +59,7 @@ highlight = true
 # Place your image in the `static/img/` folder and reference its filename below, e.g. `image = "example.jpg"`.
 [header]
 image = "publication_autonomous_detection.png"
-caption = "LOESS curve for actual and detected number of
-visitors for a patient"
+caption = "LOESS curve for actual and detected number of visitors for a patient"
 
 +++
 
