@@ -5,7 +5,34 @@
     
     <url>
     
-      <loc>https://krohitm.netlify.com/publication/autonomus-detection/</loc>
+      <loc>/project/gossip-protocol/</loc>
+      <lastmod>2018-05-02T00:00:00+00:00</lastmod>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/project/twitter-engine/</loc>
+      <lastmod>2018-05-02T00:00:00+00:00</lastmod>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/publication/intelligent-icu/</loc>
+      <lastmod>2018-04-25T00:00:00-04:00</lastmod>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/publication/autonomus-detection/</loc>
       <lastmod>2018-04-15T00:00:00-04:00</lastmod>
     </url>
     
@@ -14,7 +41,7 @@
     
     <url>
     
-      <loc>https://krohitm.netlify.com/project/twitter-simulator/</loc>
+      <loc>/project/twitter-simulator/</loc>
       <lastmod>2018-04-09T00:00:00+00:00</lastmod>
     </url>
     
@@ -23,7 +50,7 @@
     
     <url>
     
-      <loc>https://krohitm.netlify.com/post/exploratory-data-analysis/</loc>
+      <loc>/post/exploratory-data-analysis/</loc>
       <lastmod>2018-02-28T00:00:00+00:00</lastmod>
     </url>
     
@@ -32,7 +59,7 @@
     
     <url>
     
-      <loc>https://krohitm.netlify.com/talk/example-talk/</loc>
+      <loc>/talk/example-talk/</loc>
       <lastmod>2017-01-01T00:00:00-05:00</lastmod>
     </url>
     
@@ -41,7 +68,7 @@
     
     <url>
     
-      <loc>https://krohitm.netlify.com/post/</loc>
+      <loc>/post/</loc>
       <lastmod>2017-01-01T00:00:00-05:00</lastmod>
     </url>
     
@@ -50,7 +77,7 @@
     
     <url>
     
-      <loc>https://krohitm.netlify.com/tags/academic/</loc>
+      <loc>/tags/academic/</loc>
       <lastmod>2017-01-01T00:00:00+00:00</lastmod>
     </url>
     
@@ -59,7 +86,7 @@
     
     <url>
     
-      <loc>https://krohitm.netlify.com/publication/</loc>
+      <loc>/publication/</loc>
       <lastmod>2017-01-01T00:00:00+00:00</lastmod>
     </url>
     
@@ -68,7 +95,7 @@
     
     <url>
     
-      <loc>https://krohitm.netlify.com/talk/</loc>
+      <loc>/talk/</loc>
       <lastmod>2017-01-01T00:00:00+00:00</lastmod>
     </url>
     
@@ -77,7 +104,7 @@
     
     <url>
     
-      <loc>https://krohitm.netlify.com/categories/</loc>
+      <loc>/categories/</loc>
       <priority>0</priority>
     </url>
     
@@ -86,7 +113,7 @@
     
     <url>
     
-      <loc>https://krohitm.netlify.com/tags/data-analysis/</loc>
+      <loc>/tags/data-analysis/</loc>
       <lastmod>2018-02-28T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
@@ -96,7 +123,7 @@
     
     <url>
     
-      <loc>https://krohitm.netlify.com/categories/data-analysis/</loc>
+      <loc>/categories/data-analysis/</loc>
       <lastmod>2018-02-28T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
@@ -106,7 +133,7 @@
     
     <url>
     
-      <loc>https://krohitm.netlify.com/</loc>
+      <loc>/</loc>
       <lastmod>2017-10-15T00:00:00-04:00</lastmod>
       <priority>0</priority>
     </url>
@@ -116,8 +143,8 @@
     
     <url>
     
-      <loc>https://krohitm.netlify.com/tags/distributed-systems/</loc>
-      <lastmod>2018-04-09T00:00:00+00:00</lastmod>
+      <loc>/tags/distributed-systems/</loc>
+      <lastmod>2018-05-02T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -126,8 +153,8 @@
     
     <url>
     
-      <loc>https://krohitm.netlify.com/tags/elixir/</loc>
-      <lastmod>2018-04-09T00:00:00+00:00</lastmod>
+      <loc>/tags/elixir/</loc>
+      <lastmod>2018-05-02T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -136,8 +163,8 @@
     
     <url>
     
-      <loc>https://krohitm.netlify.com/project/</loc>
-      <lastmod>2018-04-09T00:00:00+00:00</lastmod>
+      <loc>/tags/phoenix/</loc>
+      <lastmod>2018-05-02T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     
@@ -146,7 +173,17 @@
     
     <url>
     
-      <loc>https://krohitm.netlify.com/tags/rstats/</loc>
+      <loc>/project/</loc>
+      <lastmod>2018-05-02T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/tags/rstats/</loc>
       <lastmod>2018-02-28T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
@@ -156,7 +193,7 @@
     
     <url>
     
-      <loc>https://krohitm.netlify.com/tags/statistics/</loc>
+      <loc>/tags/statistics/</loc>
       <lastmod>2018-02-28T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
@@ -166,8 +203,18 @@
     
     <url>
     
-      <loc>https://krohitm.netlify.com/tags/</loc>
+      <loc>/tags/</loc>
       <lastmod>2017-01-01T00:00:00+00:00</lastmod>
+      <priority>0</priority>
+    </url>
+    
+  
+    
+    
+    <url>
+    
+      <loc>/tags/twitter/</loc>
+      <lastmod>2018-05-02T00:00:00+00:00</lastmod>
       <priority>0</priority>
     </url>
     

@@ -58,7 +58,7 @@ defaultContentLanguageInSubdir = false
   organizations = [ { name = "Intelligent Health Lab", url = "http://www.bme.ufl.edu/labs/rashidi/" } ]
 
   gravatar = false  # Get your avatar from Gravatar.com? (true/false)
-  avatar = "IMG_5019.png"  # Specify an avatar image (in `static/img/` folder) or delete value to disable avatar.
+  avatar = "beach.jpg"  # Specify an avatar image (in `static/img/` folder) or delete value to disable avatar.
   email = "krohitm@gmail.com"
   address = "NEB Room 481, University of Florida, Gainesville FL, 32608, USA"
   #office_hours = "Monday 10:00 to 13:00 or email for appointment"
@@ -172,7 +172,8 @@ defaultContentLanguageInSubdir = false
     'Manuscript',  # 3
     'Report',  # 4
     'Book',  # 5
-    'Book section'  # 6
+    'Book section',  # 6,
+    'e-print' # 7
   ]
 
   # Configuration of talk pages.
@@ -267,7 +268,7 @@ defaultContentLanguageInSubdir = false
 
 [[menu.main]]
   name = "Publications"
-  url = "#publications_selected"
+  url = "#publications"
   weight = 2
 
 [[menu.main]]
