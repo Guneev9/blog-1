@@ -1,6 +1,6 @@
-.DS_Store
-.Rproj.user
-.Rhistory
-.RData
-.Ruserdata
-.icloud
+*.DS_Store
+*.Rproj.user
+*.Rhistory
+*.RData
+*.Ruserdata
+*.icloud
