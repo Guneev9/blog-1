@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme" content="hugo-academic">
+  <meta name="generator" content="Hugo 0.37" />
+  <meta name="author" content="Kumar Rohit Malhotra">
+
+  
+  
+  
+  
+    
+      
+    
+  
+  <meta name="description" content="Regression analysis is a powerful statistical process to find the relations within a dataset, with the key focus being on relationships between the independent variables (predictors) and a dependent varible (outcome). Among several methods of regression analysis, linear regression sets the basis and is quite widely used for several real-world applications.
+In this post, we will look at the insurance charges data obtained from Kaggle (https://www.kaggle.com/mirichoi0218/insurance/home). This data set consists of 7 columns: age, sex, bmi, children, smoker, region and charges.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="/post/linear-regression-modeling-and-assumptions/">
+
+  
+
+
+  
+
+  
+  
+  <meta name="theme-color" content="#0095eb">
+  
+  
+  
+  
+    
+  
+  
+    
+    
+      
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+      
+    
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha512-6MXa8B6uaO18Hid6blRMetEIoPqHf7Ux1tnyIQdpt9qI5OACx7C+O3IVTr98vwGnlcg0LOLa02i9Y1HpVhlfiw==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.1/css/academicons.min.css" integrity="sha512-NThgw3XKQ1absAahW6to7Ey42uycrVvfNfyjqcFNgCmOCQ5AR4AO0SiXrN+8ZtYeappp56lk1WtvjVmEa+VR6A==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+  
+  
+  
+  
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Montserrat:400,700%7cRoboto:400,400italic,700%7cRoboto&#43;Mono">
+  
+  <link rel="stylesheet" href="/styles.css">
+  
+
+  
+    <script>
+      window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+      ga('create', 'UA-117115991-1', 'auto');
+      ga('require', 'eventTracker');
+      ga('require', 'outboundLinkTracker');
+      ga('require', 'urlChangeTracker');
+      ga('send', 'pageview');
+    </script>
+    <script async src="//www.google-analytics.com/analytics.js"></script>
+    
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/autotrack/2.4.1/autotrack.js" integrity="sha512-HUmooslVKj4m6OBu0OgzjXXr+QuFYy/k7eLI5jdeEy/F4RSgMn6XRWRGkFi5IFaFgy7uFTkegp3Z0XnJf3Jq+g==" crossorigin="anonymous"></script>
+    
+  
+
+  
+  <link rel="alternate" href="/index.xml" type="application/rss+xml" title="Did you say data?">
+  <link rel="feed" href="/index.xml" type="application/rss+xml" title="Did you say data?">
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="/post/linear-regression-modeling-and-assumptions/">
+
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="twitter:site" content="@krohitm">
+  <meta property="twitter:creator" content="@krohitm">
+  
+  <meta property="og:site_name" content="Did you say data?">
+  <meta property="og:url" content="/post/linear-regression-modeling-and-assumptions/">
+  <meta property="og:title" content="Linear regression: Modeling and Assumptions | Did you say data?">
+  <meta property="og:description" content="Regression analysis is a powerful statistical process to find the relations within a dataset, with the key focus being on relationships between the independent variables (predictors) and a dependent varible (outcome). Among several methods of regression analysis, linear regression sets the basis and is quite widely used for several real-world applications.
+In this post, we will look at the insurance charges data obtained from Kaggle (https://www.kaggle.com/mirichoi0218/insurance/home). This data set consists of 7 columns: age, sex, bmi, children, smoker, region and charges.">
+  <meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2018-09-05T00:00:00&#43;00:00">
+  
+  <meta property="article:modified_time" content="2018-09-05T00:00:00&#43;00:00">
+  
+
+  
+
+  <title>Linear regression: Modeling and Assumptions | Did you say data?</title>
+
+</head>
+<body id="top" data-spy="scroll" data-target="#toc" data-offset="71" >
+
+<nav class="navbar navbar-default navbar-fixed-top" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="navbar-header">
+      
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+              data-target=".navbar-collapse" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      
+      <a class="navbar-brand" href="/">Did you say data?</a>
+    </div>
+
+    
+    <div class="collapse navbar-collapse">
+
+      
+      
+      <ul class="nav navbar-nav navbar-right">
+        
+
+        
+        
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#about">
+            
+            <span>Home</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+        
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#publications">
+            
+            <span>Publications</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+        
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#posts">
+            
+            <span>Posts</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+        
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#projects">
+            
+            <span>Projects</span>
+            
+          </a>
+        </li>
+
+        
+        
+
+        
+        
+        
+        
+        
+          
+        
+
+        <li class="nav-item">
+          <a href="/#contact">
+            
+            <span>Contact</span>
+            
+          </a>
+        </li>
+
+        
+        
+      
+
+      
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+<article class="article" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+  <div class="article-container">
+    <h1 itemprop="name">Linear regression: Modeling and Assumptions</h1>
+
+    
+
+<div class="article-metadata">
+
+  <span class="article-date">
+    
+    <time datetime="2018-09-05 00:00:00 &#43;0000 UTC" itemprop="datePublished dateModified">
+      Sep 5, 2018
+    </time>
+  </span>
+  <span itemscope itemprop="author publisher" itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="Kumar Rohit Malhotra">
+  </span>
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    18 min read
+  </span>
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <a href="/post/linear-regression-modeling-and-assumptions/#disqus_thread"></a>
+  
+
+  
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fa fa-folder"></i>
+    
+    <a href="/categories/data-analysis">data analysis</a
+    >
+    
+  </span>
+  
+  
+
+  
+  
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    <li>
+      <a class="twitter"
+         href="https://twitter.com/intent/tweet?text=Linear%20regression%3a%20Modeling%20and%20Assumptions&amp;url=%2fpost%2flinear-regression-modeling-and-assumptions%2f"
+         target="_blank" rel="noopener">
+        <i class="fa fa-twitter"></i>
+      </a>
+    </li>
+    <li>
+      <a class="facebook"
+         href="https://www.facebook.com/sharer.php?u=%2fpost%2flinear-regression-modeling-and-assumptions%2f"
+         target="_blank" rel="noopener">
+        <i class="fa fa-facebook"></i>
+      </a>
+    </li>
+    <li>
+      <a class="linkedin"
+         href="https://www.linkedin.com/shareArticle?mini=true&amp;url=%2fpost%2flinear-regression-modeling-and-assumptions%2f&amp;title=Linear%20regression%3a%20Modeling%20and%20Assumptions"
+         target="_blank" rel="noopener">
+        <i class="fa fa-linkedin"></i>
+      </a>
+    </li>
+    <li>
+      <a class="weibo"
+         href="http://service.weibo.com/share/share.php?url=%2fpost%2flinear-regression-modeling-and-assumptions%2f&amp;title=Linear%20regression%3a%20Modeling%20and%20Assumptions"
+         target="_blank" rel="noopener">
+        <i class="fa fa-weibo"></i>
+      </a>
+    </li>
+    <li>
+      <a class="email"
+         href="mailto:?subject=Linear%20regression%3a%20Modeling%20and%20Assumptions&amp;body=%2fpost%2flinear-regression-modeling-and-assumptions%2f">
+        <i class="fa fa-envelope"></i>
+      </a>
+    </li>
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+
+    <div class="article-style" itemprop="articleBody">
+      <p>Regression analysis is a powerful statistical process to find the relations within a dataset, with the key focus being on relationships between the independent variables (predictors) and a dependent varible (outcome). Among several methods of regression analysis, linear regression sets the basis and is quite widely used for <a href="https://en.wikipedia.org/wiki/Linear_regression#Applications" target="_blank">several real-world applications</a>.</p>
+<p>In this post, we will look at the insurance charges data obtained from Kaggle (<a href="https://www.kaggle.com/mirichoi0218/insurance/home" class="uri">https://www.kaggle.com/mirichoi0218/insurance/home</a>). This data set consists of 7 columns: age, sex, bmi, children, smoker, region and charges. It has 1,338 observations. We will get into more details about these variables later.</p>
+<p>The key questions that we would be asking are:</p>
+<ol style="list-style-type: decimal">
+<li>Is there a relationship between medical charges and other variables in the dataset?</li>
+<li>How valid is the model we have built?</li>
+<li>What can we do to improve the model making it more valid?</li>
+</ol>
+<p>We start with importing the required libraries:</p>
+<pre class="r"><code>library(magrittr)
+library(purrr)
+library(MASS)
+library(car)
+library(broom)
+library(ggplot2)
+library(psych)
+library(caret)
+library(tidyr)
+library(knitr)</code></pre>
+<p>We import the data from the csv. We can see an overview of the data using <em>summary()</em> function in R.</p>
+<pre class="r"><code>insurance &lt;- read.csv(&#39;~/Documents/CodeWork/medicalCost/insurance.csv&#39;)
+summary(insurance)</code></pre>
+<pre><code>      age            sex           bmi           children     smoker    
+ Min.   :18.00   female:662   Min.   :15.96   Min.   :0.000   no :1064  
+ 1st Qu.:27.00   male  :676   1st Qu.:26.30   1st Qu.:0.000   yes: 274  
+ Median :39.00                Median :30.40   Median :1.000             
+ Mean   :39.21                Mean   :30.66   Mean   :1.095             
+ 3rd Qu.:51.00                3rd Qu.:34.69   3rd Qu.:2.000             
+ Max.   :64.00                Max.   :53.13   Max.   :5.000             
+       region       charges     
+ northeast:324   Min.   : 1122  
+ northwest:325   1st Qu.: 4740  
+ southeast:364   Median : 9382  
+ southwest:325   Mean   :13270  
+                 3rd Qu.:16640  
+                 Max.   :63770  </code></pre>
+<p>The general observations that can be taken from the summary are:</p>
+<ol style="list-style-type: decimal">
+<li>The age of participants varies from 18 to 64.</li>
+<li>Around 49.48% of participants are female.</li>
+<li>The bmi of participants ranges from 15.96 to 53.13.</li>
+<li>Only 20.48% of the participants are smokers.</li>
+</ol>
+<p>Let’s start with building a linear model of all the variables. Instead of simple linear regression, where you have one predictor and one outcome, we will go with multiple linear regression, where you have more than one predictors and one outcome.</p>
+<div id="is-there-a-relationship-between-the-medical-charges-and-the-predictors" class="section level2">
+<h2>Is there a relationship between the medical charges and the predictors?</h2>
+<p>Our first step is finding if there is a relationship at all between the outcome and the predictors.</p>
+<p>Multiple linear regression follows the formula :</p>
+<p><span class="math display">\[y = \beta_0{}+ \beta_1x_1+\beta_2x_2+...\]</span></p>
+<p>The coefficients in this linear equation denote the magnitude of additive relation between the predictor and the response. In simpler words, keeping everything else fixed, a unit change in x_1 will lead to change of beta_1 in the outcome.</p>
+<p>The null hypothesis would be that there is no relation between any of the predictors and the response, which would be possible when all the coefficients for the predictors are 0. The alternate hypothesis would be that atleast one of the predictors has a relation with the outcome, that is the coefficient of one of the predictors is non-zero.</p>
+<p>This hypothesis is tested by computing the <a href="http://www.statisticshowto.com/probability-and-statistics/F%20statistic-value-test/" target="_blank">F statistic</a>. In case of no relationship between the predictor and the response, F statistic will be closer to 1. On the contrary, if the alternate hypothesis is true, the F statistic will be greater than 1. The p-value of F statistic can be used to determine whether the null hypothesis can be rejected or not.</p>
+<p>We will start with fitting a multiple linear regression model using all the predictors:</p>
+<pre class="r"><code>lm.fit &lt;- lm(formula = charges~., data = insurance)
+#Here &#39;.&#39; means we are using all the predictors in the dataset.
+summary(lm.fit)</code></pre>
+<pre><code>
+Call:
+lm(formula = charges ~ ., data = insurance)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-11304.9  -2848.1   -982.1   1393.9  29992.8 
+
+Coefficients:
+                Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)     -11938.5      987.8 -12.086  &lt; 2e-16 ***
+age                256.9       11.9  21.587  &lt; 2e-16 ***
+sexmale           -131.3      332.9  -0.394 0.693348    
+bmi                339.2       28.6  11.860  &lt; 2e-16 ***
+children           475.5      137.8   3.451 0.000577 ***
+smokeryes        23848.5      413.1  57.723  &lt; 2e-16 ***
+regionnorthwest   -353.0      476.3  -0.741 0.458769    
+regionsoutheast  -1035.0      478.7  -2.162 0.030782 *  
+regionsouthwest   -960.0      477.9  -2.009 0.044765 *  
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 6062 on 1329 degrees of freedom
+Multiple R-squared:  0.7509,    Adjusted R-squared:  0.7494 
+F-statistic: 500.8 on 8 and 1329 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>A high value of F statistic, with a very low p-value(&lt;2.2e-16), implies that the null hypothesis can be rejected. This means there is a potential relationship between the predictors and the outcome.</p>
+<p>RSE (Residual Standard Error) is the estimate of standard deviation of irreducible error. In simpler words, it is the average difference between the actual outcome and the outcome from the fitted regression line. Hence, a large value of RSE means a high deviation from the true regression line. As such, RSE is useful in determining the lack of fit of the model to the data. RSE in our model is large (6062), indicating that the model doesn’t fit the data well.</p>
+<p>R-squared measures the proportion of variability in the outcome that can be explained by the predictor, and is always between 0 and 1. However, R-squared may be high for higher number of predictors because of <a href="https://en.wikipedia.org/wiki/Coefficient_of_determination#Inflation_of_R2" target="_blank">how R-squared is calculated</a>. <a href="https://en.wikipedia.org/wiki/Coefficient_of_determination#Adjusted_R2" target="_blank">Adjusted R-squared</a> adjusts the value of R-squared to avoid this effect. A high value of adjusted R-squared (0.7494) shows that around 75% of variance of the data is being explained by the model.</p>
+<p>Our next step should be <a href="https://en.wikipedia.org/wiki/Regression_validation" target="_blank">validation of regression analyis</a>. This may mean validation of underlying assumptions of the model, checking the structure of model with different predictors, looking for values that have an exceptionally large impact on the regression model, looking for observations that have not been represented well enough in the model, and more.</p>
+<p>In the rest of the post, we will look at some of these methods of model validation and improvement.</p>
+<hr />
+</div>
+<div id="which-variables-have-a-strong-relation-to-medical-charges" class="section level2">
+<h2>Which variables have a strong relation to medical charges?</h2>
+<p>Now that we have determined that there is a relation between the predictors and the outcome, our next step would be finding out if all or only some of the predictors are related to the outcome.</p>
+<p>If we look at the p-values of the estimated coefficients above, we see that not all the coefficients are statistically significant (&lt;0.05). This means that only a subset of the predictors are related to the outcome.</p>
+<p>We can look at the individual p-values for selecting the variables. This may not be a problem when the number of predictors (7) is quite small compared to the number of observations (1338). This method won’t, however, work when the number of predictors is greater than the number of observations because of the <a href="http://www.statisticshowto.com/multiple-testing-problem/" target="_blank">multiple testing problem</a>. In such cases, we would have to use the <a href="https://en.wikipedia.org/wiki/Feature_selection" target="_blank">feature/variable selection</a> methods, like forward selection, backward selection, or mixed selection.</p>
+<p>Before jumping on to feature selection using any of these methods, let us try linear regression using the features with significant p-values only.</p>
+<pre class="r"><code>lm.fit.sel &lt;- lm(charges~age+bmi+children+smoker+region, data = insurance)
+summary(lm.fit.sel)</code></pre>
+<pre><code>
+Call:
+lm(formula = charges ~ age + bmi + children + smoker + region, 
+    data = insurance)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-11367.2  -2835.4   -979.7   1361.9  29935.5 
+
+Coefficients:
+                 Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)     -11990.27     978.76 -12.250  &lt; 2e-16 ***
+age                256.97      11.89  21.610  &lt; 2e-16 ***
+bmi                338.66      28.56  11.858  &lt; 2e-16 ***
+children           474.57     137.74   3.445 0.000588 ***
+smokeryes        23836.30     411.86  57.875  &lt; 2e-16 ***
+regionnorthwest   -352.18     476.12  -0.740 0.459618    
+regionsoutheast  -1034.36     478.54  -2.162 0.030834 *  
+regionsouthwest   -959.37     477.78  -2.008 0.044846 *  
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 6060 on 1330 degrees of freedom
+Multiple R-squared:  0.7509,    Adjusted R-squared:  0.7496 
+F-statistic: 572.7 on 7 and 1330 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>We will compare this to mixed variable selection, which is a combination of forward selection and backward selection. This can be done in R using the <em>stepAIC()</em> function.</p>
+<pre class="r"><code>step.lm.fit &lt;- stepAIC(lm.fit, direction = &quot;both&quot;, trace = FALSE)
+summary(step.lm.fit)</code></pre>
+<pre><code>
+Call:
+lm(formula = charges ~ age + bmi + children + smoker + region, 
+    data = insurance)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-11367.2  -2835.4   -979.7   1361.9  29935.5 
+
+Coefficients:
+                 Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)     -11990.27     978.76 -12.250  &lt; 2e-16 ***
+age                256.97      11.89  21.610  &lt; 2e-16 ***
+bmi                338.66      28.56  11.858  &lt; 2e-16 ***
+children           474.57     137.74   3.445 0.000588 ***
+smokeryes        23836.30     411.86  57.875  &lt; 2e-16 ***
+regionnorthwest   -352.18     476.12  -0.740 0.459618    
+regionsoutheast  -1034.36     478.54  -2.162 0.030834 *  
+regionsouthwest   -959.37     477.78  -2.008 0.044846 *  
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 6060 on 1330 degrees of freedom
+Multiple R-squared:  0.7509,    Adjusted R-squared:  0.7496 
+F-statistic: 572.7 on 7 and 1330 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>The model given by stepwise selection is same as the model we got by selecting the features with significant p-values (works in this case).</p>
+<p>We can see that there is a very slight improvement in R-squared value of the model(0.7494 -&gt; 0.7496), with a very slight deterioration in RSE. (6062 -&gt; 6060)</p>
+<p>Some key takeaways from the model are:</p>
+<ol style="list-style-type: decimal">
+<li>Charges increase with increase in age of the key beneficiary. For every 1 year increase in age of the key benificiary, keeping everything else fixed, charges increase by around $256.97.</li>
+<li>Similar relations can be seen for other predictors. Higher charges are expected with higher BMI or higher number of children/dependents or if the person is a smoker.</li>
+</ol>
+<hr />
+</div>
+<div id="multicollinearity" class="section level2">
+<h2>Multicollinearity</h2>
+<p>Multicollinearity in multiple regression is a phenomenon in which two or more predictors are highly related to each other, and hence one predictor can be used to predict the value of the other. The problem with multi-collinearity is that it can make it harder to estimate the individual effects of the predictors on the outcome.</p>
+<p>Usually, collinearity between pairs of predictors can be detected using a correlation matrix. However, corrrelation matrix fails, for example, when more than two predictors have high collinearity between them but don’t have high correlation as pairs.</p>
+<p>A better way to detect multicollinearity is Variance Inflation Factor (VIF). VIF of any predictor is the ratio of variance of its estimated coefficient in the full model to the variance of its estimated coefficient when fit on the outcome only by itself (as in simple linear regression). A VIF of 1 indicates no presence of multicollinearity. Usually, a VIF value of above 5 or 10 is taken as an indicator of multicollinearity. The simplest way of getting rid of multicollinearity in that case is to discard the predictor with high value of VIF.</p>
+<pre class="r"><code>vif(step.lm.fit) %&gt;% 
+  kable()</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th align="right">GVIF</th>
+<th align="right">Df</th>
+<th align="right">GVIF^(1/(2*Df))</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>age</td>
+<td align="right">1.016188</td>
+<td align="right">1</td>
+<td align="right">1.008061</td>
+</tr>
+<tr class="even">
+<td>bmi</td>
+<td align="right">1.104197</td>
+<td align="right">1</td>
+<td align="right">1.050808</td>
+</tr>
+<tr class="odd">
+<td>children</td>
+<td align="right">1.003714</td>
+<td align="right">1</td>
+<td align="right">1.001855</td>
+</tr>
+<tr class="even">
+<td>smoker</td>
+<td align="right">1.006369</td>
+<td align="right">1</td>
+<td align="right">1.003179</td>
+</tr>
+<tr class="odd">
+<td>region</td>
+<td align="right">1.098869</td>
+<td align="right">3</td>
+<td align="right">1.015838</td>
+</tr>
+</tbody>
+</table>
+<p>None of the predictors in our case has a high value of VIF. Hence, we don’t need to worry about multicollinearity in our case.</p>
+<hr />
+<pre class="r"><code>par(mfrow=c(2,2))
+plot(step.lm.fit)</code></pre>
+<p><img src="/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+</div>
+<div id="is-the-relationship-linear" class="section level2">
+<h2>Is the relationship linear?</h2>
+<p>By applying linear regression, we are assuming that there is a linear relationship between the predictors and the outcome. If the underlying relationship is quite far from linear, then most of the inferences we have made so far are doubtful. This also means reduced accuracy of model.</p>
+<p>The non-linearity of the model can be determined using residual plots. For multiple linear regression, we can plot the <a href="http://www.statisticshowto.com/residual/" target="_blank">residuals</a> versus fitted values. Presence of a pattern in the residual plots would imply a problem with the linear assumption of the model.</p>
+<pre class="r"><code>residualPlot(step.lm.fit, type = &quot;rstandard&quot;, id=TRUE)</code></pre>
+<p><img src="/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p>The blue line represents a smooth curve for the mean residual for each fitted value. We can see a little pattern of non-zero mean of residuals for different fitted values. This denotes slight non-linearity in our data (That number 1301 and 578; we’ll get to that later).</p>
+<p>The non-linearity can be further explored by looking at <a href="https://www.r-bloggers.com/r-regression-diagnostics-part-1/" target="_blank">Component Residual plots</a> (CR plots). CR plots can be created in R using the function <em>ceresePlots()</em>.</p>
+<pre class="r"><code>ceresPlots(step.lm.fit)</code></pre>
+<p><img src="/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>The pink line is modelled for the relation between the residuals and the predictor. The blue dashed line is for the line of best fit. A significant difference between the two lines for a predictor implies that the predictor and the outcome don’t have a linear relationship.</p>
+<p>This kind if inconsistency can be seen in the Component Residual plot for <em>bmi</em>. Let’s take a closer look at the CR plot for bmi:</p>
+<pre class="r"><code>ceresPlot(step.lm.fit, variable = &#39;bmi&#39;)</code></pre>
+<p><img src="/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<pre class="r"><code>ceresPlot(step.lm.fit, variable = &#39;age&#39;)</code></pre>
+<p><img src="/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-10-2.png" width="672" /></p>
+<p>The difference between the component line and residual line becomes more clear now.</p>
+<p>One of the methods of fixing this is introducing non-linearity to the predictors of the model. Let’s try adding a non-linear form of <em>bmi</em> to the model.</p>
+<pre class="r"><code>step.lm.fit.new &lt;- update(step.lm.fit, .~.+I(bmi^1.25)+I(age^1.27))
+ceresPlot(step.lm.fit.new, variable = &#39;bmi&#39;)</code></pre>
+<p><img src="/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<pre class="r"><code>ceresPlot(step.lm.fit.new, variable = &#39;age&#39;)</code></pre>
+<p><img src="/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-11-2.png" width="672" /></p>
+<pre class="r"><code>ceresPlots(step.lm.fit.new)</code></pre>
+<p><img src="/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-11-3.png" width="672" /></p>
+<p>As per the CR plots, the addition of a non-linear transformation of bmi to the existing model fixed the problem.</p>
+<pre class="r"><code>residualPlot(step.lm.fit.new, type = &quot;rstandard&quot;, id = T)</code></pre>
+<p><img src="/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<pre class="r"><code>summary(step.lm.fit.new)</code></pre>
+<pre><code>
+Call:
+lm(formula = charges ~ age + bmi + children + smoker + region + 
+    I(bmi^1.25) + I(age^1.27), data = insurance)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-10691  -3020  -1160   1564  30418 
+
+Coefficients:
+                 Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)     -13946.07    5437.97  -2.565 0.010439 *  
+age               -859.14     286.33  -3.000 0.002746 ** 
+bmi               2038.37     821.13   2.482 0.013174 *  
+children           643.12     143.43   4.484 7.96e-06 ***
+smokeryes        23863.63     409.28  58.307  &lt; 2e-16 ***
+regionnorthwest   -426.01     474.04  -0.899 0.368988    
+regionsoutheast   -999.89     475.68  -2.102 0.035740 *  
+regionsouthwest  -1003.32     475.32  -2.111 0.034976 *  
+I(bmi^1.25)       -577.47     278.15  -2.076 0.038074 *  
+I(age^1.27)        327.48      84.04   3.897 0.000102 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 6021 on 1328 degrees of freedom
+Multiple R-squared:  0.7544,    Adjusted R-squared:  0.7528 
+F-statistic: 453.4 on 9 and 1328 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>Looking at the residual plot and summary of the model, there is not much change in the overall model.</p>
+<p>One of the methods of fixing the problem of non-linearity is introducing interaction between the predictors. Out of the predictors that we have, an interaction of bmi and smoker may have an effect on the charges. Let’s update the model and see if that makes a difference:</p>
+<pre class="r"><code>lm.fit1 &lt;- update(step.lm.fit.new, ~ .+bmi*smoker)
+summary(lm.fit1)</code></pre>
+<pre><code>
+Call:
+lm(formula = charges ~ age + bmi + children + smoker + region + 
+    I(bmi^1.25) + I(age^1.27) + bmi:smoker, data = insurance)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-12164.7  -1774.5  -1289.8   -635.3  30727.4 
+
+Coefficients:
+                 Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)      -6526.69    4342.95  -1.503 0.133122    
+age               -801.43     228.25  -3.511 0.000461 ***
+bmi               2012.00     654.53   3.074 0.002155 ** 
+children           673.87     114.33   5.894 4.78e-09 ***
+smokeryes       -20296.80    1631.56 -12.440  &lt; 2e-16 ***
+regionnorthwest   -665.80     377.96  -1.762 0.078370 .  
+regionsoutheast  -1167.66     379.22  -3.079 0.002119 ** 
+regionsouthwest  -1280.49     379.02  -3.378 0.000750 ***
+I(bmi^1.25)       -675.63     221.74  -3.047 0.002357 ** 
+I(age^1.27)        312.54      66.99   4.665 3.39e-06 ***
+bmi:smokeryes     1438.65      52.08  27.624  &lt; 2e-16 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 4800 on 1327 degrees of freedom
+Multiple R-squared:  0.8441,    Adjusted R-squared:  0.8429 
+F-statistic: 718.5 on 10 and 1327 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>residualPlot(lm.fit1, type = &quot;rstandard&quot;, id=TRUE)</code></pre>
+<p><img src="/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<p>Looking at the plot for the residuals, we can see that the mean residual is closer to zero now, for different fitted values. Moreover, the adjusted R-squared is higher now (0.7496 -&gt; 0.8395) and the F statistic has improved too (572 -&gt; 875.4). RSE has decreased too(6060 -&gt; 4581).</p>
+<p>A thing to be noted here is that bmi is no more significant by itself. Your first intuition might be to simply remove it. However, that</p>
+<hr />
+</div>
+<div id="non-constant-variance-of-error-terms" class="section level2">
+<h2>Non-constant variance of error terms</h2>
+<p>Constant variance of errors is another assumption of a linear regression model. The error terms may, for instance, change with the value of the response variable in case of non-constant variance of errors. Some of the graphical methods of identifying non-constant variance of errors is presence of a funnel shape in the residual plot, or existence of a curve in the residual plot. In the above plot, we don’t see any clear pattern.</p>
+<p>A statistical way is an extension of the Breusch-Pagan Test, available in R as <em>ncvTest()</em> in the cars package. It assumes a null hypothesis of constant variance of errors against the alternate hypothesis that the error variance changes with the level of the response or with a linear combination of predictors.</p>
+<pre class="r"><code># Evaluate homoscedasticity
+# non-constant error variance test
+ncvTest(lm.fit1)</code></pre>
+<pre><code>Non-constant Variance Score Test 
+Variance formula: ~ fitted.values 
+Chisquare = 20.4333    Df = 1     p = 6.174606e-06 </code></pre>
+<p>A very low p-value (&lt;9.58e-07) means the null hypothesis can be rejected. In other words, there is a high chance that the errors have a non-constant variance.</p>
+<p>One of the methods to fix this problem is transformation of the outcome variable.</p>
+<pre class="r"><code>yTransformer &lt;- 0.78
+
+trans.lm.fit &lt;- update(lm.fit1, charges^yTransformer~.)
+summary(trans.lm.fit)</code></pre>
+<pre><code>
+Call:
+lm(formula = charges^yTransformer ~ age + bmi + children + smoker + 
+    region + I(bmi^1.25) + I(age^1.27) + bmi:smoker, data = insurance)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-865.17 -177.56 -120.58  -49.52 2308.00 
+
+Coefficients:
+                 Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)      -585.280    400.401  -1.462 0.144051    
+age               -53.915     21.044  -2.562 0.010514 *  
+bmi               193.494     60.345   3.206 0.001376 ** 
+children           70.490     10.541   6.687 3.34e-11 ***
+smokeryes       -1366.419    150.423  -9.084  &lt; 2e-16 ***
+regionnorthwest   -67.617     34.846  -1.940 0.052536 .  
+regionsoutheast  -120.461     34.962  -3.445 0.000588 ***
+regionsouthwest  -127.179     34.944  -3.640 0.000284 ***
+I(bmi^1.25)       -64.816     20.444  -3.170 0.001557 ** 
+I(age^1.27)        23.885      6.176   3.867 0.000115 ***
+bmi:smokeryes     114.522      4.802  23.851  &lt; 2e-16 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 442.5 on 1327 degrees of freedom
+Multiple R-squared:  0.839, Adjusted R-squared:  0.8378 
+F-statistic: 691.7 on 10 and 1327 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code># Evaluate homoscedasticity
+# non-constant error variance test
+ncvTest(trans.lm.fit)</code></pre>
+<pre><code>Non-constant Variance Score Test 
+Variance formula: ~ fitted.values 
+Chisquare = 0.0494218    Df = 1     p = 0.8240725 </code></pre>
+<pre class="r"><code>residualPlot(trans.lm.fit, type = &quot;rstandard&quot;, id=T)</code></pre>
+<p><img src="/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p>A p-value of 0.94 implies here that we cannot reject the null hypothesis of constant variance of error terms. However, there is a slight decrease in both adjusted R-squared as well as F statistic.</p>
+<p>This can be fixed further by looking at relations between individual predictors and outcome.</p>
+<hr />
+</div>
+<div id="correlation-of-error-terms" class="section level2">
+<h2>Correlation of error terms</h2>
+<p>An important assumption of linear regression model is that the consecutive error terms are uncorrelated. The standard errors of the estimated regression coefficients are calculated on this basis. If the consecutive error terms are correlated, the standard errors of the estimated regression coefficients may be much larger.</p>
+<p>We can check the auto-correlation of error terms using the Durbin-Watson test. The null hypothesis is that the consecutive errors have no auto-correlation. The alternate hypothesis is that the the consecutive errors have a statistically significant correlation:</p>
+<pre class="r"><code>set.seed(1)
+# Test for Autocorrelated Errors
+durbinWatsonTest(trans.lm.fit, max.lag = 5, reps=1000)</code></pre>
+<pre><code> lag Autocorrelation D-W Statistic p-value
+   1    -0.039502798      2.076866   0.150
+   2    -0.022779781      2.043090   0.420
+   3    -0.007737589      2.012719   0.780
+   4    -0.006501909      1.999400   0.972
+   5     0.017696870      1.950746   0.466
+ Alternative hypothesis: rho[lag] != 0</code></pre>
+<p>Here we are checking for auto-correlation of residuals for 5 different lags. The p-value for none of the lags is less than 0.05. Hence, we cannot reject the null hypothesis that the consecutive errors are not correlated.</p>
+<hr />
+</div>
+<div id="outliers" class="section level2">
+<h2>Outliers</h2>
+<p>Outliers are the observations which in some way are quite different from the distribution of the data. With respect to a model, an outlier is an observation whose predicted outcome is much different from the actual value of the outcome.</p>
+<p>Residual Plots (yes, again) can be used to identify outliers. We can look at the the last residual plot above. To use a standard comparison of residuals, we can use standardized residuals. Usually, the observations with residuals above 3 are possible outliers.</p>
+<pre class="r"><code>#finding ids of observations with absolute residuals of 3+, and order by value in desc order
+pot.outliers &lt;- stdres(trans.lm.fit) %&gt;%
+  tidy() %&gt;%
+  dplyr::filter(x&gt;3) %&gt;%
+  dplyr::arrange(-x)
+pot.outliers</code></pre>
+<pre><code># A tibble: 50 x 2
+   names     x
+   &lt;chr&gt; &lt;dbl&gt;
+ 1 517    5.23
+ 2 1301   5.16
+ 3 220    4.90
+ 4 1020   4.59
+ 5 243    4.56
+ 6 431    4.55
+ 7 807    4.38
+ 8 1028   4.36
+ 9 937    4.35
+10 1207   4.33
+# ... with 40 more rows</code></pre>
+<pre class="r"><code>outlier.ids &lt;- as.numeric(pot.outliers$names)</code></pre>
+<p>51 observations have an absolute standardized residual greater than 3. That marks approximately 3.8% of the observations.</p>
+<pre class="r"><code>dplyr::slice(insurance, outlier.ids)</code></pre>
+<pre><code># A tibble: 50 x 7
+     age sex      bmi children smoker region    charges
+   &lt;int&gt; &lt;fct&gt;  &lt;dbl&gt;    &lt;int&gt; &lt;fct&gt;  &lt;fct&gt;       &lt;dbl&gt;
+ 1    20 male    35.3        1 no     southeast  27724.
+ 2    45 male    30.4        0 yes    southeast  62593.
+ 3    24 female  23.2        0 no     southeast  25082.
+ 4    21 female  32.7        2 no     northwest  26019.
+ 5    55 female  26.8        1 no     southwest  35160.
+ 6    19 male    33.1        0 no     southwest  23083.
+ 7    40 female  41.4        1 no     northwest  28477.
+ 8    23 male    18.7        0 no     northwest  21595.
+ 9    44 male    29.7        2 no     northeast  32109.
+10    59 female  34.8        2 no     southwest  36911.
+# ... with 40 more rows</code></pre>
+<pre class="r"><code>insurance %&gt;%
+  dplyr::slice(-outlier.ids)%&gt;%
+  keep(is.numeric) %&gt;%
+  outlier(bad=5)</code></pre>
+<p><img src="/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
+<pre class="r"><code>clean.insurance &lt;- insurance %&gt;%
+  dplyr::slice(-(outlier.ids))
+  #dplyr::slice(-c(517, 1301, 220, 1020, 431, 243, 527, 1207, 937, 1040, 103, 600))</code></pre>
+<pre class="r"><code>lm.fit2 &lt;- update(trans.lm.fit, .~., data = clean.insurance) 
+lm.fit2 %&gt;%
+  summary()</code></pre>
+<pre><code>
+Call:
+lm(formula = charges^yTransformer ~ age + bmi + children + smoker + 
+    region + I(bmi^1.25) + I(age^1.27) + bmi:smoker, data = clean.insurance)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-857.15  -99.74  -52.05   -1.06 1422.09 
+
+Coefficients:
+                 Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)      -549.876    272.742  -2.016 0.043998 *  
+age               -50.045     14.441  -3.466 0.000547 ***
+bmi               163.728     41.189   3.975 7.43e-05 ***
+children           66.845      7.235   9.239  &lt; 2e-16 ***
+smokeryes       -1334.227    102.442 -13.024  &lt; 2e-16 ***
+regionnorthwest   -75.692     24.059  -3.146 0.001693 ** 
+regionsoutheast   -96.764     24.021  -4.028 5.95e-05 ***
+regionsouthwest   -96.312     23.993  -4.014 6.31e-05 ***
+I(bmi^1.25)       -54.655     13.954  -3.917 9.44e-05 ***
+I(age^1.27)        22.994      4.237   5.426 6.88e-08 ***
+bmi:smokeryes     115.261      3.267  35.278  &lt; 2e-16 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 297.8 on 1277 degrees of freedom
+Multiple R-squared:  0.9248,    Adjusted R-squared:  0.9242 
+F-statistic:  1571 on 10 and 1277 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>  #residualPlot()
+  #spreadLevelPlot()
+  #plot()
+  #outlierTest()</code></pre>
+<hr />
+<pre class="r"><code>confint(trans.lm.fit)</code></pre>
+<pre><code>                      2.5 %        97.5 %
+(Intercept)     -1370.76807   200.2089384
+age               -95.19751   -12.6330231
+bmi                75.11203   311.8755245
+children           49.81076    91.1690762
+smokeryes       -1661.51148 -1071.3259915
+regionnorthwest  -135.97622     0.7422564
+regionsoutheast  -189.04831   -51.8733765
+regionsouthwest  -195.72984   -58.6279149
+I(bmi^1.25)      -104.92128   -24.7103816
+I(age^1.27)        11.76811    36.0012986
+bmi:smokeryes     105.10223   123.9409629</code></pre>
+<pre class="r"><code>set.seed(1)
+insurance %&gt;%
+  #dplyr::sample_n(400) %&gt;%
+  ggplot(mapping = aes(x=bmi, y=charges)) +
+  geom_point(aes(color=age, shape = smoker)) +
+  geom_smooth()</code></pre>
+<p><img src="/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<div id="sources" class="section level3">
+<h3>Sources :</h3>
+<ul>
+<li><a href="https://www.kaggle.com/mirichoi0218/insurance/home" class="uri">https://www.kaggle.com/mirichoi0218/insurance/home</a></li>
+<li>An Introduction to Statistical Learning and Reasoning</li>
+<li>Wikipedia</li>
+<li><a href="https://www.statmethods.net/stats/rdiagnostics.html" class="uri">https://www.statmethods.net/stats/rdiagnostics.html</a></li>
+<li><a href="https://www.statmethods.net/stats/regression.html" class="uri">https://www.statmethods.net/stats/regression.html</a></li>
+<li><a href="https://datascienceplus.com/how-to-detect-heteroscedasticity-and-rectify-it/" class="uri">https://datascienceplus.com/how-to-detect-heteroscedasticity-and-rectify-it/</a></li>
+<li><a href="http://www.statisticshowto.com/probability-and-statistics/f-statistic-value-test/" class="uri">http://www.statisticshowto.com/probability-and-statistics/f-statistic-value-test/</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Coefficient_of_determination#Inflation_of_R2" class="uri">https://en.wikipedia.org/wiki/Coefficient_of_determination#Inflation_of_R2</a></li>
+</ul>
+</div>
+</div>
+
+    </div>
+
+    
+
+
+<div class="article-tags">
+  
+  <a class="btn btn-primary btn-outline" href="/tags/data-analysis">data analysis</a>
+  
+  <a class="btn btn-primary btn-outline" href="/tags/rstats">rstats</a>
+  
+  <a class="btn btn-primary btn-outline" href="/tags/statistics">statistics</a>
+  
+  <a class="btn btn-primary btn-outline" href="/tags/statistical-learning">statistical learning</a>
+  
+</div>
+
+
+
+
+    
+    
+    <div class="article-widget">
+      <div class="hr-light"></div>
+      <h3>Related</h3>
+      <ul>
+        
+        <li><a href="/post/exploratory-data-analysis/">Exploratory Data Analysis</a></li>
+        
+      </ul>
+    </div>
+    
+
+    
+
+    
+<section id="comments">
+  <div id="disqus_thread"></div>
+<script>
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "krohitm" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</section>
+
+
+
+  </div>
+</article>
+
+<footer class="site-footer">
+  <div class="container">
+    <p class="powered-by">
+
+      
+
+      Powered by the
+      <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+      <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+      <span class="pull-right" aria-hidden="true">
+        <a href="#" id="back_to_top">
+          <span class="button_icon">
+            <i class="fa fa-chevron-up fa-2x"></i>
+          </span>
+        </a>
+      </span>
+
+    </p>
+  </div>
+</footer>
+
+
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close btn-large" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Cite</h4>
+      </div>
+      <div>
+        <pre><code class="modal-body tex"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-primary btn-outline js-copy-cite" href="#" target="_blank">
+          <i class="fa fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-primary btn-outline js-download-cite" href="#" target="_blank">
+          <i class="fa fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+    
+    <script id="dsq-count-scr" src="//krohitm.disqus.com/count.js" async></script>
+    
+
+    
+
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js" integrity="sha512-3P8rXCuGJdNZOnUx/03c1jOTnMn3rP63nBip5gOP2qmUh5YAdVAvFZ1E+QLZZbC1rtMrQb+mah3AfYW11RUrWA==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.3/imagesloaded.pkgd.min.js" integrity="sha512-umsR78NN0D23AzgoZ11K7raBD+R6hqKojyBZs1w8WvYlsI+QuKRGBx3LFCwhatzBunCjDuJpDHwxD13sLMbpRA==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha512-iztkobsvnjKfAtTNdHkGVjAYTrrtlC7mGp/54c40wowO7LhURYl3gVzzcEqGl/qKXQltJ2HwMrdLcNUdo+N/RQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.4/isotope.pkgd.min.js" integrity="sha512-VDBOIlDbuC4VWxGJNmuFRQ0Li0SKkDpmGyuhAG5LTDLd/dJ/S0WMVxriR2Y+CyPL5gzjpN4f/6iqWVBJlht0tQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+    
+    
+    <script src="/js/hugo-academic.js"></script>
+    
+
+    
+    
+      
+      
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+      
+
+      
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/R.min.js"></script>
+      
+      <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/python.min.js"></script>
+      
+
+      
+
+      <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+
+  </body>
+</html>
+
