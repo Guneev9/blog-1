@@ -17,7 +17,7 @@
       <guid>/post/linear-regression-modeling-and-assumptions/</guid>
       <description>&lt;p&gt;Regression analysis is a powerful statistical process to find the relations within a dataset, with the key focus being on relationships between the independent variables (predictors) and a dependent variable (outcome). It can be used to build models for inference or prediction. Among several methods of regression analysis, linear regression sets the basis and is quite widely used for &lt;a href=&#34;https://en.wikipedia.org/wiki/Linear_regression#Applications&#34; target=&#34;_blank&#34;&gt;several real-world applications&lt;/a&gt;.&lt;/p&gt;
 &lt;div class=&#34;figure&#34;&gt;
-&lt;img src=&#34;post/2018-09-05-linear-regression-modeling-and-assumptions_files/2120406.jpg&#34; alt=&#34;Source : Google Images&#34; /&gt;
+&lt;img src=&#34;/post/2018-09-05-linear-regression-modeling-and-assumptions_files/2120406.jpg&#34; alt=&#34;Source : Google Images&#34; /&gt;
 &lt;p class=&#34;caption&#34;&gt;Source : Google Images&lt;/p&gt;
 &lt;/div&gt;
 &lt;p&gt;In this post, we will look at building a linear regression model for inference. The dataset we will use is the insurance charges data obtained from &lt;a href=&#34;https://www.kaggle.com/mirichoi0218/insurance/home&#34; target=&#34;_blank&#34;&gt;Kaggle&lt;/a&gt;. This data set consists of 1,338 observations and 7 columns: age, sex, bmi, children, smoker, region and charges.&lt;/p&gt;
@@ -115,7 +115,7 @@ F-statistic: 500.8 on 8 and 1329 DF,  p-value: &amp;lt; 2.2e-16&lt;/code&gt;&lt;
 &lt;p&gt;If we look at the p-values of the estimated coefficients above, we see that not all the coefficients are statistically significant (&amp;lt;0.05). This means that only a subset of the predictors are related to the outcome.&lt;/p&gt;
 &lt;p&gt;We can look at the individual p-values for selecting the variables. This may not be a problem when the number of predictors (7) is quite small compared to the number of observations (1338). This method won’t, however, work when the number of predictors is greater than the number of observations because of the &lt;a href=&#34;http://www.statisticshowto.com/multiple-testing-problem/&#34; target=&#34;_blank&#34;&gt;multiple testing problem&lt;/a&gt;. In such cases, we would have to use the &lt;a href=&#34;https://en.wikipedia.org/wiki/Feature_selection&#34; target=&#34;_blank&#34;&gt;feature/variable selection&lt;/a&gt; methods, like forward selection, backward selection, or mixed selection.&lt;/p&gt;
 &lt;div class=&#34;figure&#34;&gt;
-&lt;img src=&#34;static/post/2018-09-05-linear-regression-modeling-and-assumptions_files/RegressionMeme.jpg&#34; alt=&#34;Source: Google Images&#34; /&gt;
+&lt;img src=&#34;/post/2018-09-05-linear-regression-modeling-and-assumptions_files/RegressionMeme.jpg&#34; alt=&#34;Source: Google Images&#34; /&gt;
 &lt;p class=&#34;caption&#34;&gt;Source: Google Images&lt;/p&gt;
 &lt;/div&gt;
 &lt;p&gt;Before jumping on to feature selection using any of these methods, let us try linear regression using the features with significant p-values only.&lt;/p&gt;
@@ -184,7 +184,7 @@ step.lm.fit &amp;lt;- stepAIC(lm.fit, direction = &amp;quot;both&amp;quot;, trac
 &lt;/table&gt;
 &lt;p&gt;None of the predictors in our case has a high value of VIF. Hence, we don’t need to worry about multicollinearity in our case.&lt;/p&gt;
 &lt;div class=&#34;figure&#34;&gt;
-&lt;img src=&#34;static/post/2018-09-05-linear-regression-modeling-and-assumptions_files/multicollinearity%20meme.jpg&#34; alt=&#34;Source: Google Images&#34; /&gt;
+&lt;img src=&#34;/post/2018-09-05-linear-regression-modeling-and-assumptions_files/multicollinearity%20meme.jpg&#34; alt=&#34;Source: Google Images&#34; /&gt;
 &lt;p class=&#34;caption&#34;&gt;Source: Google Images&lt;/p&gt;
 &lt;/div&gt;
 &lt;hr /&gt;
@@ -229,7 +229,7 @@ Signif. codes:  0 &amp;#39;***&amp;#39; 0.001 &amp;#39;**&amp;#39; 0.01 &amp;#39
 &lt;p&gt;&lt;img src=&#34;/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-13-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;Looking at the residual plot of the new model, there is not much change in the overall pattern of the standard residuals.&lt;/p&gt;
 &lt;div class=&#34;figure&#34;&gt;
-&lt;img src=&#34;static/post/2018-09-05-linear-regression-modeling-and-assumptions_files/multiple-regression-more-like-multiple-depression.jpg&#34; alt=&#34;Source: Google Images&#34; /&gt;
+&lt;img src=&#34;/post/2018-09-05-linear-regression-modeling-and-assumptions_files/multiple-regression-more-like-multiple-depression.jpg&#34; alt=&#34;Source: Google Images&#34; /&gt;
 &lt;p class=&#34;caption&#34;&gt;Source: Google Images&lt;/p&gt;
 &lt;/div&gt;
 &lt;p&gt;Another method of fixing the problem of non-linearity is introducing an &lt;a href=&#34;https://en.wikipedia.org/wiki/Interaction_(statistics)#In_regression&#34; target=&#34;_blank&#34;&gt;interaction&lt;/a&gt; between some predictors. A person who smokes and has a high bmi may have higher charges as compared to a person who has lower bmi and is a non-smoker. Let’s update the model to introduce an interaction between &lt;em&gt;bmi&lt;/em&gt; and &lt;em&gt;smoker&lt;/em&gt;, and see if that makes a difference:&lt;/p&gt;
@@ -306,7 +306,7 @@ Chisquare = 0.005724708, Df = 1, p = 0.93969&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-17-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;p&gt;A p-value of ~0.94 implies here that we cannot reject the null hypothesis of constant variance of error terms.&lt;/p&gt;
 &lt;div class=&#34;figure&#34;&gt;
-&lt;img src=&#34;static/post/2018-09-05-linear-regression-modeling-and-assumptions_files/2d3a442e8b01577630a816aea1ba2ac8.jpeg&#34; alt=&#34;Source: Google Images&#34; /&gt;
+&lt;img src=&#34;/post/2018-09-05-linear-regression-modeling-and-assumptions_files/2d3a442e8b01577630a816aea1ba2ac8.jpeg&#34; alt=&#34;Source: Google Images&#34; /&gt;
 &lt;p class=&#34;caption&#34;&gt;Source: Google Images&lt;/p&gt;
 &lt;/div&gt;
 &lt;p&gt;However, there is a slight increase in non-linearity of the model as can be seen in the residual plot.&lt;/p&gt;
