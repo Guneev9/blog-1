@@ -330,7 +330,7 @@ ggplot(predictions, aes(x=insurance$charges, y=fit))+
   theme(legend.position = c(0.8, 0.2)) 
 ```
 
-The initial model is able to approximate the actual charges below \$17,000, but as the actual charges go above $20,000, the gap between actual charges and fitted values keeps increasing. As per the initial model, the actual charges near \$50,000 are fitted as somewhere near or below \$40,000, and this gap keeps increasing upwards.
+The initial model is able to approximate the actual charges below 17,000 USD, but as the actual charges go above 20,000 USD, the gap between actual charges and fitted values keeps increasing. As per the initial model, the actual charges near 50,000 USD are fitted as somewhere near or below 40,000 USD, and this gap keeps increasing upwards.
 
 In comparison, this is how the fitted values of the last model look against the actual outcomes:
 
