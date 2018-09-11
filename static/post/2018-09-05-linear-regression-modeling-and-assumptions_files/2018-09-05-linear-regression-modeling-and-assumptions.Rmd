@@ -60,7 +60,7 @@ Let's start with building a linear model. Instead of simple linear regression, w
 
 Multiple linear regression follows the formula : 
 
-$$y = beta_0{}+ beta_1x_1+beta_2x_2+...$$
+$y = {\beta_0}+ {\beta_1}x_1+{\beta_2}x_2+...$
 
 The coefficients in this linear equation denote the magnitude of additive relation between the predictor and the response. In simpler words, keeping everything else fixed, a unit change in x_1 will lead to change of beta_1 in the outcome, and so on.
 
@@ -364,7 +364,7 @@ confint(lm.fit2) %>%
   knitr::kable()
 ```
 
-In the above table, the X2.5 and X97.5 mark the lower and upper bounds for the 95% confidence interval of the regression coefficients. These are calculated using the standard errors of the estimated coefficients. As an example, for _age_, the estimated coefficient is ~34.49 and the 95% confidence interval lies between ~33.03 and ~35.95. This means that as per the model, keeping everything else fixed, an increase in 1 year of age will result in an increase of 34.49 in the value of $$charges^{0.8}$$ (since we transformed the outcome). However, this is an estimate and hence there is a scope for variation. This variation is accounted for by the confidence interval, denoting that about 95% of the times, the change in the value of charges^0.8 will be between 33.03 and 35.95, keeping everything else fixed.
+In the above table, the X2.5 and X97.5 mark the lower and upper bounds for the 95% confidence interval of the regression coefficients. These are calculated using the standard errors of the estimated coefficients. As an example, for _age_, the estimated coefficient is ~34.49 and the 95% confidence interval lies between ~33.03 and ~35.95. This means that as per the model, keeping everything else fixed, an increase in 1 year of age will result in an increase of 34.49 in the value of $charges^{0.8}$ (since we transformed the outcome). However, this is an estimate and hence there is a scope for variation. This variation is accounted for by the confidence interval, denoting that about 95% of the times, the change in the value of $charges^{0.8}$ will be between 33.03 and 35.95, keeping everything else fixed.
 
 This effect can be further viewed by plotting the effect using _effects_ function.
 

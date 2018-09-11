@@ -64,7 +64,7 @@ summary(insurance)&lt;/code&gt;&lt;/pre&gt;
 &lt;/ol&gt;
 &lt;p&gt;Let’s start with building a linear model. Instead of simple linear regression, where you have one predictor and one outcome, we will go with multiple linear regression, where you have more than one predictors and one outcome.&lt;/p&gt;
 &lt;p&gt;Multiple linear regression follows the formula :&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[y = beta_0{}+ beta_1x_1+beta_2x_2+...\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(y = {\beta_0}+ {\beta_1}x_1+{\beta_2}x_2+...\)&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;The coefficients in this linear equation denote the magnitude of additive relation between the predictor and the response. In simpler words, keeping everything else fixed, a unit change in x_1 will lead to change of beta_1 in the outcome, and so on.&lt;/p&gt;
 &lt;div id=&#34;is-there-a-relationship-between-the-medical-charges-and-the-predictors&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Is there a relationship between the medical charges and the predictors?&lt;/h2&gt;
@@ -504,7 +504,7 @@ ggplot(predictions, aes(x=insurance$charges, y=fit))+
 &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
-&lt;p&gt;In the above table, the X2.5 and X97.5 mark the lower and upper bounds for the 95% confidence interval of the regression coefficients. These are calculated using the standard errors of the estimated coefficients. As an example, for &lt;em&gt;age&lt;/em&gt;, the estimated coefficient is ~34.49 and the 95% confidence interval lies between ~33.03 and ~35.95. This means that as per the model, keeping everything else fixed, an increase in 1 year of age will result in an increase of 34.49 in the value of &lt;span class=&#34;math display&#34;&gt;\[charges^{0.8}\]&lt;/span&gt; (since we transformed the outcome). However, this is an estimate and hence there is a scope for variation. This variation is accounted for by the confidence interval, denoting that about 95% of the times, the change in the value of charges^0.8 will be between 33.03 and 35.95, keeping everything else fixed.&lt;/p&gt;
+&lt;p&gt;In the above table, the X2.5 and X97.5 mark the lower and upper bounds for the 95% confidence interval of the regression coefficients. These are calculated using the standard errors of the estimated coefficients. As an example, for &lt;em&gt;age&lt;/em&gt;, the estimated coefficient is ~34.49 and the 95% confidence interval lies between ~33.03 and ~35.95. This means that as per the model, keeping everything else fixed, an increase in 1 year of age will result in an increase of 34.49 in the value of &lt;span class=&#34;math inline&#34;&gt;\(charges^{0.8}\)&lt;/span&gt; (since we transformed the outcome). However, this is an estimate and hence there is a scope for variation. This variation is accounted for by the confidence interval, denoting that about 95% of the times, the change in the value of &lt;span class=&#34;math inline&#34;&gt;\(charges^{0.8}\)&lt;/span&gt; will be between 33.03 and 35.95, keeping everything else fixed.&lt;/p&gt;
 &lt;p&gt;This effect can be further viewed by plotting the effect using &lt;em&gt;effects&lt;/em&gt; function.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#get effects for age
 effs &amp;lt;- effect(&amp;#39;age&amp;#39;, mod = lm.fit2, 
