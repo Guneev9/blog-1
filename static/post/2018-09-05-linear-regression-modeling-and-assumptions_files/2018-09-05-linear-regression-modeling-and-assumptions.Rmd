@@ -62,7 +62,7 @@ Multiple linear regression follows the formula :
 
 $y = {\beta_0}+ {\beta_1}x_1+{\beta_2}x_2+...$
 
-The coefficients in this linear equation denote the magnitude of additive relation between the predictor and the response. In simpler words, keeping everything else fixed, a unit change in x_1 will lead to change of beta_1 in the outcome, and so on.
+The coefficients in this linear equation denote the magnitude of additive relation between the predictor and the response. In simpler words, keeping everything else fixed, a unit change in $x_1$ will lead to change of $beta_1$ in the outcome, and so on.
 
 ## Is there a relationship between the medical charges and the predictors?
 
@@ -88,7 +88,7 @@ R-squared measures the proportion of variability in the outcome that can be expl
 
 The Std. Error gives us the average amount that the estimated coefficient of a predictor differs from the actual coefficient of predictor. It can be used to compute the confidence interval of an estimated coefficient, which we will see later.
 
-The _t value_ of a predictor tells us how many standard deviations its estimated coefficient is away from 0. _Pr (>|t|)_ for a predictor is the p-value for the estimated regression coefficient, which is same as saying what is the probability of . A very low p-value (<0.05) for a predictor can be used to infer that there is a relationsip between the predictor and the outcome.
+The _t value_ of a predictor tells us how many standard deviations its estimated coefficient is away from 0. _Pr (>|t|)_ for a predictor is the p-value for the estimated regression coefficient, which is same as saying what is the probability of seeing a t value for the regression coefficient. A very low p-value (<0.05) for a predictor can be used to infer that there is a relationsip between the predictor and the outcome.
 
 Our next step should be [validation of regression analyis](https://en.wikipedia.org/wiki/Regression_validation){target="_blank"}. This may mean validation of underlying assumptions of the model, checking the structure of model with different predictors, looking for values that have an exceptionally large impact on the regression model, looking for observations that have not been represented well enough in the model, and more. 
 
