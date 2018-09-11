@@ -408,7 +408,7 @@ ggplot(predictions, aes(x=insurance$charges, y=fit))+
   scale_color_manual(&amp;#39;linear relation&amp;#39;, values = c(&amp;#39;red&amp;#39;, &amp;#39;blue&amp;#39;)) +
   theme(legend.position = c(0.8, 0.2)) &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-21-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;The initial model is able to approximate the actual charges below $17,000, but as the actual charges go above $20,000, the gap between actual charges and fitted values keeps increasing. As per the initial model, the actual charges near $50,000 are fitted as somewhere near or below $40,000, and this gap keeps increasing upwards.&lt;/p&gt;
+&lt;p&gt;The initial model is able to approximate the actual charges below 17,000 dollars, but as the actual charges go above 20,000 dolalrs, the gap between actual charges and fitted values keeps increasing. As per the initial model, the actual charges near 50,000 dolalrs are fitted as somewhere near or below 40,000 dollars, and this gap keeps increasing upwards.&lt;/p&gt;
 &lt;p&gt;In comparison, this is how the fitted values of the last model look against the actual outcomes:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;predictions &amp;lt;- predict(lm.fit2, insurance, interval = &amp;quot;confidence&amp;quot;)^(1/yTransformer) %&amp;gt;%
   tidy()
