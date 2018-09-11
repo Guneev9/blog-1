@@ -12,18 +12,22 @@
     <item>
       <title>Linear regression: Modeling and Assumptions</title>
       <link>/post/linear-regression-modeling-and-assumptions/</link>
-      <pubDate>Wed, 05 Sep 2018 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 09 Sep 2018 00:00:00 +0000</pubDate>
       
       <guid>/post/linear-regression-modeling-and-assumptions/</guid>
-      <description>&lt;p&gt;Regression analysis is a powerful statistical process to find the relations within a dataset, with the key focus being on relationships between the independent variables (predictors) and a dependent varible (outcome). Among several methods of regression analysis, linear regression sets the basis and is quite widely used for &lt;a href=&#34;https://en.wikipedia.org/wiki/Linear_regression#Applications&#34; target=&#34;_blank&#34;&gt;several real-world applications&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;In this post, we will look at the insurance charges data obtained from Kaggle (&lt;a href=&#34;https://www.kaggle.com/mirichoi0218/insurance/home&#34; class=&#34;uri&#34;&gt;https://www.kaggle.com/mirichoi0218/insurance/home&lt;/a&gt;). This data set consists of 7 columns: age, sex, bmi, children, smoker, region and charges. It has 1,338 observations. We will get into more details about these variables later.&lt;/p&gt;
+      <description>&lt;p&gt;Regression analysis is a powerful statistical process to find the relations within a dataset, with the key focus being on relationships between the independent variables (predictors) and a dependent varible (outcome). It can be used to build models for inference or prediction. Among several methods of regression analysis, linear regression sets the basis and is quite widely used for &lt;a href=&#34;https://en.wikipedia.org/wiki/Linear_regression#Applications&#34; target=&#34;_blank&#34;&gt;several real-world applications&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&#34;figure&#34;&gt;
+&lt;img src=&#34;static/post/2018-09-05-linear-regression-modeling-and-assumptions_files/2120406.jpg&#34; alt=&#34;Source : Google Images&#34; /&gt;
+&lt;p class=&#34;caption&#34;&gt;Source : Google Images&lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;In this post, we will look at building a linear regression model for inference. The dataset we will use is the insurance charges data obtained from &lt;a href=&#34;https://www.kaggle.com/mirichoi0218/insurance/home&#34; target=&#34;_blank&#34;&gt;Kaggle&lt;/a&gt;. This data set consists of 1,338 observations and 7 columns: age, sex, bmi, children, smoker, region and charges.&lt;/p&gt;
 &lt;p&gt;The key questions that we would be asking are:&lt;/p&gt;
 &lt;ol style=&#34;list-style-type: decimal&#34;&gt;
 &lt;li&gt;Is there a relationship between medical charges and other variables in the dataset?&lt;/li&gt;
 &lt;li&gt;How valid is the model we have built?&lt;/li&gt;
-&lt;li&gt;What can we do to improve the model making it more valid?&lt;/li&gt;
+&lt;li&gt;What can we do to improve the model?&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;We start with importing the required libraries:&lt;/p&gt;
+&lt;p&gt;We start with importing the required libraries and data:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(magrittr)
 library(purrr)
 library(MASS)
@@ -33,8 +37,8 @@ library(ggplot2)
 library(psych)
 library(caret)
 library(tidyr)
-library(knitr)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;We import the data from the csv. We can see an overview of the data using &lt;em&gt;summary()&lt;/em&gt; function in R.&lt;/p&gt;
+library(effects)
+library(tibble)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;insurance &amp;lt;- read.csv(&amp;#39;~/Documents/CodeWork/medicalCost/insurance.csv&amp;#39;)
 summary(insurance)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;      age            sex           bmi           children     smoker    
@@ -51,21 +55,21 @@ summary(insurance)&lt;/code&gt;&lt;/pre&gt;
  southwest:325   Mean   :13270  
                  3rd Qu.:16640  
                  Max.   :63770  &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;The general observations that can be taken from the summary are:&lt;/p&gt;
+&lt;p&gt;Some simple observations that can be taken from the summary are:&lt;/p&gt;
 &lt;ol style=&#34;list-style-type: decimal&#34;&gt;
 &lt;li&gt;The age of participants varies from 18 to 64.&lt;/li&gt;
 &lt;li&gt;Around 49.48% of participants are female.&lt;/li&gt;
 &lt;li&gt;The bmi of participants ranges from 15.96 to 53.13.&lt;/li&gt;
 &lt;li&gt;Only 20.48% of the participants are smokers.&lt;/li&gt;
 &lt;/ol&gt;
-&lt;p&gt;Let’s start with building a linear model of all the variables. Instead of simple linear regression, where you have one predictor and one outcome, we will go with multiple linear regression, where you have more than one predictors and one outcome.&lt;/p&gt;
+&lt;p&gt;Let’s start with building a linear model. Instead of simple linear regression, where you have one predictor and one outcome, we will go with multiple linear regression, where you have more than one predictors and one outcome.&lt;/p&gt;
+&lt;p&gt;Multiple linear regression follows the formula :&lt;/p&gt;
+&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[y = beta_0{}+ beta_1x_1+beta_2x_2+...\]&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;The coefficients in this linear equation denote the magnitude of additive relation between the predictor and the response. In simpler words, keeping everything else fixed, a unit change in x_1 will lead to change of beta_1 in the outcome, and so on.&lt;/p&gt;
 &lt;div id=&#34;is-there-a-relationship-between-the-medical-charges-and-the-predictors&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Is there a relationship between the medical charges and the predictors?&lt;/h2&gt;
-&lt;p&gt;Our first step is finding if there is a relationship at all between the outcome and the predictors.&lt;/p&gt;
-&lt;p&gt;Multiple linear regression follows the formula :&lt;/p&gt;
-&lt;p&gt;&lt;span class=&#34;math display&#34;&gt;\[y = \beta_0{}+ \beta_1x_1+\beta_2x_2+...\]&lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;The coefficients in this linear equation denote the magnitude of additive relation between the predictor and the response. In simpler words, keeping everything else fixed, a unit change in x_1 will lead to change of beta_1 in the outcome.&lt;/p&gt;
-&lt;p&gt;The null hypothesis would be that there is no relation between any of the predictors and the response, which would be possible when all the coefficients for the predictors are 0. The alternate hypothesis would be that atleast one of the predictors has a relation with the outcome, that is the coefficient of one of the predictors is non-zero.&lt;/p&gt;
+&lt;p&gt;Our first step is finding if there is any relationship between the outcome and the predictors.&lt;/p&gt;
+&lt;p&gt;The null hypothesis would be that there is no relation between any of the predictors and the response, which would be possible when all the regression coefficients for the predictors are equal to zero. The alternate hypothesis would be that atleast one of the predictors has a relation with the outcome, that is the regression coefficient of one of the predictors is non-zero.&lt;/p&gt;
 &lt;p&gt;This hypothesis is tested by computing the &lt;a href=&#34;http://www.statisticshowto.com/probability-and-statistics/F%20statistic-value-test/&#34; target=&#34;_blank&#34;&gt;F statistic&lt;/a&gt;. In case of no relationship between the predictor and the response, F statistic will be closer to 1. On the contrary, if the alternate hypothesis is true, the F statistic will be greater than 1. The p-value of F statistic can be used to determine whether the null hypothesis can be rejected or not.&lt;/p&gt;
 &lt;p&gt;We will start with fitting a multiple linear regression model using all the predictors:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;lm.fit &amp;lt;- lm(formula = charges~., data = insurance)
@@ -96,9 +100,11 @@ Signif. codes:  0 &amp;#39;***&amp;#39; 0.001 &amp;#39;**&amp;#39; 0.01 &amp;#39
 Residual standard error: 6062 on 1329 degrees of freedom
 Multiple R-squared:  0.7509,    Adjusted R-squared:  0.7494 
 F-statistic: 500.8 on 8 and 1329 DF,  p-value: &amp;lt; 2.2e-16&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;A high value of F statistic, with a very low p-value(&amp;lt;2.2e-16), implies that the null hypothesis can be rejected. This means there is a potential relationship between the predictors and the outcome.&lt;/p&gt;
-&lt;p&gt;RSE (Residual Standard Error) is the estimate of standard deviation of irreducible error. In simpler words, it is the average difference between the actual outcome and the outcome from the fitted regression line. Hence, a large value of RSE means a high deviation from the true regression line. As such, RSE is useful in determining the lack of fit of the model to the data. RSE in our model is large (6062), indicating that the model doesn’t fit the data well.&lt;/p&gt;
-&lt;p&gt;R-squared measures the proportion of variability in the outcome that can be explained by the predictor, and is always between 0 and 1. However, R-squared may be high for higher number of predictors because of &lt;a href=&#34;https://en.wikipedia.org/wiki/Coefficient_of_determination#Inflation_of_R2&#34; target=&#34;_blank&#34;&gt;how R-squared is calculated&lt;/a&gt;. &lt;a href=&#34;https://en.wikipedia.org/wiki/Coefficient_of_determination#Adjusted_R2&#34; target=&#34;_blank&#34;&gt;Adjusted R-squared&lt;/a&gt; adjusts the value of R-squared to avoid this effect. A high value of adjusted R-squared (0.7494) shows that around 75% of variance of the data is being explained by the model.&lt;/p&gt;
+&lt;p&gt;A high value of F statistic, with a very low p-value (&amp;lt;2.2e-16), implies that the null hypothesis can be rejected. This means there is a potential relationship between the predictors and the outcome.&lt;/p&gt;
+&lt;p&gt;RSE (Residual Standard Error) is the estimate of standard deviation of irreducible error (the error which can’t be reduced even if knew the true regression line; hence, irreducible). In simpler words, it is the average deviation between the actual outcome and the true regression line. Hence, a large value of RSE means a high deviation from the true regression line. As such, RSE is useful in determining the lack of fit of the model to the data. RSE in our model is large (6062), indicating that the model doesn’t fit the data well.&lt;/p&gt;
+&lt;p&gt;R-squared measures the proportion of variability in the outcome that can be explained by the predictor, and is always between 0 and 1; the higher the value, the better the model is able to explain the variability in the outcome. However, increase in number of predictors mostly results in an increased value of R-squared due to &lt;a href=&#34;https://en.wikipedia.org/wiki/Coefficient_of_determination#Inflation_of_R2&#34; target=&#34;_blank&#34;&gt;inflation of R-squared&lt;/a&gt;. &lt;a href=&#34;https://en.wikipedia.org/wiki/Coefficient_of_determination#Adjusted_R2&#34; target=&#34;_blank&#34;&gt;Adjusted R-squared&lt;/a&gt; adjusts the value of R-squared to avoid this effect. A high value of adjusted R-squared (0.7494) shows that more than 74% of the variance in the data is being explained by the model. From now on, we will use the term R-squared for adjusted R-squared.&lt;/p&gt;
+&lt;p&gt;The Std. Error gives us the average amount that the estimated coefficient of a predictor differs from the actual coefficient of predictor. It can be used to compute the confidence interval of an estimated coefficient, which we will see later.&lt;/p&gt;
+&lt;p&gt;The &lt;em&gt;t value&lt;/em&gt; of a predictor tells us how many standard deviations its estimated coefficient is away from 0. &lt;em&gt;Pr (&amp;gt;|t|)&lt;/em&gt; for a predictor is the p-value for the estimated regression coefficient, which is same as saying what is the probability of . A very low p-value (&amp;lt;0.05) for a predictor can be used to infer that there is a relationsip between the predictor and the outcome.&lt;/p&gt;
 &lt;p&gt;Our next step should be &lt;a href=&#34;https://en.wikipedia.org/wiki/Regression_validation&#34; target=&#34;_blank&#34;&gt;validation of regression analyis&lt;/a&gt;. This may mean validation of underlying assumptions of the model, checking the structure of model with different predictors, looking for values that have an exceptionally large impact on the regression model, looking for observations that have not been represented well enough in the model, and more.&lt;/p&gt;
 &lt;p&gt;In the rest of the post, we will look at some of these methods of model validation and improvement.&lt;/p&gt;
 &lt;hr /&gt;
@@ -108,78 +114,32 @@ F-statistic: 500.8 on 8 and 1329 DF,  p-value: &amp;lt; 2.2e-16&lt;/code&gt;&lt;
 &lt;p&gt;Now that we have determined that there is a relation between the predictors and the outcome, our next step would be finding out if all or only some of the predictors are related to the outcome.&lt;/p&gt;
 &lt;p&gt;If we look at the p-values of the estimated coefficients above, we see that not all the coefficients are statistically significant (&amp;lt;0.05). This means that only a subset of the predictors are related to the outcome.&lt;/p&gt;
 &lt;p&gt;We can look at the individual p-values for selecting the variables. This may not be a problem when the number of predictors (7) is quite small compared to the number of observations (1338). This method won’t, however, work when the number of predictors is greater than the number of observations because of the &lt;a href=&#34;http://www.statisticshowto.com/multiple-testing-problem/&#34; target=&#34;_blank&#34;&gt;multiple testing problem&lt;/a&gt;. In such cases, we would have to use the &lt;a href=&#34;https://en.wikipedia.org/wiki/Feature_selection&#34; target=&#34;_blank&#34;&gt;feature/variable selection&lt;/a&gt; methods, like forward selection, backward selection, or mixed selection.&lt;/p&gt;
+&lt;div class=&#34;figure&#34;&gt;
+&lt;img src=&#34;static/post/2018-09-05-linear-regression-modeling-and-assumptions_files/RegressionMeme.jpg&#34; alt=&#34;Source: Google Images&#34; /&gt;
+&lt;p class=&#34;caption&#34;&gt;Source: Google Images&lt;/p&gt;
+&lt;/div&gt;
 &lt;p&gt;Before jumping on to feature selection using any of these methods, let us try linear regression using the features with significant p-values only.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;lm.fit.sel &amp;lt;- lm(charges~age+bmi+children+smoker+region, data = insurance)
-summary(lm.fit.sel)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;
-Call:
-lm(formula = charges ~ age + bmi + children + smoker + region, 
-    data = insurance)
-
-Residuals:
-     Min       1Q   Median       3Q      Max 
--11367.2  -2835.4   -979.7   1361.9  29935.5 
-
-Coefficients:
-                 Estimate Std. Error t value Pr(&amp;gt;|t|)    
-(Intercept)     -11990.27     978.76 -12.250  &amp;lt; 2e-16 ***
-age                256.97      11.89  21.610  &amp;lt; 2e-16 ***
-bmi                338.66      28.56  11.858  &amp;lt; 2e-16 ***
-children           474.57     137.74   3.445 0.000588 ***
-smokeryes        23836.30     411.86  57.875  &amp;lt; 2e-16 ***
-regionnorthwest   -352.18     476.12  -0.740 0.459618    
-regionsoutheast  -1034.36     478.54  -2.162 0.030834 *  
-regionsouthwest   -959.37     477.78  -2.008 0.044846 *  
----
-Signif. codes:  0 &amp;#39;***&amp;#39; 0.001 &amp;#39;**&amp;#39; 0.01 &amp;#39;*&amp;#39; 0.05 &amp;#39;.&amp;#39; 0.1 &amp;#39; &amp;#39; 1
-
-Residual standard error: 6060 on 1330 degrees of freedom
-Multiple R-squared:  0.7509,    Adjusted R-squared:  0.7496 
-F-statistic: 572.7 on 7 and 1330 DF,  p-value: &amp;lt; 2.2e-16&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;We will compare this to mixed variable selection, which is a combination of forward selection and backward selection. This can be done in R using the &lt;em&gt;stepAIC()&lt;/em&gt; function.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;step.lm.fit &amp;lt;- stepAIC(lm.fit, direction = &amp;quot;both&amp;quot;, trace = FALSE)
-summary(step.lm.fit)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;
-Call:
-lm(formula = charges ~ age + bmi + children + smoker + region, 
-    data = insurance)
-
-Residuals:
-     Min       1Q   Median       3Q      Max 
--11367.2  -2835.4   -979.7   1361.9  29935.5 
-
-Coefficients:
-                 Estimate Std. Error t value Pr(&amp;gt;|t|)    
-(Intercept)     -11990.27     978.76 -12.250  &amp;lt; 2e-16 ***
-age                256.97      11.89  21.610  &amp;lt; 2e-16 ***
-bmi                338.66      28.56  11.858  &amp;lt; 2e-16 ***
-children           474.57     137.74   3.445 0.000588 ***
-smokeryes        23836.30     411.86  57.875  &amp;lt; 2e-16 ***
-regionnorthwest   -352.18     476.12  -0.740 0.459618    
-regionsoutheast  -1034.36     478.54  -2.162 0.030834 *  
-regionsouthwest   -959.37     477.78  -2.008 0.044846 *  
----
-Signif. codes:  0 &amp;#39;***&amp;#39; 0.001 &amp;#39;**&amp;#39; 0.01 &amp;#39;*&amp;#39; 0.05 &amp;#39;.&amp;#39; 0.1 &amp;#39; &amp;#39; 1
-
-Residual standard error: 6060 on 1330 degrees of freedom
-Multiple R-squared:  0.7509,    Adjusted R-squared:  0.7496 
-F-statistic: 572.7 on 7 and 1330 DF,  p-value: &amp;lt; 2.2e-16&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;The model given by stepwise selection is same as the model we got by selecting the features with significant p-values (works in this case).&lt;/p&gt;
-&lt;p&gt;We can see that there is a very slight improvement in R-squared value of the model(0.7494 -&amp;gt; 0.7496), with a very slight deterioration in RSE. (6062 -&amp;gt; 6060)&lt;/p&gt;
-&lt;p&gt;Some key takeaways from the model are:&lt;/p&gt;
-&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
-&lt;li&gt;Charges increase with increase in age of the key beneficiary. For every 1 year increase in age of the key benificiary, keeping everything else fixed, charges increase by around $256.97.&lt;/li&gt;
-&lt;li&gt;Similar relations can be seen for other predictors. Higher charges are expected with higher BMI or higher number of children/dependents or if the person is a smoker.&lt;/li&gt;
-&lt;/ol&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;lm.fit.sel &amp;lt;- lm(charges~age+bmi+children+smoker+region, data = insurance)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We will compare this to &lt;a href=&#34;https://www.stat.ubc.ca/~rollin/teach/643w04/lec/node43.html&#34; target=&#34;_blank&#34;&gt;mixed selection&lt;/a&gt;, which is a combination of forward and backward selection. This can be done in R using the &lt;em&gt;stepAIC()&lt;/em&gt; function, which uses &lt;a href=&#34;https://en.wikipedia.org/wiki/Akaike_information_criterion&#34; target=&#34;_blank&#34;&gt;Akaike Information Criterion&lt;/a&gt; (AIC) to select the best model out of multiple models.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#selecting direction = &amp;quot;both&amp;quot; for mixed selection
+step.lm.fit &amp;lt;- stepAIC(lm.fit, direction = &amp;quot;both&amp;quot;, trace = FALSE)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Let’s compare the two models :&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;step.lm.fit$call&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;lm(formula = charges ~ age + bmi + children + smoker + region, 
+    data = insurance)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;lm.fit.sel$call&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;lm(formula = charges ~ age + bmi + children + smoker + region, 
+    data = insurance)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The model given by stepwise selection is same as the model we got by selecting the predictors with significant p-values (works in this case). You can check the summary of the new model to see if there is any improvement in the model.&lt;/p&gt;
 &lt;hr /&gt;
 &lt;/div&gt;
-&lt;div id=&#34;multicollinearity&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Multicollinearity&lt;/h2&gt;
+&lt;div id=&#34;are-there-any-multicollinear-features&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Are there any multicollinear features?&lt;/h2&gt;
 &lt;p&gt;Multicollinearity in multiple regression is a phenomenon in which two or more predictors are highly related to each other, and hence one predictor can be used to predict the value of the other. The problem with multi-collinearity is that it can make it harder to estimate the individual effects of the predictors on the outcome.&lt;/p&gt;
-&lt;p&gt;Usually, collinearity between pairs of predictors can be detected using a correlation matrix. However, corrrelation matrix fails, for example, when more than two predictors have high collinearity between them but don’t have high correlation as pairs.&lt;/p&gt;
+&lt;p&gt;Usually, collinearity between pairs of predictors can be detected using a correlation matrix. However, corrrelation matrix fails, for example, when more than two predictors have high collinearity as a group but don’t have high correlations as pairs.&lt;/p&gt;
 &lt;p&gt;A better way to detect multicollinearity is Variance Inflation Factor (VIF). VIF of any predictor is the ratio of variance of its estimated coefficient in the full model to the variance of its estimated coefficient when fit on the outcome only by itself (as in simple linear regression). A VIF of 1 indicates no presence of multicollinearity. Usually, a VIF value of above 5 or 10 is taken as an indicator of multicollinearity. The simplest way of getting rid of multicollinearity in that case is to discard the predictor with high value of VIF.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;vif(step.lm.fit) %&amp;gt;% 
-  kable()&lt;/code&gt;&lt;/pre&gt;
+  knitr::kable()&lt;/code&gt;&lt;/pre&gt;
 &lt;table&gt;
 &lt;thead&gt;
 &lt;tr class=&#34;header&#34;&gt;
@@ -223,294 +183,385 @@ F-statistic: 572.7 on 7 and 1330 DF,  p-value: &amp;lt; 2.2e-16&lt;/code&gt;&lt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 &lt;p&gt;None of the predictors in our case has a high value of VIF. Hence, we don’t need to worry about multicollinearity in our case.&lt;/p&gt;
+&lt;div class=&#34;figure&#34;&gt;
+&lt;img src=&#34;static/post/2018-09-05-linear-regression-modeling-and-assumptions_files/multicollinearity%20meme.jpg&#34; alt=&#34;Source: Google Images&#34; /&gt;
+&lt;p class=&#34;caption&#34;&gt;Source: Google Images&lt;/p&gt;
+&lt;/div&gt;
 &lt;hr /&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;par(mfrow=c(2,2))
-plot(step.lm.fit)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-7-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;is-the-relationship-linear&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Is the relationship linear?&lt;/h2&gt;
-&lt;p&gt;By applying linear regression, we are assuming that there is a linear relationship between the predictors and the outcome. If the underlying relationship is quite far from linear, then most of the inferences we have made so far are doubtful. This also means reduced accuracy of model.&lt;/p&gt;
-&lt;p&gt;The non-linearity of the model can be determined using residual plots. For multiple linear regression, we can plot the &lt;a href=&#34;http://www.statisticshowto.com/residual/&#34; target=&#34;_blank&#34;&gt;residuals&lt;/a&gt; versus fitted values. Presence of a pattern in the residual plots would imply a problem with the linear assumption of the model.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;residualPlot(step.lm.fit, type = &amp;quot;rstandard&amp;quot;, id=TRUE)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;By applying linear regression, we are assuming that there is a linear relationship between the predictors and the outcome. If the underlying relationship is quite far from linear, then most of the inferences we would make would be doubtful. This also means reduced accuracy of model.&lt;/p&gt;
+&lt;p&gt;The non-linearity of the model can be determined using the residual plot. &lt;a href=&#34;http://www.statisticshowto.com/residual/&#34; target=&#34;_blank&#34;&gt;Residual&lt;/a&gt; for any observation is the difference between the actual outcome and the fitted outcome as per the model. For multiple linear regression, we can plot the residuals versus the fitted values. Presence of a pattern in the residual plot would imply a problem with the linear assumption of the model.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#type = &amp;quot;rstandard&amp;quot; draws a plot for standardized residuals
+residualPlot(step.lm.fit, type = &amp;quot;rstandard&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-8-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;The blue line represents a smooth curve for the mean residual for each fitted value. We can see a little pattern of non-zero mean of residuals for different fitted values. This denotes slight non-linearity in our data (That number 1301 and 578; we’ll get to that later).&lt;/p&gt;
-&lt;p&gt;The non-linearity can be further explored by looking at &lt;a href=&#34;https://www.r-bloggers.com/r-regression-diagnostics-part-1/&#34; target=&#34;_blank&#34;&gt;Component Residual plots&lt;/a&gt; (CR plots). CR plots can be created in R using the function &lt;em&gt;ceresePlots()&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;The blue line represents a smooth pattern between the fitted values and the standard residuals. The curve in our case denotes slight non-linearity in our data.&lt;/p&gt;
+&lt;p&gt;The non-linearity can be further explored by looking at &lt;a href=&#34;https://www.r-bloggers.com/r-regression-diagnostics-part-1/&#34; target=&#34;_blank&#34;&gt;Component Residual plots&lt;/a&gt; (CR plots). CR plots can be created in R using the function &lt;em&gt;ceresPlots()&lt;/em&gt;.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ceresPlots(step.lm.fit)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-9-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;The pink line is modelled for the relation between the residuals and the predictor. The blue dashed line is for the line of best fit. A significant difference between the two lines for a predictor implies that the predictor and the outcome don’t have a linear relationship.&lt;/p&gt;
-&lt;p&gt;This kind if inconsistency can be seen in the Component Residual plot for &lt;em&gt;bmi&lt;/em&gt;. Let’s take a closer look at the CR plot for bmi:&lt;/p&gt;
+&lt;p&gt;The pink line (residual line) is modelled for the relation between the predictor and the residuals. The blue dashed line (component line) is for the line of best fit. A significant difference between the two lines for a predictor implies that the predictor and the outcome don’t have a linear relationship.&lt;/p&gt;
+&lt;p&gt;This kind of inconsistency can be seen in the CR plot for &lt;em&gt;bmi&lt;/em&gt;. Let’s take a closer look:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ceresPlot(step.lm.fit, variable = &amp;#39;bmi&amp;#39;)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-10-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ceresPlot(step.lm.fit, variable = &amp;#39;age&amp;#39;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-10-2.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;The difference between the component line and residual line becomes more clear now.&lt;/p&gt;
-&lt;p&gt;One of the methods of fixing this is introducing non-linearity to the predictors of the model. Let’s try adding a non-linear form of &lt;em&gt;bmi&lt;/em&gt; to the model.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;step.lm.fit.new &amp;lt;- update(step.lm.fit, .~.+I(bmi^1.25)+I(age^1.27))
-ceresPlot(step.lm.fit.new, variable = &amp;#39;bmi&amp;#39;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The difference between the component line and the residual line becomes more clear now.&lt;/p&gt;
+&lt;p&gt;One of the methods of fixing this is introducing non-linear transformation of predictors of the model. Let’s try adding a non-linear transformation of &lt;em&gt;bmi&lt;/em&gt; to the model.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#update() can be used to update an existing model with new requirements
+step.lm.fit.new &amp;lt;- update(step.lm.fit, .~.+I(bmi^1.25))
+
+ceresPlots(step.lm.fit.new)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-11-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ceresPlot(step.lm.fit.new, variable = &amp;#39;age&amp;#39;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-11-2.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ceresPlots(step.lm.fit.new)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-11-3.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;As per the CR plots, the addition of a non-linear transformation of bmi to the existing model fixed the problem.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;residualPlot(step.lm.fit.new, type = &amp;quot;rstandard&amp;quot;, id = T)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-12-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;summary(step.lm.fit.new)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;
-Call:
-lm(formula = charges ~ age + bmi + children + smoker + region + 
-    I(bmi^1.25) + I(age^1.27), data = insurance)
+&lt;p&gt;The CR plot of bmi no more has a difference between the residual line and the component line. As per the CR plots, the addition of a non-linear transformation of bmi to the existing model fixed the problem.&lt;/p&gt;
+&lt;p&gt;We can use ANOVA to check if the new model is significantly better than the previous model. A low p-value (&amp;lt;0.05) for the new model will mean we can conclude that it is better than the previous model:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;anova(step.lm.fit, step.lm.fit.new, test = &amp;quot;F&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;Analysis of Variance Table
 
-Residuals:
-   Min     1Q Median     3Q    Max 
--10691  -3020  -1160   1564  30418 
-
-Coefficients:
-                 Estimate Std. Error t value Pr(&amp;gt;|t|)    
-(Intercept)     -13946.07    5437.97  -2.565 0.010439 *  
-age               -859.14     286.33  -3.000 0.002746 ** 
-bmi               2038.37     821.13   2.482 0.013174 *  
-children           643.12     143.43   4.484 7.96e-06 ***
-smokeryes        23863.63     409.28  58.307  &amp;lt; 2e-16 ***
-regionnorthwest   -426.01     474.04  -0.899 0.368988    
-regionsoutheast   -999.89     475.68  -2.102 0.035740 *  
-regionsouthwest  -1003.32     475.32  -2.111 0.034976 *  
-I(bmi^1.25)       -577.47     278.15  -2.076 0.038074 *  
-I(age^1.27)        327.48      84.04   3.897 0.000102 ***
+Model 1: charges ~ age + bmi + children + smoker + region
+Model 2: charges ~ age + bmi + children + smoker + region + I(bmi^1.25)
+  Res.Df        RSS Df Sum of Sq      F  Pr(&amp;gt;F)  
+1   1330 4.8845e+10                              
+2   1329 4.8697e+10  1 148484981 4.0524 0.04431 *
 ---
-Signif. codes:  0 &amp;#39;***&amp;#39; 0.001 &amp;#39;**&amp;#39; 0.01 &amp;#39;*&amp;#39; 0.05 &amp;#39;.&amp;#39; 0.1 &amp;#39; &amp;#39; 1
-
-Residual standard error: 6021 on 1328 degrees of freedom
-Multiple R-squared:  0.7544,    Adjusted R-squared:  0.7528 
-F-statistic: 453.4 on 9 and 1328 DF,  p-value: &amp;lt; 2.2e-16&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Looking at the residual plot and summary of the model, there is not much change in the overall model.&lt;/p&gt;
-&lt;p&gt;One of the methods of fixing the problem of non-linearity is introducing interaction between the predictors. Out of the predictors that we have, an interaction of bmi and smoker may have an effect on the charges. Let’s update the model and see if that makes a difference:&lt;/p&gt;
+Signif. codes:  0 &amp;#39;***&amp;#39; 0.001 &amp;#39;**&amp;#39; 0.01 &amp;#39;*&amp;#39; 0.05 &amp;#39;.&amp;#39; 0.1 &amp;#39; &amp;#39; 1&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Since the model with non-linear transformation of &lt;em&gt;bmi&lt;/em&gt; has a sufficiently low p-value (&amp;lt;0.05), we can conclude that it is better than the previous model.&lt;/p&gt;
+&lt;p&gt;Let’s look at the residual plot of this new model.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;residualPlot(step.lm.fit.new, type = &amp;quot;rstandard&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-13-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Looking at the residual plot of the new model, there is not much change in the overall pattern of the standard residuals.&lt;/p&gt;
+&lt;div class=&#34;figure&#34;&gt;
+&lt;img src=&#34;static/post/2018-09-05-linear-regression-modeling-and-assumptions_files/multiple-regression-more-like-multiple-depression.jpg&#34; alt=&#34;Source: Google Images&#34; /&gt;
+&lt;p class=&#34;caption&#34;&gt;Source: Google Images&lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;Another method of fixing the problem of non-linearity is introducing an &lt;a href=&#34;https://en.wikipedia.org/wiki/Interaction_(statistics)#In_regression&#34; target=&#34;_blank&#34;&gt;interaction&lt;/a&gt; between some predictors. A person who smokes and has a high bmi may have higher charges as compared to a person who has lower bmi and is a non-smoker. Let’s update the model to introduce an interaction between &lt;em&gt;bmi&lt;/em&gt; and &lt;em&gt;smoker&lt;/em&gt;, and see if that makes a difference:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;lm.fit1 &amp;lt;- update(step.lm.fit.new, ~ .+bmi*smoker)
-summary(lm.fit1)&lt;/code&gt;&lt;/pre&gt;
+
+residualPlot(lm.fit1, type = &amp;quot;rstandard&amp;quot;, id=TRUE)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-14-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;anova(step.lm.fit.new, lm.fit1, test = &amp;quot;F&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;Analysis of Variance Table
+
+Model 1: charges ~ age + bmi + children + smoker + region + I(bmi^1.25)
+Model 2: charges ~ age + bmi + children + smoker + region + I(bmi^1.25) + 
+    bmi:smoker
+  Res.Df        RSS Df  Sum of Sq      F    Pr(&amp;gt;F)    
+1   1329 4.8697e+10                                   
+2   1328 3.1069e+10  1 1.7627e+10 753.45 &amp;lt; 2.2e-16 ***
+---
+Signif. codes:  0 &amp;#39;***&amp;#39; 0.001 &amp;#39;**&amp;#39; 0.01 &amp;#39;*&amp;#39; 0.05 &amp;#39;.&amp;#39; 0.1 &amp;#39; &amp;#39; 1&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Not only the relation becomes more linear with less appearance of a pattern in the residual plot, the new model is significantly better than the previous model (without interactions) as can be seen with the p-value (&amp;lt;2.2e-16).&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;summary(lm.fit1)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;
 Call:
 lm(formula = charges ~ age + bmi + children + smoker + region + 
-    I(bmi^1.25) + I(age^1.27) + bmi:smoker, data = insurance)
+    I(bmi^1.25) + bmi:smoker, data = insurance)
 
 Residuals:
      Min       1Q   Median       3Q      Max 
--12164.7  -1774.5  -1289.8   -635.3  30727.4 
+-11932.6  -1968.0  -1303.7   -311.3  29983.2 
 
 Coefficients:
-                 Estimate Std. Error t value Pr(&amp;gt;|t|)    
-(Intercept)      -6526.69    4342.95  -1.503 0.133122    
-age               -801.43     228.25  -3.511 0.000461 ***
-bmi               2012.00     654.53   3.074 0.002155 ** 
-children           673.87     114.33   5.894 4.78e-09 ***
-smokeryes       -20296.80    1631.56 -12.440  &amp;lt; 2e-16 ***
-regionnorthwest   -665.80     377.96  -1.762 0.078370 .  
-regionsoutheast  -1167.66     379.22  -3.079 0.002119 ** 
-regionsouthwest  -1280.49     379.02  -3.378 0.000750 ***
-I(bmi^1.25)       -675.63     221.74  -3.047 0.002357 ** 
-I(age^1.27)        312.54      66.99   4.665 3.39e-06 ***
-bmi:smokeryes     1438.65      52.08  27.624  &amp;lt; 2e-16 ***
+                  Estimate Std. Error t value Pr(&amp;gt;|t|)    
+(Intercept)     -14184.835   4052.086  -3.501 0.000480 ***
+age                262.504      9.509  27.607  &amp;lt; 2e-16 ***
+bmi               1974.710    659.578   2.994 0.002805 ** 
+children           514.273    109.947   4.677  3.2e-06 ***
+smokeryes       -20370.230   1644.191 -12.389  &amp;lt; 2e-16 ***
+regionnorthwest   -654.158    380.892  -1.717 0.086132 .  
+regionsoutheast  -1172.647    382.170  -3.068 0.002196 ** 
+regionsouthwest  -1285.747    381.967  -3.366 0.000784 ***
+I(bmi^1.25)       -661.819    223.449  -2.962 0.003112 ** 
+bmi:smokeryes     1440.617     52.483  27.449  &amp;lt; 2e-16 ***
 ---
 Signif. codes:  0 &amp;#39;***&amp;#39; 0.001 &amp;#39;**&amp;#39; 0.01 &amp;#39;*&amp;#39; 0.05 &amp;#39;.&amp;#39; 0.1 &amp;#39; &amp;#39; 1
 
-Residual standard error: 4800 on 1327 degrees of freedom
-Multiple R-squared:  0.8441,    Adjusted R-squared:  0.8429 
-F-statistic: 718.5 on 10 and 1327 DF,  p-value: &amp;lt; 2.2e-16&lt;/code&gt;&lt;/pre&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;residualPlot(lm.fit1, type = &amp;quot;rstandard&amp;quot;, id=TRUE)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-13-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;Looking at the plot for the residuals, we can see that the mean residual is closer to zero now, for different fitted values. Moreover, the adjusted R-squared is higher now (0.7496 -&amp;gt; 0.8395) and the F statistic has improved too (572 -&amp;gt; 875.4). RSE has decreased too(6060 -&amp;gt; 4581).&lt;/p&gt;
-&lt;p&gt;A thing to be noted here is that bmi is no more significant by itself. Your first intuition might be to simply remove it. However, that&lt;/p&gt;
+Residual standard error: 4837 on 1328 degrees of freedom
+Multiple R-squared:  0.8415,    Adjusted R-squared:  0.8405 
+F-statistic: 783.6 on 9 and 1328 DF,  p-value: &amp;lt; 2.2e-16&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Looking at the summary of the model, the R-squared is higher now (0.8405), with new model explaining more than 84% variance of the data, and the RSE has decreased too (4837).&lt;/p&gt;
 &lt;hr /&gt;
 &lt;/div&gt;
 &lt;div id=&#34;non-constant-variance-of-error-terms&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Non-constant variance of error terms&lt;/h2&gt;
-&lt;p&gt;Constant variance of errors is another assumption of a linear regression model. The error terms may, for instance, change with the value of the response variable in case of non-constant variance of errors. Some of the graphical methods of identifying non-constant variance of errors is presence of a funnel shape in the residual plot, or existence of a curve in the residual plot. In the above plot, we don’t see any clear pattern.&lt;/p&gt;
+&lt;p&gt;Constant variance (&lt;a href=&#34;https://en.wikipedia.org/wiki/Homoscedasticity&#34; target=&#34;_blank&#34;&gt;homoscedasticity&lt;/a&gt;) of errors is another assumption of a linear regression model. The error terms may, for instance, change with the value of the response variable in case of non-constant variance (heteroscedasticity) of errors. Some of the graphical methods of identifying heteroscedasticity is presence of a funnel shape in the residual plot, or existence of a curve in the residual plot. In the above plot, we don’t see any clear pattern.&lt;/p&gt;
 &lt;p&gt;A statistical way is an extension of the Breusch-Pagan Test, available in R as &lt;em&gt;ncvTest()&lt;/em&gt; in the cars package. It assumes a null hypothesis of constant variance of errors against the alternate hypothesis that the error variance changes with the level of the response or with a linear combination of predictors.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Evaluate homoscedasticity
 # non-constant error variance test
 ncvTest(lm.fit1)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;Non-constant Variance Score Test 
 Variance formula: ~ fitted.values 
-Chisquare = 20.4333    Df = 1     p = 6.174606e-06 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;A very low p-value (&amp;lt;9.58e-07) means the null hypothesis can be rejected. In other words, there is a high chance that the errors have a non-constant variance.&lt;/p&gt;
+Chisquare = 17.90486, Df = 1, p = 2.3223e-05&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;A very low p-value (~2.3-05) means the null hypothesis can be rejected. In other words, there is a high chance that the errors have a non-constant variance.&lt;/p&gt;
 &lt;p&gt;One of the methods to fix this problem is transformation of the outcome variable.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;yTransformer &amp;lt;- 0.78
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;yTransformer &amp;lt;- 0.8
 
 trans.lm.fit &amp;lt;- update(lm.fit1, charges^yTransformer~.)
-summary(trans.lm.fit)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;
-Call:
-lm(formula = charges^yTransformer ~ age + bmi + children + smoker + 
-    region + I(bmi^1.25) + I(age^1.27) + bmi:smoker, data = insurance)
 
-Residuals:
-    Min      1Q  Median      3Q     Max 
--865.17 -177.56 -120.58  -49.52 2308.00 
-
-Coefficients:
-                 Estimate Std. Error t value Pr(&amp;gt;|t|)    
-(Intercept)      -585.280    400.401  -1.462 0.144051    
-age               -53.915     21.044  -2.562 0.010514 *  
-bmi               193.494     60.345   3.206 0.001376 ** 
-children           70.490     10.541   6.687 3.34e-11 ***
-smokeryes       -1366.419    150.423  -9.084  &amp;lt; 2e-16 ***
-regionnorthwest   -67.617     34.846  -1.940 0.052536 .  
-regionsoutheast  -120.461     34.962  -3.445 0.000588 ***
-regionsouthwest  -127.179     34.944  -3.640 0.000284 ***
-I(bmi^1.25)       -64.816     20.444  -3.170 0.001557 ** 
-I(age^1.27)        23.885      6.176   3.867 0.000115 ***
-bmi:smokeryes     114.522      4.802  23.851  &amp;lt; 2e-16 ***
----
-Signif. codes:  0 &amp;#39;***&amp;#39; 0.001 &amp;#39;**&amp;#39; 0.01 &amp;#39;*&amp;#39; 0.05 &amp;#39;.&amp;#39; 0.1 &amp;#39; &amp;#39; 1
-
-Residual standard error: 442.5 on 1327 degrees of freedom
-Multiple R-squared:  0.839, Adjusted R-squared:  0.8378 
-F-statistic: 691.7 on 10 and 1327 DF,  p-value: &amp;lt; 2.2e-16&lt;/code&gt;&lt;/pre&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Evaluate homoscedasticity
+# Evaluate homoscedasticity
 # non-constant error variance test
 ncvTest(trans.lm.fit)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;Non-constant Variance Score Test 
 Variance formula: ~ fitted.values 
-Chisquare = 0.0494218    Df = 1     p = 0.8240725 &lt;/code&gt;&lt;/pre&gt;
+Chisquare = 0.005724708, Df = 1, p = 0.93969&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;residualPlot(trans.lm.fit, type = &amp;quot;rstandard&amp;quot;, id=T)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-15-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;A p-value of 0.94 implies here that we cannot reject the null hypothesis of constant variance of error terms. However, there is a slight decrease in both adjusted R-squared as well as F statistic.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-17-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;A p-value of ~0.94 implies here that we cannot reject the null hypothesis of constant variance of error terms.&lt;/p&gt;
+&lt;div class=&#34;figure&#34;&gt;
+&lt;img src=&#34;static/post/2018-09-05-linear-regression-modeling-and-assumptions_files/2d3a442e8b01577630a816aea1ba2ac8.jpeg&#34; alt=&#34;Source: Google Images&#34; /&gt;
+&lt;p class=&#34;caption&#34;&gt;Source: Google Images&lt;/p&gt;
+&lt;/div&gt;
+&lt;p&gt;However, there is a slight increase in non-linearity of the model as can be seen in the residual plot.&lt;/p&gt;
 &lt;p&gt;This can be fixed further by looking at relations between individual predictors and outcome.&lt;/p&gt;
 &lt;hr /&gt;
 &lt;/div&gt;
 &lt;div id=&#34;correlation-of-error-terms&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Correlation of error terms&lt;/h2&gt;
-&lt;p&gt;An important assumption of linear regression model is that the consecutive error terms are uncorrelated. The standard errors of the estimated regression coefficients are calculated on this basis. If the consecutive error terms are correlated, the standard errors of the estimated regression coefficients may be much larger.&lt;/p&gt;
-&lt;p&gt;We can check the auto-correlation of error terms using the Durbin-Watson test. The null hypothesis is that the consecutive errors have no auto-correlation. The alternate hypothesis is that the the consecutive errors have a statistically significant correlation:&lt;/p&gt;
+&lt;p&gt;An important assumption of linear regression model is that the consecutive error terms are uncorrelated. The standard errors of the estimated regression coefficients are calculated on the basis of this assumption. If the consecutive error terms are correlated, the standard errors of the estimated regression coefficients may be much larger.&lt;/p&gt;
+&lt;p&gt;We can check the auto-correlation of error terms using the &lt;a href=&#34;https://en.wikipedia.org/wiki/Durbin–Watson_statistic&#34; target=&#34;_blank&#34;&gt;Durbin-Watson test&lt;/a&gt;. The null hypothesis is that the consecutive errors have no auto-correlation. The alternate hypothesis is that the the consecutive errors have a statistically significant correlation:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;set.seed(1)
 # Test for Autocorrelated Errors
 durbinWatsonTest(trans.lm.fit, max.lag = 5, reps=1000)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt; lag Autocorrelation D-W Statistic p-value
-   1    -0.039502798      2.076866   0.150
-   2    -0.022779781      2.043090   0.420
-   3    -0.007737589      2.012719   0.780
-   4    -0.006501909      1.999400   0.972
-   5     0.017696870      1.950746   0.466
+   1    -0.036139510      2.070557   0.216
+   2    -0.026396886      2.050927   0.340
+   3    -0.009537725      2.017017   0.712
+   4    -0.004187672      1.996569   0.972
+   5     0.008894177      1.970058   0.680
  Alternative hypothesis: rho[lag] != 0&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Here we are checking for auto-correlation of residuals for 5 different lags. The p-value for none of the lags is less than 0.05. Hence, we cannot reject the null hypothesis that the consecutive errors are not correlated.&lt;/p&gt;
+&lt;p&gt;Here we are checking for auto-correlation of residuals for 5 different lags. The p-value for none of the lags is less than 0.05. Hence, we cannot reject the null hypothesis that the consecutive errors are not correlated, concluding that the consecutive errors are not correlated.&lt;/p&gt;
 &lt;hr /&gt;
 &lt;/div&gt;
 &lt;div id=&#34;outliers&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;Outliers&lt;/h2&gt;
 &lt;p&gt;Outliers are the observations which in some way are quite different from the distribution of the data. With respect to a model, an outlier is an observation whose predicted outcome is much different from the actual value of the outcome.&lt;/p&gt;
-&lt;p&gt;Residual Plots (yes, again) can be used to identify outliers. We can look at the the last residual plot above. To use a standard comparison of residuals, we can use standardized residuals. Usually, the observations with residuals above 3 are possible outliers.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#finding ids of observations with absolute residuals of 3+, and order by value in desc order
+&lt;p&gt;Residual Plots (yes, again) can be used to identify outliers. We can look at the the last residual plot above. To make a standard comparison of residuals, we can use standardized residuals as in that plot. Usually, the observations with absolute standard residuals above 3 are possible outliers.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#finding ids of observations with absolute standard residuals of 3+, and order by value in desc order
 pot.outliers &amp;lt;- stdres(trans.lm.fit) %&amp;gt;%
   tidy() %&amp;gt;%
-  dplyr::filter(x&amp;gt;3) %&amp;gt;%
+  dplyr::filter(abs(x)&amp;gt;3) %&amp;gt;%
   dplyr::arrange(-x)
 pot.outliers&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;# A tibble: 50 x 2
+&lt;pre&gt;&lt;code&gt;# A tibble: 51 x 2
    names     x
    &amp;lt;chr&amp;gt; &amp;lt;dbl&amp;gt;
- 1 517    5.23
- 2 1301   5.16
- 3 220    4.90
- 4 1020   4.59
- 5 243    4.56
- 6 431    4.55
- 7 807    4.38
- 8 1028   4.36
- 9 937    4.35
-10 1207   4.33
-# ... with 40 more rows&lt;/code&gt;&lt;/pre&gt;
+ 1 517    5.31
+ 2 1301   5.11
+ 3 220    4.85
+ 4 1020   4.67
+ 5 431    4.62
+ 6 243    4.59
+ 7 1207   4.48
+ 8 527    4.42
+ 9 1028   4.33
+10 937    4.25
+# ... with 41 more rows&lt;/code&gt;&lt;/pre&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;outlier.ids &amp;lt;- as.numeric(pot.outliers$names)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;51 observations have an absolute standardized residual greater than 3. That marks approximately 3.8% of the observations.&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;dplyr::slice(insurance, outlier.ids)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;# A tibble: 50 x 7
-     age sex      bmi children smoker region    charges
-   &amp;lt;int&amp;gt; &amp;lt;fct&amp;gt;  &amp;lt;dbl&amp;gt;    &amp;lt;int&amp;gt; &amp;lt;fct&amp;gt;  &amp;lt;fct&amp;gt;       &amp;lt;dbl&amp;gt;
- 1    20 male    35.3        1 no     southeast  27724.
- 2    45 male    30.4        0 yes    southeast  62593.
- 3    24 female  23.2        0 no     southeast  25082.
- 4    21 female  32.7        2 no     northwest  26019.
- 5    55 female  26.8        1 no     southwest  35160.
- 6    19 male    33.1        0 no     southwest  23083.
- 7    40 female  41.4        1 no     northwest  28477.
- 8    23 male    18.7        0 no     northwest  21595.
- 9    44 male    29.7        2 no     northeast  32109.
-10    59 female  34.8        2 no     southwest  36911.
-# ... with 40 more rows&lt;/code&gt;&lt;/pre&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;insurance %&amp;gt;%
-  dplyr::slice(-outlier.ids)%&amp;gt;%
-  keep(is.numeric) %&amp;gt;%
-  outlier(bad=5)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-19-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;51 observations have an absolute standardized residual greater than 3. That marks approximately 3.8% of the observations. This is a high percentage and further analysis should be done to identify the reason behind outliers (which is a totally different topic). For now, we will remove these outliers and build our model.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;clean.insurance &amp;lt;- insurance %&amp;gt;%
   dplyr::slice(-(outlier.ids))
-  #dplyr::slice(-c(517, 1301, 220, 1020, 431, 243, 527, 1207, 937, 1040, 103, 600))&lt;/code&gt;&lt;/pre&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;lm.fit2 &amp;lt;- update(trans.lm.fit, .~., data = clean.insurance) 
-lm.fit2 %&amp;gt;%
-  summary()&lt;/code&gt;&lt;/pre&gt;
+
+#fitting the model on data after removing the outliers
+lm.fit2 &amp;lt;- update(trans.lm.fit, .~., data = clean.insurance) 
+summary(lm.fit2)&lt;/code&gt;&lt;/pre&gt;
 &lt;pre&gt;&lt;code&gt;
 Call:
 lm(formula = charges^yTransformer ~ age + bmi + children + smoker + 
-    region + I(bmi^1.25) + I(age^1.27) + bmi:smoker, data = clean.insurance)
+    region + I(bmi^1.25) + bmi:smoker, data = clean.insurance)
 
 Residuals:
-    Min      1Q  Median      3Q     Max 
--857.15  -99.74  -52.05   -1.06 1422.09 
+     Min       1Q   Median       3Q      Max 
+-1081.34  -137.51   -73.18    26.35  1739.12 
 
 Coefficients:
-                 Estimate Std. Error t value Pr(&amp;gt;|t|)    
-(Intercept)      -549.876    272.742  -2.016 0.043998 *  
-age               -50.045     14.441  -3.466 0.000547 ***
-bmi               163.728     41.189   3.975 7.43e-05 ***
-children           66.845      7.235   9.239  &amp;lt; 2e-16 ***
-smokeryes       -1334.227    102.442 -13.024  &amp;lt; 2e-16 ***
-regionnorthwest   -75.692     24.059  -3.146 0.001693 ** 
-regionsoutheast   -96.764     24.021  -4.028 5.95e-05 ***
-regionsouthwest   -96.312     23.993  -4.014 6.31e-05 ***
-I(bmi^1.25)       -54.655     13.954  -3.917 9.44e-05 ***
-I(age^1.27)        22.994      4.237   5.426 6.88e-08 ***
-bmi:smokeryes     115.261      3.267  35.278  &amp;lt; 2e-16 ***
+                  Estimate Std. Error t value Pr(&amp;gt;|t|)    
+(Intercept)     -1405.6648   315.5522  -4.455 9.14e-06 ***
+age                34.4895     0.7455  46.262  &amp;lt; 2e-16 ***
+bmi               201.4243    51.3600   3.922 9.26e-05 ***
+children           65.8613     8.5713   7.684 3.06e-14 ***
+smokeryes       -1726.8579   127.7735 -13.515  &amp;lt; 2e-16 ***
+regionnorthwest  -103.9364    30.0050  -3.464  0.00055 ***
+regionsoutheast  -130.2721    29.9565  -4.349 1.48e-05 ***
+regionsouthwest  -124.5118    29.8996  -4.164 3.33e-05 ***
+I(bmi^1.25)       -67.1363    17.3982  -3.859  0.00012 ***
+bmi:smokeryes     145.8096     4.0753  35.779  &amp;lt; 2e-16 ***
 ---
 Signif. codes:  0 &amp;#39;***&amp;#39; 0.001 &amp;#39;**&amp;#39; 0.01 &amp;#39;*&amp;#39; 0.05 &amp;#39;.&amp;#39; 0.1 &amp;#39; &amp;#39; 1
 
-Residual standard error: 297.8 on 1277 degrees of freedom
-Multiple R-squared:  0.9248,    Adjusted R-squared:  0.9242 
-F-statistic:  1571 on 10 and 1277 DF,  p-value: &amp;lt; 2.2e-16&lt;/code&gt;&lt;/pre&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;  #residualPlot()
-  #spreadLevelPlot()
-  #plot()
-  #outlierTest()&lt;/code&gt;&lt;/pre&gt;
+Residual standard error: 371.5 on 1277 degrees of freedom
+Multiple R-squared:  0.9245,    Adjusted R-squared:  0.9239 
+F-statistic:  1737 on 9 and 1277 DF,  p-value: &amp;lt; 2.2e-16&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We can’t compare the R-squared now since the model is built by removing the outliers.&lt;/p&gt;
 &lt;hr /&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;confint(trans.lm.fit)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;                      2.5 %        97.5 %
-(Intercept)     -1370.76807   200.2089384
-age               -95.19751   -12.6330231
-bmi                75.11203   311.8755245
-children           49.81076    91.1690762
-smokeryes       -1661.51148 -1071.3259915
-regionnorthwest  -135.97622     0.7422564
-regionsoutheast  -189.04831   -51.8733765
-regionsouthwest  -195.72984   -58.6279149
-I(bmi^1.25)      -104.92128   -24.7103816
-I(age^1.27)        11.76811    36.0012986
-bmi:smokeryes     105.10223   123.9409629&lt;/code&gt;&lt;/pre&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;set.seed(1)
-insurance %&amp;gt;%
-  #dplyr::sample_n(400) %&amp;gt;%
-  ggplot(mapping = aes(x=bmi, y=charges)) +
-  geom_point(aes(color=age, shape = smoker)) +
-  geom_smooth()&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-23-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;interpretations&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Interpretations&lt;/h2&gt;
+&lt;p&gt;Let’s look at the actual charges vs fitted values for the model. Before doing that, let’s look at the how the fitted values of the very first model that we created stand against the actual outcomes:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;predictions &amp;lt;- predict(lm.fit, insurance, interval = &amp;quot;confidence&amp;quot;) %&amp;gt;%
+  tidy()
+
+ggplot(predictions, aes(x=insurance$charges, y=fit))+
+  geom_point()+
+  geom_smooth(aes(color = &amp;#39;model&amp;#39;))+
+  geom_line(aes(x=seq(min(insurance$charges),max(insurance$charges), length.out = 1338), 
+                y=seq(min(insurance$charges),max(insurance$charges), length.out = 1338), 
+                color = &amp;#39;ideal&amp;#39;))+
+  labs(x=&amp;quot;actual charges&amp;quot;, y=&amp;quot;fitted values&amp;quot;) + 
+  scale_color_manual(&amp;#39;linear relation&amp;#39;, values = c(&amp;#39;red&amp;#39;, &amp;#39;blue&amp;#39;)) +
+  theme(legend.position = c(0.8, 0.2)) &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-21-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;The initial model is able to approximate the actual charges below $17,000, but as the actual charges go above $20,000, the gap between actual charges and fitted values keeps increasing. As per the initial model, the actual charges near $50,000 are fitted as somewhere near or below $40,000, and this gap keeps increasing upwards.&lt;/p&gt;
+&lt;p&gt;In comparison, this is how the fitted values of the last model look against the actual outcomes:&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;predictions &amp;lt;- predict(lm.fit2, insurance, interval = &amp;quot;confidence&amp;quot;)^(1/yTransformer) %&amp;gt;%
+  tidy()
+
+ggplot(predictions, aes(x=insurance$charges, y=fit))+
+  geom_point()+
+  geom_smooth(aes(color = &amp;#39;model&amp;#39;))+
+  geom_line(aes(x=seq(min(insurance$charges),max(insurance$charges), 
+                      length.out = 1338), 
+                y=seq(min(insurance$charges),max(insurance$charges), 
+                      length.out = 1338), 
+                color = &amp;#39;ideal&amp;#39;))+
+  labs(x=&amp;quot;actual charges&amp;quot;, y=&amp;quot;fitted values&amp;quot;) + 
+  scale_color_manual(&amp;#39;relation&amp;#39;, values = c(&amp;#39;red&amp;#39;, &amp;#39;blue&amp;#39;)) +
+  theme(legend.position = c(0.8, 0.2)) &lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-22-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;This is quite an improvement from the initial model. The fitted values are closer to the actual charges, as can be seen by the gaps between the ideal relation and the modelled relation between the actual charges and fitted values.&lt;/p&gt;
+&lt;p&gt;There is still a lot of scope of improvement. This model still has a lot of non-constant variance of errors, as can be seen from the varying deviations of fitted values along the line of the ideal relation.&lt;/p&gt;
+&lt;p&gt;We can look at the estimated coefficients of the predictors and their confidence intervals for interpretation on how they define the model.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;confint(lm.fit2) %&amp;gt;%
+  tidy() %&amp;gt;%
+  add_column(coefficients = lm.fit2$coefficients, .after = 2) %&amp;gt;%
+  knitr::kable()&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th align=&#34;left&#34;&gt;.rownames&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;X2.5..&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;coefficients&lt;/th&gt;
+&lt;th align=&#34;right&#34;&gt;X97.5..&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;(Intercept)&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-2024.72245&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-1405.66485&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-786.60725&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;age&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;33.02690&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;34.48948&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;35.95205&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;bmi&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;100.66518&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;201.42433&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;302.18349&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;children&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;49.04596&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;65.86134&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;82.67673&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;smokeryes&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-1977.52699&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-1726.85792&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-1476.18886&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;regionnorthwest&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-162.80104&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-103.93644&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-45.07185&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;regionsoutheast&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-189.04134&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-130.27207&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-71.50279&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;regionsouthwest&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-183.16949&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-124.51184&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-65.85419&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;I(bmi^1.25)&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-101.26845&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-67.13632&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;-33.00419&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td align=&#34;left&#34;&gt;bmi:smokeryes&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;137.81459&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;145.80964&lt;/td&gt;
+&lt;td align=&#34;right&#34;&gt;153.80468&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;p&gt;In the above table, the X2.5 and X97.5 mark the lower and upper bounds for the 95% confidence interval of the regression coefficients. These are calculated using the standard errors of the estimated coefficients. As an example, for &lt;em&gt;age&lt;/em&gt;, the estimated coefficient is ~34.49 and the 95% confidence interval lies between ~33.03 and ~35.95. This means that as per the model, keeping everything else fixed, an increase in 1 year of age will result in an increase of 34.49 in the value of &lt;span class=&#34;math display&#34;&gt;\[charges^{0.8}\]&lt;/span&gt; (since we transformed the outcome). However, this is an estimate and hence there is a scope for variation. This variation is accounted for by the confidence interval, denoting that about 95% of the times, the change in the value of charges^0.8 will be between 33.03 and 35.95, keeping everything else fixed.&lt;/p&gt;
+&lt;p&gt;This effect can be further viewed by plotting the effect using &lt;em&gt;effects&lt;/em&gt; function.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#get effects for age
+effs &amp;lt;- effect(&amp;#39;age&amp;#39;, mod = lm.fit2, 
+       xlevels = list(age=min(insurance$age):max(insurance$age)))
+
+#create a data frame for age and the fitted values, with upper and lower confidence bands
+model.effs &amp;lt;- effs[c(&amp;#39;x&amp;#39;, &amp;#39;lower&amp;#39;, &amp;#39;fit&amp;#39;, &amp;#39;upper&amp;#39;)] %&amp;gt;%
+  as.data.frame()
+
+model.effs$fit &amp;lt;- model.effs$fit^(1/yTransformer)
+model.effs$lower &amp;lt;- model.effs$lower^(1/yTransformer)
+model.effs$upper &amp;lt;- model.effs$upper^(1/yTransformer)
+
+ggplot(model.effs, aes(x = age, y = fit)) +
+  theme_bw()+
+  geom_smooth()+
+  geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.5)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-24-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;For an average value of other predictors, insurance charges increase with increase in age.&lt;/p&gt;
+&lt;p&gt;More interesting effects can be seen for the interaction between &lt;em&gt;bmi&lt;/em&gt; and &lt;em&gt;smoker&lt;/em&gt;.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#get effects for bmi*smoker
+effs &amp;lt;- effect(&amp;#39;bmi*smoker&amp;#39;, mod = lm.fit2, 
+       xlevels = list(bmi=min(insurance$bmi):max(insurance$bmi)))
+
+#create a data frame for bmi*smoker and the fitted values, with upper and lower confidence bands
+model.effs &amp;lt;- effs[c(&amp;#39;x&amp;#39;, &amp;#39;lower&amp;#39;, &amp;#39;fit&amp;#39;, &amp;#39;upper&amp;#39;)] %&amp;gt;%
+  as.data.frame()
+
+model.effs$fit &amp;lt;- model.effs$fit^(1/yTransformer)
+model.effs$lower &amp;lt;- model.effs$lower^(1/yTransformer)
+model.effs$upper &amp;lt;- model.effs$upper^(1/yTransformer)
+
+ggplot(model.effs, aes(x = x.bmi, y = fit)) +
+  facet_wrap(~x.smoker)+
+  theme_bw()+
+  geom_smooth(size=0.5)+
+  geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.5)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-25-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Non-smokers, irrespective of their bmi, have mostly low insurance charges for an average value of other predictors. Smokers with low bmi have low insurance charges, though still higher than non-smokers with any value of bmi. Moreover, as their bmi increases, the insurance charges of smokers increases rapidly.&lt;/p&gt;
+&lt;hr /&gt;
+&lt;/div&gt;
+&lt;div id=&#34;conclusion&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;The model we have built can be used for inference of how the different predictors influence the outcome.&lt;/p&gt;
+&lt;p&gt;It is far from perfect. Their is still presence of non-linearity and non-constant variance of errors. Moreover, the outliers and leverage points should be analyzed further to find a better model. It may not (and most probably won’t) give similar results when used to predict the outcome for new, unseen data. In order to use it for prediction, more concrete measures should be taken for ensuring the accuracy of the model, like cross-validation.&lt;/p&gt;
+&lt;p&gt;It still helps by providing good estimations of the significant relations between the predictors and the outcome, which can themselves be used to summarize the data in a more useful and presentful way.&lt;/p&gt;
+&lt;hr /&gt;
 &lt;div id=&#34;sources&#34; class=&#34;section level3&#34;&gt;
 &lt;h3&gt;Sources :&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.kaggle.com/mirichoi0218/insurance/home&#34; class=&#34;uri&#34;&gt;https://www.kaggle.com/mirichoi0218/insurance/home&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.kaggle.com/mirichoi0218/insurance/home&#34; class=&#34;uri&#34; target=&#34;_blank&#34;&gt;https://www.kaggle.com/mirichoi0218/insurance/home&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;An Introduction to Statistical Learning and Reasoning&lt;/li&gt;
 &lt;li&gt;Wikipedia&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.statmethods.net/stats/rdiagnostics.html&#34; class=&#34;uri&#34;&gt;https://www.statmethods.net/stats/rdiagnostics.html&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://www.statmethods.net/stats/regression.html&#34; class=&#34;uri&#34;&gt;https://www.statmethods.net/stats/regression.html&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://datascienceplus.com/how-to-detect-heteroscedasticity-and-rectify-it/&#34; class=&#34;uri&#34;&gt;https://datascienceplus.com/how-to-detect-heteroscedasticity-and-rectify-it/&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;http://www.statisticshowto.com/probability-and-statistics/f-statistic-value-test/&#34; class=&#34;uri&#34;&gt;http://www.statisticshowto.com/probability-and-statistics/f-statistic-value-test/&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Coefficient_of_determination#Inflation_of_R2&#34; class=&#34;uri&#34;&gt;https://en.wikipedia.org/wiki/Coefficient_of_determination#Inflation_of_R2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.statmethods.net/stats/rdiagnostics.html&#34; class=&#34;uri&#34; target=&#34;_blank&#34;&gt;https://www.statmethods.net/stats/rdiagnostics.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://www.statmethods.net/stats/regression.html&#34; class=&#34;uri&#34; target=&#34;_blank&#34;&gt;https://www.statmethods.net/stats/regression.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://datascienceplus.com/how-to-detect-heteroscedasticity-and-rectify-it/&#34; class=&#34;uri&#34; target=&#34;_blank&#34;&gt;https://datascienceplus.com/how-to-detect-heteroscedasticity-and-rectify-it/&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.statisticshowto.com/probability-and-statistics/f-statistic-value-test/&#34; class=&#34;uri&#34; target=&#34;_blank&#34;&gt;http://www.statisticshowto.com/probability-and-statistics/f-statistic-value-test/&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 &lt;/div&gt;
 &lt;/div&gt;

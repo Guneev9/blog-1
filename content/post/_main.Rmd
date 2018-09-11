@@ -1,0 +1,618 @@
+---
+title: Exploratory Data Analysis
+author: 'Kumar Rohit Malhotra'
+date: '2018-02-28'
+slug: exploratory-data-analysis
+categories:
+  - data analysis
+tags:
+  - data analysis
+  - rstats
+  - statistics
+output:
+  html_document: default
+  #pdf_document: default
+---
+
+```{r setup, include=FALSE, message=FALSE, echo=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message=FALSE, comment='')
+```
+
+New Oxford American Dictionary defines exploration as "the action of traveling in or through an unfamiliar area in order to learn about it." Analysis is defined as "detailed examination of the elements or structure of something, typically as a basis for discussion or interpretation." This makes Exploratory data analysis an act of travelling through unfamiliar data for a detailed examination of its structure, for further discussion or interpretation. 
+
+Upon reading the book "Think Stats" by Allen Downey, I loved the approach he uses for data exploration he has given in the book. This post and the rest in the series are highly inspired by the book, and uses the approaches and the datasets presented in the book. 
+
+I have used RMarkdown to write the post,including the code, trying to stick mostly to tidyverse. The goal of this post is to reproduce the work in the book, but in R.
+
+Let's start with an example. Your friend rated a movie a 4 star on a scale of a 10, 10 being the highest. Another user rated the movie 3 star on a similar scale. You might start thinking of skipping the movie. However, this conclusion fails because of certain reasons:
+
+* You have only two observations to base your conclusion on. We might need more ratings to conclude if the movie is actually that bad.
+* Selection Bias: People who gave a critique on the movie might be speaking up because they particularly hated the movie (and really want to vent it out!), while people who found the movie to be good or even okay didn't care much to speak about it. This is called **Selection Bias**.
+* Someone might have a preexisting belief that a movie won't be good and upon its release might rate it low because of that belief. Someone who would have loved the trailer may have given a high rating to the movie, even if the movie might have actually not been good. This is called **Confirmation Bias**.
+
+In order to have more reliable conclusions, we need to follow a statistical approach, which includes:
+
+* Data Collection: 
+* Descriptive Statistics
+* Exploratory data analysis
+* Estimation
+* Hypothesis Testing
+
+We will be following this approach in the rest of the series. The data we will use will be from [National Survey of Family Growth (NSFG)](http://cdc.gov/nchs/nsfg.htm) conducted by CDC. This survey is intended to gather information on family life, marriage and divorce, pregnancy, infertility, use of contraception, and men's and women's health. The survey results are used to plan health services and health education programs, and to do statistical studies of families, fertility, and health."
+
+We will use data collected by this survey to investigate questions like whether first babies tend to come late. In order to use this data effectively, we have to understand the design of the study. The NSFG has been conducted seven times; each deployment is called a cycle. We will use data from Cycle 6, which was conducted from January 2002 to March 2003.
+
+The goal of this study is to draw conclusions about the *population*, which in this case would be poeple in the United States aged 15-44. Since it is not always possible to collect data from every person in United States, the data is collected from a subset of the population, known as *sample*. The people participating in the survey are called *respondents*.
+
+
+```{r}
+library(extraDistr)
+library(tidyverse)
+```
+
+The data source is obtained from https://www.cdc.gov/nchs/nsfg/nsfg_cycle6.htm. The dataset consists of fixed width files for the data, and stata dictionaries consisting of the metadata for the data files. We will use dct.parser function from [mrdwab/StataDCTutils](https://github.com/mrdwab/StataDCTutils/blob/master/R/dct.parser.R) to parse the stata dictionaries and assign the metadata to the data.
+
+```{r}
+#helper function to parse Stata dictionary
+dct.parser <- function(dct, includes = c("StartPos", "StorageType", "ColName", 
+                                         "ColWidth", "VarLabel"),
+                       preview = FALSE) {
+  temp <- readLines(dct)
+  temp <- temp[grepl("_column", temp)]
+  
+  if (isTRUE(preview)) {
+    head(temp)
+  } else {
+    possibilities <- c("StartPos", "StorageType", 
+                       "ColName", "ColWidth", "VarLabel")
+    classes <- c("numeric", "character", "
+                 character", "numeric", "character")
+    pattern <- c(StartPos = ".*\\(([0-9 ]+)\\)",
+                 StorageType = "(byte|int|long|float|double|str[0-9]+)",
+                 ColName = "(.*)",
+                 ColWidth = "%([0-9.]+)[a-z]+",
+                 VarLabel = "(.*)")
+    
+    mymatch <- match(includes, possibilities)
+    
+    pattern <- paste(paste(pattern[mymatch], 
+                           collapse ="\\s+"), "$", sep = "")    
+    
+    metadata <- setNames(lapply(seq_along(mymatch), function(x) {
+      out <- gsub(pattern, paste("\\", x, sep = ""), temp)
+      out <- gsub("^\\s+|\\s+$", "", out)
+      out <- gsub('\"', "", out, fixed = TRUE)
+      class(out) <- classes[mymatch][x] ; out }), 
+                         possibilities[mymatch])
+    
+    implicit.dec <- grepl("\\.[1-9]", metadata[["ColWidth"]])
+    if (any(implicit.dec)) {
+      message("Some variables may need to be corrected for implicit decimals. 
+              Try 'MESSAGES(output_from_dct.parser)' for more details.")
+      metadata[["Decimals"]] <- rep(NA, length(metadata[["ColWidth"]]))
+      metadata[["Decimals"]][implicit.dec] <-
+        as.numeric(gsub("[0-9]+\\.", "", 
+                        metadata[["ColWidth"]][implicit.dec]))
+      metadata[["ColWidth"]] <- floor(as.numeric(metadata[["ColWidth"]]))
+    }
+    
+    metadata[["ColName"]] <- make.names(
+      gsub("\\s", "", metadata[["ColName"]]))
+    
+    metadata <- data.frame(metadata)
+    
+    if ("StorageType" %in% includes) {
+      metadata <- 
+        within(metadata, {
+          colClasses <- ifelse(
+            StorageType == "byte", "raw",
+            ifelse(StorageType %in% c("double", "long", "float"), 
+                   "numeric", 
+                   ifelse(StorageType == "int", "integer",
+                          ifelse(substr(StorageType, 1, 3) == "str", 
+                                 "character", NA))))
+        })
+    }
+    if (any(implicit.dec)) {
+      attr(metadata, "MESSAGE") <- c(sprintf("%s", paste(
+        "Some variables might need to be corrected for implicit decimals. 
+        A variable, 'Decimals', has been created in the metadata that
+        indicates the number of decimal places the variable should hold. 
+        To correct the output, try (where your stored output is 'mydf'): 
+        
+        lapply(seq_along(mydf[!is.na(Decimals)]), 
+        function(x) mydf[!is.na(Decimals)][x]
+        / 10^Decimals[!is.na(Decimals)][x])
+        
+        The variables in question are:
+        ")), sprintf("%s", metadata[["ColName"]][!is.na(metadata[["Decimals"]])]))
+            class(attr(metadata, "MESSAGE")) <- c(
+                "MESSAGE", class(attr(metadata, "MESSAGE")))
+        }
+        attr(metadata, "original.dictionary") <- 
+            c(dct, basename(dct))
+        metadata
+    }
+}
+```
+
+
+We can read the coulmns from 2002FemPreg.dct and use those columns to import the data from the fixed width file 2002FemPreg.dat
+
+```{r}
+femPreg2002columns <- dct.parser('~/Documents/CodeWork/ThinkStats2/code/2002FemPreg.dct')
+femPreg2002 <- read.fwf('~/Documents/CodeWork/ThinkStats2/code/2002FemPreg.dat', widths = femPreg2002columns$ColWidth, col.names = femPreg2002columns$ColName)
+```
+
+Taking a look at the data
+```{r}
+#head(femPreg2002)
+femPreg2002 %>%
+  summary()
+```
+
+We can see a lot of missing values. We'll clean the data for the columns that we want to analyze.
+
+## Transformation
+
+1. agepreg contains the mother's age at the end of the pregnancy. In the data file, agepreg is encoded as an integer number of centiyears. So the first line divides each element of agepreg by 100, yielding a floating-point value in years.
+
+2. birthwgt_lb and birthwgt_oz contain the weight of the baby, in pounds and ounces, for pregnancies that end in live birth. In addition it uses several special codes: \n
+  97 NOT ASCERTAINED
+  98 REFUSED
+  99 DONT KNOW
+Special values encoded as numbers are dangerous because if they are not
+handled properly, they can generate bogus results, like a 99-pound baby. Assuming that a baby can't be generally more than 20 lb at birth, we will replace all other values with NA, as they are NOT ASCERTAINED(97),  REFUSED(98), DONT KNOW(99), or invalid values.
+Similarly, the age of father has these similar special codes, which we will replace by NA
+```{r}
+cleanFemPreg <- function(data){
+  # mother's age is encoded in centiyears; convert to years
+  data['agepreg'] <-  data['agepreg']/100.0
+  
+  # birthwgt_lb contains at least one bogus value (51 lbs)
+  # replace with NaN
+  data$birthwgt_lb[data$birthwgt_lb > 20] <- NA
+  
+  # replace 'not ascertained', 'refused', 'don't know' with NA
+  na_vals = c(97, 98, 99)
+  data$birthwgt_oz[data$birthwgt_oz %in% na_vals] <- NA
+  data$hpagelb[data$hpagelb %in% na_vals] <- NA
+  
+  # birthweight is stored in two columns, lbs and oz.
+  # convert to a single column in lb
+  data['totalwgt_lb'] <- data$birthwgt_lb + (data$birthwgt_oz / 16.0)
+  
+  return (data)
+}
+```
+
+```{r}
+femPregCleaned <- cleanFemPreg(femPreg2002)
+```
+
+### Validation
+One way to validate data is to compute basic statistics and compare them with published results. For example, the NSFG codebook includes tables that summarize each variable. Here is the table for outcome, which encodes the outcome of each pregnancy:
+value     label         Total
+1         LIVE BIRTH        9148
+2         INDUCED ABORTION  1862
+3         STILLBIRTH        120
+4         MISCARRIAGE       1921
+5         ECTOPIC PREGNANCY 190
+6         CURRENT PREGNANCY 352
+
+```{r}
+femPreg2002 %>%
+  group_by(outcome) %>%
+  summarise(Total = length(outcome))
+```
+
+Comparing the results with the published table, it looks like the values in
+outcome are correct. Similarly, here is the published table for birthwgt_lb
+value     label             Total
+.         INAPPLICABLE      4449
+0-5       UNDER 6 POUNDS    1125
+6         6 POUNDS          2223
+7         7 POUNDS          3049
+8         8 POUNDS          1889
+9-95      9 POUNDS OR MORE  799
+
+```{r}
+femPreg2002 %>%
+  group_by(birthwgt_lb) %>%
+  summarise(Total = length(birthwgt_lb))
+```
+
+The counts for 6, 7, and 8 pounds check out, and if you add up the counts
+for 0-5 and 9-95, they check out, too. But if you look more closely, you will
+notice one value that has to be an error, a 51 pound baby! This has been cleaned in the cleanFemPreg function.
+
+### Interpretation
+To work with data effectively, you have to think on two levels at the same time: the level of statistics and the level of context.
+As an example, let's look at the sequence of outcomes for a few respondents.
+This example looks up one respondent and prints a list of outcomes for her
+pregnancies:
+```{r}
+CASEID = 10229
+femPregCleaned %>%
+  filter(caseid==CASEID) %>%
+  .$outcome
+```
+The outcome code 1 indicates a live birth. Code 4 indicates a miscarriage; that is, a pregnancy that ended spontaneously, usually with no known medical cause.
+
+Statistically this respondent is not unusual. Miscarriages are common and there are other respondents who reported as many or more. But remembering the context, this data tells the story of a woman who was pregnant six times, each time ending in miscarriage. Her seventh and most recent pregnancy ended in a live birth. If we consider this data with empathy,
+it is natural to be moved by the story it tells.
+
+Each record in the NSFG dataset represents a person who provided honest answers to many personal and difficult questions. We can use this data to answer statistical questions about family life, reproduction, and health. At the same time, we have an obligation to consider the people represented by the data, and to afford them respect and gratitude.
+
+<!--chapter:end:2018-02-28-exploratory-data-analysis.Rmd-->
+
+---
+title: 'Linear regression: Modeling and Assumptions'
+author: Kumar Rohit Malhotra
+date: '2018-09-09'
+slug: linear-regression-modeling-and-assumptions
+categories:
+  - data analysis
+tags:
+  - data analysis
+  - rstats
+  - statistics
+  - statistical learning
+---
+
+```{r setup, include=FALSE, message=FALSE, echo=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message=FALSE, comment='')
+```
+
+Regression analysis is a powerful statistical process to find the relations within a dataset, with the key focus being on relationships between the independent variables (predictors) and a dependent varible (outcome). It can be used to build models for inference or prediction. Among several methods of regression analysis, linear regression sets the basis and is quite widely used for [several real-world applications](https://en.wikipedia.org/wiki/Linear_regression#Applications){target="_blank"}. 
+
+In this post, we will look at building a linear regression model for inference. The dataset we will use is the insurance charges data obtained from [Kaggle](https://www.kaggle.com/mirichoi0218/insurance/home){target="_blank"}. This data set consists of 1,338 observations and 7 columns: age, sex, bmi, children, smoker, region and charges.
+
+The key questions that we would be asking are:
+
+1. Is there a relationship between medical charges and other variables in the dataset?
+2. How valid is the model we have built?
+3. What can we do to improve the model?
+
+We start with importing the required libraries and data:
+
+```{r}
+library(magrittr)
+library(purrr)
+library(MASS)
+library(car)
+library(broom)
+library(ggplot2)
+library(psych)
+library(caret)
+library(tidyr)
+library(effects)
+```
+
+```{r}
+insurance <- read.csv('~/Documents/CodeWork/medicalCost/insurance.csv')
+summary(insurance)
+```
+
+Some simple observations that can be taken from the summary are:
+
+1. The age of participants varies from 18 to 64.
+2. Around 49.48% of participants are female.
+3. The bmi of participants ranges from 15.96 to 53.13.
+4. Only 20.48% of the participants are smokers.
+
+Let's start with building a linear model. Instead of simple linear regression, where you have one predictor and one outcome, we will go with multiple linear regression, where you have more than one predictors and one outcome.
+
+Multiple linear regression follows the formula : 
+
+$$y = \beta_0{}+ \beta_1x_1+\beta_2x_2+...$$
+
+The coefficients in this linear equation denote the magnitude of additive relation between the predictor and the response. In simpler words, keeping everything else fixed, a unit change in x_1 will lead to change of beta_1 in the outcome, and so on.
+
+## Is there a relationship between the medical charges and the predictors?
+
+Our first step is finding if there is any relationship between the outcome and the predictors.
+
+The null hypothesis would be that there is no relation between any of the predictors and the response, which would be possible when all the regression coefficients for the predictors are equal to zero. The alternate hypothesis would be that atleast one of the predictors has a relation with the outcome, that is the regression coefficient of one of the predictors is non-zero.
+
+This hypothesis is tested by computing the [F statistic](http://www.statisticshowto.com/probability-and-statistics/F statistic-value-test/){target="_blank"}. In case of no relationship between the predictor and the response, F statistic will be closer to 1. On the contrary, if the alternate hypothesis is true, the F statistic will be greater than 1. The p-value of F statistic can be used to determine whether the null hypothesis can be rejected or not.
+
+We will start with fitting a multiple linear regression model using all the predictors: 
+
+```{r}
+lm.fit <- lm(formula = charges~., data = insurance)
+#Here '.' means we are using all the predictors in the dataset.
+summary(lm.fit)
+```
+
+A high value of F statistic, with a very low p-value (<2.2e-16), implies that the null hypothesis can be rejected. This means there is a potential relationship between the predictors and the outcome.
+
+RSE (Residual Standard Error) is the estimate of standard deviation of irreducible error (the error which can't be reduced even if knew the true regression line; hence, irreducible). In simpler words, it is the average deviation between the actual outcome and the true regression line. Hence, a large value of RSE means a high deviation from the true regression line. As such, RSE is useful in determining the lack of fit of the model to the data. RSE in our model is large (6062), indicating that the model doesn't fit the data well.
+
+R-squared measures the proportion of variability in the outcome that can be explained by the predictor, and is always between 0 and 1; the higher the value, the better the model is able to explain the variability in the outcome. However, increase in number of predictors mostly results in an increased value of R-squared due to [inflation of R-squared](https://en.wikipedia.org/wiki/Coefficient_of_determination#Inflation_of_R2){target="_blank"}. [Adjusted R-squared](https://en.wikipedia.org/wiki/Coefficient_of_determination#Adjusted_R2){target="_blank"} adjusts the value of R-squared to avoid this effect. A high value of adjusted R-squared (0.7494) shows that more than 74% of the variance in the data is being explained by the model. From now on, we will use the term R-squared for adjusted R-squared.
+
+_Pr (>|t|)_ for a predictor is the p-value for the estimated regression coefficient. A very low p-value (<0.05) for a predictor can be used to infer that there is a relationsip between the predictor and the outcome.
+
+Our next step should be [validation of regression analyis](https://en.wikipedia.org/wiki/Regression_validation){target="_blank"}. This may mean validation of underlying assumptions of the model, checking the structure of model with different predictors, looking for values that have an exceptionally large impact on the regression model, looking for observations that have not been represented well enough in the model, and more. 
+
+In the rest of the post, we will look at some of these methods of model validation and improvement.
+
+***
+
+## Which variables have a strong relation to medical charges?
+
+Now that we have determined that there is a relation between the predictors and the outcome, our next step would be finding out if all or only some of the predictors are related to the outcome.
+
+If we look at the p-values of the estimated coefficients above, we see that not all the coefficients are statistically significant (<0.05). This means that only a subset of the predictors are related to the outcome.
+
+We can look at the individual p-values for selecting the variables. This may not be a problem when the number of predictors (7) is quite small compared to the number of observations (1338). This method won't, however, work when the number of predictors is greater than the number of observations because of the [multiple testing problem](http://www.statisticshowto.com/multiple-testing-problem/){target="_blank"}. In such cases, we would have to use the [feature/variable selection](https://en.wikipedia.org/wiki/Feature_selection){target="_blank"} methods, like forward selection, backward selection, or mixed selection. 
+
+Before jumping on to feature selection using any of these methods, let us try linear regression using the features with significant p-values only.
+
+```{r}
+lm.fit.sel <- lm(charges~age+bmi+children+smoker+region, data = insurance)
+```
+
+We will compare this to [mixed selection](https://www.stat.ubc.ca/~rollin/teach/643w04/lec/node43.html){target="_blank"}, which is a combination of forward and backward selection. This can be done in R using the _stepAIC()_ function, which uses [Akaike Information Criterion](https://en.wikipedia.org/wiki/Akaike_information_criterion){target="_blank"} (AIC) to select the best model out of multiple models.
+
+```{r}
+#selecting direction = "both" for mixed selection
+step.lm.fit <- stepAIC(lm.fit, direction = "both", trace = FALSE)
+```
+
+Let's compare the two models :
+
+```{r}
+step.lm.fit$call
+lm.fit.sel$call
+```
+
+The model given by stepwise selection is same as the model we got by selecting the predictors with significant p-values (works in this case). You can check the summary of the new model to see if there is any improvement in the model.
+
+***
+
+## Are there any multicollinear features?
+
+Multicollinearity in multiple regression is a phenomenon in which two or more predictors are highly related to each other, and hence one predictor can be used to predict the value of the other. The problem with multi-collinearity is that it can make it harder to estimate the individual effects of the predictors on the outcome. 
+
+Usually, collinearity between pairs of predictors can be detected using a correlation matrix. However, corrrelation matrix fails, for example, when more than two predictors have high collinearity as a group but don't have high correlations as pairs.
+
+A better way to detect multicollinearity is Variance Inflation Factor (VIF). VIF of any predictor is the ratio of variance of its estimated coefficient in the full model to the variance of its estimated coefficient when fit on the outcome only by itself (as in simple linear regression). A VIF of 1 indicates no presence of multicollinearity. Usually, a VIF value of above 5 or 10 is taken as an indicator of multicollinearity. The simplest way of getting rid of multicollinearity in that case is to discard the predictor with high value of VIF.
+
+```{r results='asis'}
+vif(step.lm.fit) %>% 
+  knitr::kable()
+```
+
+None of the predictors in our case has a high value of VIF. Hence, we don't need to worry about multicollinearity in our case.
+
+***
+
+## Is the relationship linear?
+
+By applying linear regression, we are assuming that there is a linear relationship between the predictors and the outcome. If the underlying relationship is quite far from linear, then most of the inferences we would make would be doubtful. This also means reduced accuracy of model.
+
+The non-linearity of the model can be determined using the residual plot. [Residual](http://www.statisticshowto.com/residual/){target="_blank"} for any observation is the difference between the actual outcome and the fitted outcome as per the model. For multiple linear regression, we can plot the residuals versus the fitted values. Presence of a pattern in the residual plot would imply a problem with the linear assumption of the model.
+
+```{r}
+#type = "rstandard" draws a plot for standardized residuals
+residualPlot(step.lm.fit, type = "rstandard")
+```
+
+The blue line represents a smooth pattern between the fitted values and the standard residuals. The curve in our case denotes slight non-linearity in our data.
+
+The non-linearity can be further explored by looking at [Component Residual plots](https://www.r-bloggers.com/r-regression-diagnostics-part-1/){target="_blank"} (CR plots). CR plots can be created in R using the function _ceresPlots()_.
+
+```{r}
+ceresPlots(step.lm.fit)
+```
+
+The pink line (residual line) is modelled for the relation between the predictor and the residuals. The blue dashed line (component line) is for the line of best fit. A significant difference between the two lines for a predictor implies that the predictor and the outcome don't have a linear relationship.
+
+This kind of inconsistency can be seen in the CR plot for _bmi_. Let's take a closer look:
+
+```{r}
+ceresPlot(step.lm.fit, variable = 'bmi')
+```
+
+The difference between the component line and the residual line becomes more clear now. 
+
+One of the methods of fixing this is introducing non-linear transformation of predictors of the model. Let's try adding a non-linear transformation of _bmi_ to the model.
+
+```{r}
+#update() can be used to update an existing model with new requirements
+step.lm.fit.new <- update(step.lm.fit, .~.+I(bmi^1.25))
+
+ceresPlots(step.lm.fit.new)
+```
+
+The CR plot of bmi no more has a difference between the residual line and the component line. As per the CR plots, the addition of a non-linear transformation of bmi to the existing model fixed the problem.
+
+We can use ANOVA to check if the new model is significantly better than the previous model. A low p-value (<0.05) for the new model will mean we can conclude that it is better than the previous model:
+
+```{r}
+anova(step.lm.fit, step.lm.fit.new, test = "F")
+```
+
+Since the model with non-linear transformation of _bmi_ has a sufficiently low p-value (<0.05), we can conclude that it is better than the previous model.
+
+Let's look at the residual plot of this new model.
+
+```{r}
+residualPlot(step.lm.fit.new, type = "rstandard")
+```
+
+Looking at the residual plot of the new model, there is not much change in the overall pattern of the standard residuals.
+
+Another method of fixing the problem of non-linearity is introducing an [interaction](https://en.wikipedia.org/wiki/Interaction_(statistics)#In_regression){target="_blank"} between some predictors. A person who smokes and has a high bmi may have higher charges as compared to a person who has lower bmi and is a non-smoker. Let's update the model to introduce an interaction between _bmi_ and _smoker_, and see if that makes a difference:
+
+```{r}
+lm.fit1 <- update(step.lm.fit.new, ~ .+bmi*smoker)
+
+residualPlot(lm.fit1, type = "rstandard", id=TRUE)
+anova(step.lm.fit.new, lm.fit1, test = "F")
+```
+
+Not only the relation becomes more linear with less appearance of a pattern in the residual plot, the new model is significantly better than the previous model (without interactions) as can be seen with the p-value (<2.2e-16).
+
+```{r}
+summary(lm.fit1)
+```
+
+Looking at the summary of the model, the R-squared is higher now (0.8405), with new model explaining more than 84% variance of the data, and the RSE has decreased too (4837).
+
+***
+
+## Non-constant variance of error terms
+
+Constant variance ([homoscedasticity](https://en.wikipedia.org/wiki/Homoscedasticity){target="_blank"}) of errors is another assumption of a linear regression model. The error terms may, for instance, change with the value of the response variable in case of non-constant variance (heteroscedasticity) of errors. Some of the graphical methods of identifying heteroscedasticity is presence of a funnel shape in the residual plot, or existence of a curve in the residual plot. In the above plot, we don't see any clear pattern. 
+
+A statistical way is an extension of the Breusch-Pagan Test, available in R as _ncvTest()_ in the cars package. It assumes a null hypothesis of constant variance of errors against the alternate hypothesis that the error variance changes with the level of the response or with a linear combination of predictors.
+
+```{r}
+# Evaluate homoscedasticity
+# non-constant error variance test
+ncvTest(lm.fit1)
+```
+
+A very low p-value (~2.3-05) means the null hypothesis can be rejected. In other words, there is a high chance that the errors have a non-constant variance.
+
+One of the methods to fix this problem is transformation of the outcome variable. 
+
+```{r}
+yTransformer <- 0.8
+
+trans.lm.fit <- update(lm.fit1, charges^yTransformer~.)
+
+# Evaluate homoscedasticity
+# non-constant error variance test
+ncvTest(trans.lm.fit)
+
+residualPlot(trans.lm.fit, type = "rstandard", id=T)
+```
+
+A p-value of ~0.94 implies here that we cannot reject the null hypothesis of constant variance of error terms. However, there is a slight increase in non-linearity of the model as can be seen in the residual plot.
+
+This can be fixed further by looking at relations between individual predictors and outcome.
+
+***
+
+## Correlation of error terms
+
+An important assumption of linear regression model is that the consecutive error terms are uncorrelated. The standard errors of the estimated regression coefficients are calculated on the basis of this assumption. If the consecutive error terms are correlated, the standard errors of the estimated regression coefficients may be much larger.
+
+We can check the auto-correlation of error terms using the [Durbin-Watson test](https://en.wikipedia.org/wiki/Durbin–Watson_statistic){target="_blank"}. The null hypothesis is that the consecutive errors have no auto-correlation. The alternate hypothesis is that the the consecutive errors have a statistically significant correlation:
+
+```{r}
+set.seed(1)
+# Test for Autocorrelated Errors
+durbinWatsonTest(trans.lm.fit, max.lag = 5, reps=1000)
+```
+
+Here we are checking for auto-correlation of residuals for 5 different lags. The p-value for none of the lags is less than 0.05. Hence, we cannot reject the null hypothesis that the consecutive errors are not correlated, concluding that the consecutive errors are not correlated.
+
+***
+
+## Outliers
+
+Outliers are the observations which in some way are quite different from the distribution of the data. With respect to a model, an outlier is an observation whose predicted outcome is much different from the actual value of the outcome.
+
+Residual Plots (yes, again) can be used to identify outliers. We can look at the the last residual plot above. To make a standard comparison of residuals, we can use standardized residuals as in that plot. Usually, the observations with absolute standard residuals above 3 are possible outliers.
+
+```{r}
+#finding ids of observations with absolute standard residuals of 3+, and order by value in desc order
+pot.outliers <- stdres(trans.lm.fit) %>%
+  tidy() %>%
+  dplyr::filter(abs(x)>3) %>%
+  dplyr::arrange(-x)
+pot.outliers
+outlier.ids <- as.numeric(pot.outliers$names)
+```
+
+51 observations have an absolute standardized residual greater than 3. That marks approximately 3.8% of the observations. This is a high percentage and further analysis should be done to identify the reason behind outliers (which is a totally different topic). For now, we will remove these outliers and build our model.
+
+```{r}
+clean.insurance <- insurance %>%
+  dplyr::slice(-(outlier.ids))
+
+#fitting the model on data after removing the outliers
+lm.fit2 <- update(trans.lm.fit, .~., data = clean.insurance) 
+summary(lm.fit2)
+```
+
+We can't compare the R-squared now since the model is built by removing the outliers.
+Let's look at the actual charges vs fitted values for the model. Before doing that, let's look at the how the fitted values of the very first model that we created stand against the actual outcomes:
+
+```{r}
+predictions <- predict(lm.fit, insurance, interval = "confidence") %>%
+  tidy()
+
+ggplot(predictions, aes(x=insurance$charges, y=fit))+
+  geom_point()+
+  geom_smooth(aes(color = 'model'))+
+  geom_line(aes(x=seq(min(insurance$charges),max(insurance$charges), length.out = 1338), 
+                y=seq(min(insurance$charges),max(insurance$charges), length.out = 1338), 
+                color = 'actual'))+
+  labs(x="actual charges", y="fitted values") + 
+  scale_color_manual('linear relation', values = c('red', 'blue')) +
+  theme(legend.position = c(0.8, 0.2)) 
+```
+
+In comparison, this is how the fitted values of the last model look against the actual outcomes:
+
+```{r}
+predictions <- predict(lm.fit2, insurance, interval = "confidence")^(1/yTransformer) %>%
+  tidy()
+
+ggplot(predictions, aes(x=insurance$charges, y=fit))+
+  geom_point()+
+  geom_smooth(aes(color = 'model'))+
+  geom_line(aes(x=seq(min(insurance$charges),max(insurance$charges), length.out = 1338), 
+                y=seq(min(insurance$charges),max(insurance$charges), length.out = 1338), 
+                color = 'actual'))+
+  labs(x="actual charges", y="fitted values") + 
+  scale_color_manual('relation', values = c('red', 'blue')) +
+  theme(legend.position = c(0.8, 0.2)) 
+```
+
+This is quite an improvement from the initial model. 
+
+
+```{r}
+predictions <- predict(lm.fit2, insurance, interval = "confidence")^(1/yTransformer) %>%
+  tidy()
+
+ggplot(predictions)+
+  geom_point(aes(x=insurance$bmi, y=insurance$charges))+
+  geom_smooth(aes(x=insurance$bmi, y=insurance$charges, color = 'actual'))+
+  geom_smooth(aes(x=insurance$bmi, y=fit, color = 'model'))+
+  labs(x="bmi", y="charges") + 
+  scale_color_manual('relation', values = c('red', 'blue')) +
+  theme(legend.position = c(0.15, 0.8)) 
+```
+
+```{r}
+effect('age*bmi', mod = lm.fit2, 
+       xlevels = list(bmi=min(insurance$bmi):max(insurance$bmi))) %>%
+  plot()
+```
+
+And let's take a look at the regression coefficients of the final model.
+
+```{r}
+confint(lm.fit2)
+lm.fit2$coefficients
+```
+
+### Sources :
+
+* [https://www.kaggle.com/mirichoi0218/insurance/home](https://www.kaggle.com/mirichoi0218/insurance/home){target="_blank"}
+* An Introduction to Statistical Learning and Reasoning
+* Wikipedia
+* [https://www.statmethods.net/stats/rdiagnostics.html](https://www.statmethods.net/stats/rdiagnostics.html){target="_blank"}
+* [https://www.statmethods.net/stats/regression.html](https://www.statmethods.net/stats/regression.html){target="_blank"}
+* [https://datascienceplus.com/how-to-detect-heteroscedasticity-and-rectify-it/](https://datascienceplus.com/how-to-detect-heteroscedasticity-and-rectify-it/){target="_blank"}
+* [http://www.statisticshowto.com/probability-and-statistics/f-statistic-value-test/](http://www.statisticshowto.com/probability-and-statistics/f-statistic-value-test/){target="_blank"}
+
+<!--chapter:end:2018-09-05-linear-regression-modeling-and-assumptions.Rmd-->
+

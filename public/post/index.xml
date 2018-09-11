@@ -14,11 +14,12 @@
     <item>
       <title>Linear regression: Modeling and Assumptions</title>
       <link>/post/linear-regression-modeling-and-assumptions/</link>
-      <pubDate>Wed, 05 Sep 2018 00:00:00 +0000</pubDate>
+      <pubDate>Sun, 09 Sep 2018 00:00:00 +0000</pubDate>
       
       <guid>/post/linear-regression-modeling-and-assumptions/</guid>
-      <description>Regression analysis is a powerful statistical process to find the relations within a dataset, with the key focus being on relationships between the independent variables (predictors) and a dependent varible (outcome). Among several methods of regression analysis, linear regression sets the basis and is quite widely used for several real-world applications.
-In this post, we will look at the insurance charges data obtained from Kaggle (https://www.kaggle.com/mirichoi0218/insurance/home). This data set consists of 7 columns: age, sex, bmi, children, smoker, region and charges.</description>
+      <description>Regression analysis is a powerful statistical process to find the relations within a dataset, with the key focus being on relationships between the independent variables (predictors) and a dependent varible (outcome). It can be used to build models for inference or prediction. Among several methods of regression analysis, linear regression sets the basis and is quite widely used for several real-world applications.
+Source : Google Images
+ In this post, we will look at building a linear regression model for inference.</description>
     </item>
     
     <item>
