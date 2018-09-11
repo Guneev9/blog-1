@@ -62,7 +62,7 @@ Multiple linear regression follows the formula :
 
 $y = {\beta_0}+ {\beta_1}x_1+{\beta_2}x_2+...$
 
-The coefficients in this linear equation denote the magnitude of additive relation between the predictor and the response. In simpler words, keeping everything else fixed, a unit change in $x_1$ will lead to change of $beta_1$ in the outcome, and so on.
+The coefficients in this linear equation denote the magnitude of additive relation between the predictor and the response. In simpler words, keeping everything else fixed, a unit change in $x_1$ will lead to change of $\beta_1$ in the outcome, and so on.
 
 ## Is there a relationship between the medical charges and the predictors?
 
@@ -276,7 +276,7 @@ set.seed(1)
 durbinWatsonTest(trans.lm.fit, max.lag = 5, reps=1000)
 ```
 
-Here we are checking for auto-correlation of residuals for 5 different lags. The p-value for none of the lags is less than 0.05. Hence, we cannot reject the null hypothesis that the consecutive errors are not correlated, concluding that the consecutive errors are not correlated.
+Here we are checking for auto-correlation of residuals for 5 different lags. The p-value for none of the lags is less than 0.05. Hence, we cannot reject the null hypothesis that the consecutive errors are not correlated, concluding that the consecutive errors are independent of each other.
 
 ***
 

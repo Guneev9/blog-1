@@ -276,7 +276,7 @@ set.seed(1)
 durbinWatsonTest(trans.lm.fit, max.lag = 5, reps=1000)
 ```
 
-Here we are checking for auto-correlation of residuals for 5 different lags. The p-value for none of the lags is less than 0.05. Hence, we cannot reject the null hypothesis that the consecutive errors are not correlated, concluding that the consecutive errors are not correlated.
+Here we are checking for auto-correlation of residuals for 5 different lags. The p-value for none of the lags is less than 0.05. Hence, we cannot reject the null hypothesis that the consecutive errors are not correlated, concluding that the consecutive errors are independent of each other.
 
 ***
 
