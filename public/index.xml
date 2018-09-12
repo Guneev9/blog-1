@@ -16,10 +16,6 @@
       
       <guid>/post/linear-regression-modeling-and-assumptions/</guid>
       <description>&lt;p&gt;Regression analysis is a powerful statistical process to find the relations within a dataset, with the key focus being on relationships between the independent variables (predictors) and a dependent variable (outcome). It can be used to build models for inference or prediction. Among several methods of regression analysis, linear regression sets the basis and is quite widely used for &lt;a href=&#34;https://en.wikipedia.org/wiki/Linear_regression#Applications&#34; target=&#34;_blank&#34;&gt;several real-world applications&lt;/a&gt;.&lt;/p&gt;
-&lt;div class=&#34;figure&#34;&gt;
-&lt;img src=&#34;/post/2018-09-05-linear-regression-modeling-and-assumptions_files/2120406.jpg&#34; alt=&#34;Source : Google Images&#34; /&gt;
-&lt;p class=&#34;caption&#34;&gt;Source : Google Images&lt;/p&gt;
-&lt;/div&gt;
 &lt;p&gt;In this post, we will look at building a linear regression model for inference. The dataset we will use is the insurance charges data obtained from &lt;a href=&#34;https://www.kaggle.com/mirichoi0218/insurance/home&#34; target=&#34;_blank&#34;&gt;Kaggle&lt;/a&gt;. This data set consists of 1,338 observations and 7 columns: age, sex, bmi, children, smoker, region and charges.&lt;/p&gt;
 &lt;p&gt;The key questions that we would be asking are:&lt;/p&gt;
 &lt;ol style=&#34;list-style-type: decimal&#34;&gt;
@@ -27,6 +23,10 @@
 &lt;li&gt;How valid is the model we have built?&lt;/li&gt;
 &lt;li&gt;What can we do to improve the model?&lt;/li&gt;
 &lt;/ol&gt;
+&lt;div class=&#34;figure&#34;&gt;
+&lt;img src=&#34;/post/2018-09-05-linear-regression-modeling-and-assumptions_files/2120406.jpg&#34; alt=&#34;Source : Google Images&#34; /&gt;
+&lt;p class=&#34;caption&#34;&gt;Source : Google Images&lt;/p&gt;
+&lt;/div&gt;
 &lt;p&gt;We start with importing the required libraries and data:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(magrittr)
 library(purrr)
@@ -67,7 +67,7 @@ summary(insurance)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(y = {\beta_0}+ {\beta_1}x_1+{\beta_2}x_2+...\)&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;The coefficients in this linear equation denote the magnitude of additive relation between the predictor and the response. In simpler words, keeping everything else fixed, a unit change in &lt;span class=&#34;math inline&#34;&gt;\(x_1\)&lt;/span&gt; will lead to change of &lt;span class=&#34;math inline&#34;&gt;\({\beta_1}\)&lt;/span&gt; in the outcome, and so on.&lt;/p&gt;
 &lt;div id=&#34;is-there-a-relationship-between-the-medical-charges-and-the-predictors&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Is there a relationship between the medical charges and the predictors?&lt;/h2&gt;
+&lt;h2&gt;&lt;strong&gt;Is there a relationship between the medical charges and the predictors?&lt;/strong&gt;&lt;/h2&gt;
 &lt;p&gt;Our first step is finding if there is any relationship between the outcome and the predictors.&lt;/p&gt;
 &lt;p&gt;The null hypothesis would be that there is no relation between any of the predictors and the response, which would be possible when all the regression coefficients for the predictors are equal to zero. The alternate hypothesis would be that atleast one of the predictors has a relation with the outcome, that is the regression coefficient of one of the predictors is non-zero.&lt;/p&gt;
 &lt;p&gt;This hypothesis is tested by computing the &lt;a href=&#34;http://www.statisticshowto.com/probability-and-statistics/F%20statistic-value-test/&#34; target=&#34;_blank&#34;&gt;F statistic&lt;/a&gt;. In case of no relationship between the predictor and the response, F statistic will be closer to 1. On the contrary, if the alternate hypothesis is true, the F statistic will be greater than 1. The p-value of F statistic can be used to determine whether the null hypothesis can be rejected or not.&lt;/p&gt;
@@ -110,7 +110,7 @@ F-statistic: 500.8 on 8 and 1329 DF,  p-value: &amp;lt; 2.2e-16&lt;/code&gt;&lt;
 &lt;hr /&gt;
 &lt;/div&gt;
 &lt;div id=&#34;which-variables-have-a-strong-relation-to-medical-charges&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Which variables have a strong relation to medical charges?&lt;/h2&gt;
+&lt;h2&gt;&lt;strong&gt;Which variables have a strong relation to medical charges?&lt;/strong&gt;&lt;/h2&gt;
 &lt;p&gt;Now that we have determined that there is a relation between the predictors and the outcome, our next step would be finding out if all or only some of the predictors are related to the outcome.&lt;/p&gt;
 &lt;p&gt;If we look at the p-values of the estimated coefficients above, we see that not all the coefficients are statistically significant (&amp;lt;0.05). This means that only a subset of the predictors are related to the outcome.&lt;/p&gt;
 &lt;p&gt;We can look at the individual p-values for selecting the variables. This may not be a problem when the number of predictors (7) is quite small compared to the number of observations (1338). This method won’t, however, work when the number of predictors is greater than the number of observations because of the &lt;a href=&#34;http://www.statisticshowto.com/multiple-testing-problem/&#34; target=&#34;_blank&#34;&gt;multiple testing problem&lt;/a&gt;. In such cases, we would have to use the &lt;a href=&#34;https://en.wikipedia.org/wiki/Feature_selection&#34; target=&#34;_blank&#34;&gt;feature/variable selection&lt;/a&gt; methods, like forward selection, backward selection, or mixed selection.&lt;/p&gt;
@@ -134,7 +134,7 @@ step.lm.fit &amp;lt;- stepAIC(lm.fit, direction = &amp;quot;both&amp;quot;, trac
 &lt;hr /&gt;
 &lt;/div&gt;
 &lt;div id=&#34;are-there-any-multicollinear-features&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Are there any multicollinear features?&lt;/h2&gt;
+&lt;h2&gt;&lt;strong&gt;Are there any multicollinear features?&lt;/strong&gt;&lt;/h2&gt;
 &lt;p&gt;Multicollinearity in multiple regression is a phenomenon in which two or more predictors are highly related to each other, and hence one predictor can be used to predict the value of the other. The problem with multi-collinearity is that it can make it harder to estimate the individual effects of the predictors on the outcome.&lt;/p&gt;
 &lt;p&gt;Usually, collinearity between pairs of predictors can be detected using a correlation matrix. However, corrrelation matrix fails, for example, when more than two predictors have high collinearity as a group but don’t have high correlations as pairs.&lt;/p&gt;
 &lt;p&gt;A better way to detect multicollinearity is Variance Inflation Factor (VIF). VIF of any predictor is the ratio of variance of its estimated coefficient in the full model to the variance of its estimated coefficient when fit on the outcome only by itself (as in simple linear regression). A VIF of 1 indicates no presence of multicollinearity. Usually, a VIF value of above 5 or 10 is taken as an indicator of multicollinearity. The simplest way of getting rid of multicollinearity in that case is to discard the predictor with high value of VIF.&lt;/p&gt;
@@ -190,7 +190,7 @@ step.lm.fit &amp;lt;- stepAIC(lm.fit, direction = &amp;quot;both&amp;quot;, trac
 &lt;hr /&gt;
 &lt;/div&gt;
 &lt;div id=&#34;is-the-relationship-linear&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Is the relationship linear?&lt;/h2&gt;
+&lt;h2&gt;&lt;strong&gt;Is the relationship linear?&lt;/strong&gt;&lt;/h2&gt;
 &lt;p&gt;By applying linear regression, we are assuming that there is a linear relationship between the predictors and the outcome. If the underlying relationship is quite far from linear, then most of the inferences we would make would be doubtful. This also means reduced accuracy of model.&lt;/p&gt;
 &lt;p&gt;The non-linearity of the model can be determined using the residual plot. &lt;a href=&#34;http://www.statisticshowto.com/residual/&#34; target=&#34;_blank&#34;&gt;Residual&lt;/a&gt; for any observation is the difference between the actual outcome and the fitted outcome as per the model. For multiple linear regression, we can plot the residuals versus the fitted values. Presence of a pattern in the residual plot would imply a problem with the linear assumption of the model.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#type = &amp;quot;rstandard&amp;quot; draws a plot for standardized residuals
@@ -281,7 +281,7 @@ F-statistic: 783.6 on 9 and 1328 DF,  p-value: &amp;lt; 2.2e-16&lt;/code&gt;&lt;
 &lt;hr /&gt;
 &lt;/div&gt;
 &lt;div id=&#34;non-constant-variance-of-error-terms&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Non-constant variance of error terms&lt;/h2&gt;
+&lt;h2&gt;&lt;strong&gt;Non-constant variance of error terms&lt;/strong&gt;&lt;/h2&gt;
 &lt;p&gt;Constant variance (&lt;a href=&#34;https://en.wikipedia.org/wiki/Homoscedasticity&#34; target=&#34;_blank&#34;&gt;homoscedasticity&lt;/a&gt;) of errors is another assumption of a linear regression model. The error terms may, for instance, change with the value of the response variable in case of non-constant variance (heteroscedasticity) of errors. Some of the graphical methods of identifying heteroscedasticity is presence of a funnel shape in the residual plot, or existence of a curve in the residual plot. In the above plot, we don’t see any clear pattern.&lt;/p&gt;
 &lt;p&gt;A statistical way is an extension of the Breusch-Pagan Test, available in R as &lt;em&gt;ncvTest()&lt;/em&gt; in the cars package. It assumes a null hypothesis of constant variance of errors against the alternate hypothesis that the error variance changes with the level of the response or with a linear combination of predictors.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Evaluate homoscedasticity
@@ -314,7 +314,7 @@ Chisquare = 0.005724708, Df = 1, p = 0.93969&lt;/code&gt;&lt;/pre&gt;
 &lt;hr /&gt;
 &lt;/div&gt;
 &lt;div id=&#34;correlation-of-error-terms&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Correlation of error terms&lt;/h2&gt;
+&lt;h2&gt;&lt;strong&gt;Correlation of error terms&lt;/strong&gt;&lt;/h2&gt;
 &lt;p&gt;An important assumption of linear regression model is that the consecutive error terms are uncorrelated. The standard errors of the estimated regression coefficients are calculated on the basis of this assumption. If the consecutive error terms are correlated, the standard errors of the estimated regression coefficients may be much larger.&lt;/p&gt;
 &lt;p&gt;We can check the auto-correlation of error terms using the &lt;a href=&#34;https://en.wikipedia.org/wiki/Durbin–Watson_statistic&#34; target=&#34;_blank&#34;&gt;Durbin-Watson test&lt;/a&gt;. The null hypothesis is that the consecutive errors have no auto-correlation. The alternate hypothesis is that the the consecutive errors have a statistically significant correlation:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;set.seed(1)
@@ -331,7 +331,7 @@ durbinWatsonTest(trans.lm.fit, max.lag = 5, reps=1000)&lt;/code&gt;&lt;/pre&gt;
 &lt;hr /&gt;
 &lt;/div&gt;
 &lt;div id=&#34;outliers&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Outliers&lt;/h2&gt;
+&lt;h2&gt;&lt;strong&gt;Outliers&lt;/strong&gt;&lt;/h2&gt;
 &lt;p&gt;Outliers are the observations which in some way are quite different from the distribution of the data. With respect to a model, an outlier is an observation whose predicted outcome is much different from the actual value of the outcome.&lt;/p&gt;
 &lt;p&gt;Residual Plots (yes, again) can be used to identify outliers. We can look at the the last residual plot above. To make a standard comparison of residuals, we can use standardized residuals as in that plot. Usually, the observations with absolute standard residuals above 3 are possible outliers.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#finding ids of observations with absolute standard residuals of 3+, and order by value in desc order
@@ -393,7 +393,7 @@ F-statistic:  1737 on 9 and 1277 DF,  p-value: &amp;lt; 2.2e-16&lt;/code&gt;&lt;
 &lt;hr /&gt;
 &lt;/div&gt;
 &lt;div id=&#34;interpretations&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Interpretations&lt;/h2&gt;
+&lt;h2&gt;&lt;strong&gt;Interpretations&lt;/strong&gt;&lt;/h2&gt;
 &lt;p&gt;Let’s look at the actual charges vs fitted values for the model. Before doing that, let’s look at the how the fitted values of the very first model that we created stand against the actual outcomes:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;predictions &amp;lt;- predict(lm.fit, insurance, interval = &amp;quot;confidence&amp;quot;) %&amp;gt;%
   tidy()
@@ -547,13 +547,13 @@ ggplot(model.effs, aes(x = x.bmi, y = fit)) +
 &lt;hr /&gt;
 &lt;/div&gt;
 &lt;div id=&#34;conclusion&#34; class=&#34;section level2&#34;&gt;
-&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;h2&gt;&lt;strong&gt;Conclusion&lt;/strong&gt;&lt;/h2&gt;
 &lt;p&gt;The model we have built can be used for inference of how the different predictors influence the outcome.&lt;/p&gt;
 &lt;p&gt;It is far from perfect. Their is still presence of non-linearity and non-constant variance of errors. Moreover, the outliers and leverage points should be analyzed further to find a better model. It may not (and most probably won’t) give similar results when used to predict the outcome for new, unseen data. In order to use it for prediction, more concrete measures should be taken for ensuring the accuracy of the model, like cross-validation.&lt;/p&gt;
 &lt;p&gt;It still helps by providing good estimations of the significant relations between the predictors and the outcome, which can themselves be used to summarize the data in a more useful and presentful way.&lt;/p&gt;
 &lt;hr /&gt;
 &lt;div id=&#34;sources&#34; class=&#34;section level3&#34;&gt;
-&lt;h3&gt;Sources :&lt;/h3&gt;
+&lt;h3&gt;&lt;strong&gt;Sources:&lt;/strong&gt;&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href=&#34;https://www.kaggle.com/mirichoi0218/insurance/home&#34; class=&#34;uri&#34; target=&#34;_blank&#34;&gt;https://www.kaggle.com/mirichoi0218/insurance/home&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;An Introduction to Statistical Learning and Reasoning&lt;/li&gt;
