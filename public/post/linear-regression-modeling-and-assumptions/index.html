@@ -385,9 +385,9 @@ summary(insurance)</code></pre>
 <p>Let’s start with building a linear model. Instead of simple linear regression, where you have one predictor and one outcome, we will go with multiple linear regression, where you have more than one predictors and one outcome.</p>
 <p>Multiple linear regression follows the formula :</p>
 <p><span class="math inline">\(y = {\beta_0}+ {\beta_1}x_1+{\beta_2}x_2+...\)</span></p>
-<p>The coefficients in this linear equation denote the magnitude of additive relation between the predictor and the response. In simpler words, keeping everything else fixed, a unit change in <span class="math inline">\(x_1\)</span> will lead to change of <span class="math inline">\(beta_1\)</span> in the outcome, and so on.</p>
+<p>The coefficients in this linear equation denote the magnitude of additive relation between the predictor and the response. In simpler words, keeping everything else fixed, a unit change in <span class="math inline">\(x_1\)</span> will lead to change of <span class="math inline">\({\beta_1}\)</span> in the outcome, and so on.</p>
 <div id="is-there-a-relationship-between-the-medical-charges-and-the-predictors" class="section level2">
-<h2><em>Is there a relationship between the medical charges and the predictors?</em></h2>
+<h2>Is there a relationship between the medical charges and the predictors?</h2>
 <p>Our first step is finding if there is any relationship between the outcome and the predictors.</p>
 <p>The null hypothesis would be that there is no relation between any of the predictors and the response, which would be possible when all the regression coefficients for the predictors are equal to zero. The alternate hypothesis would be that atleast one of the predictors has a relation with the outcome, that is the regression coefficient of one of the predictors is non-zero.</p>
 <p>This hypothesis is tested by computing the <a href="http://www.statisticshowto.com/probability-and-statistics/F%20statistic-value-test/" target="_blank">F statistic</a>. In case of no relationship between the predictor and the response, F statistic will be closer to 1. On the contrary, if the alternate hypothesis is true, the F statistic will be greater than 1. The p-value of F statistic can be used to determine whether the null hypothesis can be rejected or not.</p>
@@ -946,6 +946,18 @@ ggplot(model.effs, aes(x = x.bmi, y = fit)) +
 </section>
 
 
+<div id="disqus_thread"></div>
+<script>
+    (function() {  
+        var d = document, s = d.createElement('script');
+        
+        s.src = 'https://https-krohitm-netlify-com.disqus.com/embed.js';
+        
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
 
   </div>
 </article>
