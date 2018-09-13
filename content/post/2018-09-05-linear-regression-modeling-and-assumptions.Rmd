@@ -26,7 +26,7 @@ The key questions that we would be asking are:
 2. How valid is the model we have built?
 3. What can we do to improve the model?
 
-![Source : Google Images](/post/2018-09-05-linear-regression-modeling-and-assumptions_files/2120406.jpg)
+![Source : Google Images](/post/2018-09-05-linear-regression-modeling-and-assumptions_files/2120406.jpg){width=350px height=350px}
 
 We start with importing the main required libraries and data:
 
@@ -91,9 +91,7 @@ Now that we have determined that there is a relation between the predictors and 
 
 If we look at the p-values of the estimated coefficients above, we see that not all the coefficients are statistically significant (<0.05). This means that only a subset of the predictors are related to the outcome.
 
-We can look at the individual p-values for selecting the variables. This may not be a problem when the number of predictors (7) is quite small compared to the number of observations (1338). This method won't, however, work when the number of predictors is greater than the number of observations because of the [multiple testing problem](http://www.statisticshowto.com/multiple-testing-problem/){target="_blank"}. A better way of selecting predictors is [feature/variable selection](https://en.wikipedia.org/wiki/Feature_selection){target="_blank"} methods, like forward selection, backward selection, or mixed selection. 
-
-![Source: Google Images](/post/2018-09-05-linear-regression-modeling-and-assumptions_files/RegressionMeme.jpg)
+We can look at the individual p-values for selecting the variables. This may not be a problem when the number of predictors (7) is quite small compared to the number of observations (1338). This method won't, however, work when the number of predictors is greater than the number of observations because of the [multiple testing problem](http://www.statisticshowto.com/multiple-testing-problem/){target="_blank"}. A better way of selecting predictors is [feature/variable selection](https://en.wikipedia.org/wiki/Feature_selection){target="_blank"} methods, like forward selection, backward selection, or mixed selection.
 
 Before jumping on to feature selection using any of these methods, let us try linear regression using the features with significant p-values only.
 
@@ -132,7 +130,7 @@ vif(step.lm.fit) %>%
 
 None of the predictors in our case has a high value of VIF. Hence, we don't need to worry about multicollinearity in our case.
 
-![Source: Google Images](/post/2018-09-05-linear-regression-modeling-and-assumptions_files/multicollinearity meme.jpg)
+![Source: Google Images](/post/2018-09-05-linear-regression-modeling-and-assumptions_files/multicollinearity meme.jpg){width=350px height=350px}
 
 ***
 
@@ -184,7 +182,7 @@ residualPlot(step.lm.fit.new, type = "rstandard")
 
 Looking at the residual plot of the new model, there is not much change in the overall pattern of the standard residuals.
 
-![Source: Google Images](/post/2018-09-05-linear-regression-modeling-and-assumptions_files/multiple-regression-more-like-multiple-depression.jpg)
+![Source: Google Images](/post/2018-09-05-linear-regression-modeling-and-assumptions_files/multiple-regression-more-like-multiple-depression.jpg){width=350px height=350px}
 
 Another method of fixing the problem of non-linearity is introducing an [interaction](https://en.wikipedia.org/wiki/Interaction_(statistics)#In_regression){target="_blank"} between some predictors. A person who smokes and has a high bmi may have higher charges as compared to a person who has lower bmi and is a non-smoker. Let's update the model to introduce an interaction between _bmi_ and _smoker_, and see if that makes a difference:
 
@@ -230,9 +228,7 @@ ncvTest(trans.lm.fit)
 residualPlot(trans.lm.fit, type = "rstandard", id=T)
 ```
 
-A p-value of ~0.94 implies here that we cannot reject the null hypothesis of constant variance of error terms.
-
-However, there is a slight increase in non-linearity of the model as can be seen in the residual plot. This can be fixed further by looking at relations between individual predictors and outcome.
+A p-value of ~0.94 implies here that we cannot reject the null hypothesis of constant variance of error terms. However, there is a slight increase in non-linearity of the model as can be seen in the residual plot. This can be fixed further by looking at relations between individual predictors and outcome.
 
 ***
 
@@ -267,7 +263,7 @@ fitted_vs_actual <- function(predictions, title){
                 color = 'ideal'))+
   labs(x="actual charges", y="fitted values") + 
   scale_color_manual('linear relation', values = c('red', 'blue')) +
-  theme(legend.position = c(0.8, 0.2))+
+  theme(legend.position = c(0.1, 0.8))+
     ggtitle(title)
 }
 
@@ -329,9 +325,7 @@ plot_effect('age', 'age') %>%
   geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.5)
 ```
 
-For an average value of other predictors, insurance charges increase with increase in age.
-
-More interesting effects can be seen for the interaction between _bmi_ and _smoker_.
+For an average value of other predictors, insurance charges increase with increase in age. More interesting effects can be seen for the interaction between _bmi_ and _smoker_:
 
 ```{r}
 plot_effect('bmi*smoker', 'bmi') %>%
