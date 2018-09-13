@@ -28,20 +28,13 @@ The key questions that we would be asking are:
 
 ![Source : Google Images](/post/2018-09-05-linear-regression-modeling-and-assumptions_files/2120406.jpg)
 
-We start with importing the required libraries and data:
+We start with importing the main required libraries and data:
 
 ```{r}
 library(magrittr)
-library(purrr)
-library(MASS)
 library(car)
 library(broom)
 library(ggplot2)
-library(psych)
-library(caret)
-library(tidyr)
-library(effects)
-library(tibble)
 ```
 
 ```{r}
@@ -112,7 +105,7 @@ We will compare this to [mixed selection](https://www.stat.ubc.ca/~rollin/teach/
 
 ```{r}
 #selecting direction = "both" for mixed selection
-step.lm.fit <- stepAIC(lm.fit, direction = "both", trace = FALSE)
+step.lm.fit <- MASS::stepAIC(lm.fit, direction = "both", trace = FALSE)
 ```
 
 Let's compare the two models :
@@ -302,7 +295,7 @@ We can look at the estimated coefficients of the predictors and their confidence
 ```{r results='asis'}
 confint(trans.lm.fit) %>%
   tidy() %>%
-  add_column(coefficients = trans.lm.fit$coefficients, .after = 2) %>%
+  tibble::add_column(coefficients = trans.lm.fit$coefficients, .after = 2) %>%
   knitr::kable()
 ```
 
@@ -314,7 +307,7 @@ Let's visualize these effects to get a better understanding of how the predictor
 #funtion to get model effects on transformed outcome
 plot_effect <- function(interaction, xpredictor){
   #get effects for predictor
-  effs <- effect(interaction, mod = trans.lm.fit, 
+  effs <- effects::effect(interaction, mod = trans.lm.fit, 
                  xlevels = list(xpredictor=min(insurance[xpredictor]):max(insurance[xpredictor])))
   
   model.effs <- effs[c('x', 'lower', 'fit', 'upper')] %>%

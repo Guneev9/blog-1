@@ -26,18 +26,11 @@ tags:
 <img src="/post/2018-09-05-linear-regression-modeling-and-assumptions_files/2120406.jpg" alt="Source : Google Images" />
 <p class="caption">Source : Google Images</p>
 </div>
-<p>We start with importing the required libraries and data:</p>
+<p>We start with importing the main required libraries and data:</p>
 <pre class="r"><code>library(magrittr)
-library(purrr)
-library(MASS)
 library(car)
 library(broom)
-library(ggplot2)
-library(psych)
-library(caret)
-library(tidyr)
-library(effects)
-library(tibble)</code></pre>
+library(ggplot2)</code></pre>
 <pre class="r"><code>insurance &lt;- read.csv(&#39;~/Documents/CodeWork/medicalCost/insurance.csv&#39;)
 summary(insurance)</code></pre>
 <pre><code>      age            sex           bmi           children     smoker    
@@ -119,7 +112,7 @@ F-statistic: 500.8 on 8 and 1329 DF,  p-value: &lt; 2.2e-16</code></pre>
 <pre class="r"><code>lm.fit.sel &lt;- lm(charges~age+bmi+children+smoker+region, data = insurance)</code></pre>
 <p>We will compare this to <a href="https://www.stat.ubc.ca/~rollin/teach/643w04/lec/node43.html" target="_blank">mixed selection</a>, which is a combination of forward and backward selection. This can be done in R using the <em>stepAIC()</em> function, which uses <a href="https://en.wikipedia.org/wiki/Akaike_information_criterion" target="_blank">Akaike Information Criterion</a> (AIC) to select the best model out of multiple models.</p>
 <pre class="r"><code>#selecting direction = &quot;both&quot; for mixed selection
-step.lm.fit &lt;- stepAIC(lm.fit, direction = &quot;both&quot;, trace = FALSE)</code></pre>
+step.lm.fit &lt;- MASS::stepAIC(lm.fit, direction = &quot;both&quot;, trace = FALSE)</code></pre>
 <p>Let’s compare the two models :</p>
 <pre class="r"><code>step.lm.fit$call</code></pre>
 <pre><code>lm(formula = charges ~ age + bmi + children + smoker + region, 
@@ -325,7 +318,7 @@ gridExtra::grid.arrange(g1,g2, ncol = 2)</code></pre>
 <p>We can look at the estimated coefficients of the predictors and their confidence intervals for interpretation on how they define the model.</p>
 <pre class="r"><code>confint(trans.lm.fit) %&gt;%
   tidy() %&gt;%
-  add_column(coefficients = trans.lm.fit$coefficients, .after = 2) %&gt;%
+  tibble::add_column(coefficients = trans.lm.fit$coefficients, .after = 2) %&gt;%
   knitr::kable()</code></pre>
 <table>
 <thead>
@@ -404,7 +397,7 @@ gridExtra::grid.arrange(g1,g2, ncol = 2)</code></pre>
 <pre class="r"><code>#funtion to get model effects on transformed outcome
 plot_effect &lt;- function(interaction, xpredictor){
   #get effects for predictor
-  effs &lt;- effect(interaction, mod = trans.lm.fit, 
+  effs &lt;- effects::effect(interaction, mod = trans.lm.fit, 
                  xlevels = list(xpredictor=min(insurance[xpredictor]):max(insurance[xpredictor])))
   
   model.effs &lt;- effs[c(&#39;x&#39;, &#39;lower&#39;, &#39;fit&#39;, &#39;upper&#39;)] %&gt;%
