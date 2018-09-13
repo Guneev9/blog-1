@@ -259,37 +259,6 @@ The p-value for none of the 5 lags is less than 0.05. Hence, we cannot reject th
 
 ***
 
-## **Outliers**
-
-Outliers are the observations which in some way are quite different from the distribution of the data. With respect to a model, an outlier is an observation whose predicted outcome is much different from the actual value of the outcome.
-
-Residual Plots (yes, again) can be used to identify outliers. We can look at the the last residual plot above. Usually, the observations with absolute standard residuals above 3 are possible outliers.
-
-```{r}
-#finding ids of observations with absolute standard residuals of 3+, and order by value in desc order
-pot.outliers <- stdres(trans.lm.fit) %>%
-  tidy() %>%
-  dplyr::filter(abs(x)>3) %>%
-  dplyr::arrange(-x)
-outlier.ids <- as.numeric(pot.outliers$names)
-#print the number of identified outliers as per absolute standard residuals
-length(outlier.ids)
-```
-
-51 observations have an absolute standardized residual greater than 3. That marks approximately 3.8% of the observations. This is a high percentage and further analysis should be done to identify the reason behind outliers (which is a totally different topic). For now, we will remove these outliers and build our model.
-
-```{r}
-clean.insurance <- insurance %>%
-  dplyr::slice(-(outlier.ids))
-
-#fitting the model on data after removing the outliers
-lm.fit2 <- update(trans.lm.fit, .~., data = clean.insurance) 
-```
-
-We can't compare the $R^2$ value of the models directly now since the model is built by removing the outliers.
-
-***
-
 ## **Interpretations**
 
 Let's look at the actual charges vs fitted values for the final model and compare it with the results from the initial model:
@@ -315,7 +284,7 @@ fitted_init <- predict(lm.fit, insurance, interval = "confidence") %>%
 g1 <- fitted_vs_actual(fitted_init, "Initial Model")
 
 #fitted values of final model
-fitted_final <- predict(lm.fit2, insurance, 
+fitted_final <- predict(trans.lm.fit, insurance, 
                              interval = "confidence")^(1/yTransformer) %>%
   tidy()
 g2 <- fitted_vs_actual(fitted_final, "Final Model")
