@@ -259,37 +259,6 @@ The p-value for none of the 5 lags is less than 0.05. Hence, we cannot reject th
 
 ***
 
-## **Outliers**
-
-Outliers are the observations which in some way are quite different from the distribution of the data. With respect to a model, an outlier is an observation whose predicted outcome is much different from the actual value of the outcome.
-
-Residual Plots (yes, again) can be used to identify outliers. We can look at the the last residual plot above. Usually, the observations with absolute standard residuals above 3 are possible outliers.
-
-```{r}
-#finding ids of observations with absolute standard residuals of 3+, and order by value in desc order
-pot.outliers <- stdres(trans.lm.fit) %>%
-  tidy() %>%
-  dplyr::filter(abs(x)>3) %>%
-  dplyr::arrange(-x)
-outlier.ids <- as.numeric(pot.outliers$names)
-#print the number of identified outliers as per absolute standard residuals
-length(outlier.ids)
-```
-
-51 observations have an absolute standardized residual greater than 3. That marks approximately 3.8% of the observations. This is a high percentage and further analysis should be done to identify the reason behind outliers (which is a totally different topic). For now, we will remove these outliers and build our model.
-
-```{r}
-clean.insurance <- insurance %>%
-  dplyr::slice(-(outlier.ids))
-
-#fitting the model on data after removing the outliers
-lm.fit2 <- update(trans.lm.fit, .~., data = clean.insurance) 
-```
-
-We can't compare the $R^2$ value of the models directly now since the model is built by removing the outliers.
-
-***
-
 ## **Interpretations**
 
 Let's look at the actual charges vs fitted values for the final model and compare it with the results from the initial model:
@@ -315,7 +284,7 @@ fitted_init <- predict(lm.fit, insurance, interval = "confidence") %>%
 g1 <- fitted_vs_actual(fitted_init, "Initial Model")
 
 #fitted values of final model
-fitted_final <- predict(lm.fit2, insurance, 
+fitted_final <- predict(trans.lm.fit, insurance, 
                              interval = "confidence")^(1/yTransformer) %>%
   tidy()
 g2 <- fitted_vs_actual(fitted_final, "Final Model")
@@ -331,13 +300,13 @@ In comparison, the fitted values in the new model are much closer to the actual 
 We can look at the estimated coefficients of the predictors and their confidence intervals for interpretation on how they define the model.
 
 ```{r results='asis'}
-confint(lm.fit2) %>%
+confint(trans.lm.fit) %>%
   tidy() %>%
-  add_column(coefficients = lm.fit2$coefficients, .after = 2) %>%
+  add_column(coefficients = trans.lm.fit$coefficients, .after = 2) %>%
   knitr::kable()
 ```
 
-In the above table, the X2.5 and X97.5 mark the lower and upper bounds for the 95% confidence interval of the regression coefficients. These are calculated using the standard errors of the estimated coefficients. As an example, for _age_, the estimated coefficient is ~34.49 and the 95% confidence interval lies between ~33.03 and ~35.95. This means that as per the model, keeping everything else fixed, an increase in 1 year of age will result in an increase of 34.49 in the value of $charges^{0.8}$ (since we transformed the outcome). However, this is an estimate and hence there is a scope for variation. This variation is accounted for by the confidence interval, denoting that about 95% of the times, the change in the value of $charges^{0.8}$ will be between 33.03 and 35.95, keeping everything else fixed.
+In the above table, the X2.5 and X97.5 mark the lower and upper bounds for the 95% confidence interval of the regression coefficients. These are calculated using the standard errors of the estimated coefficients. As an example, for _age_, the estimated coefficient is ~33.69 and the 95% confidence interval lies between ~31.56 and ~35.83. This means that as per the model, keeping everything else fixed, an increase in 1 year of age will result in an increase of 33.69 in the value of $charges^{0.8}$ (since we transformed the outcome). However, this is an estimate and hence there is a scope for variation. This variation is accounted for by the confidence interval, denoting that about 95% of the times, the change in the value of $charges^{0.8}$ will be between 31.56 and 35.83, keeping everything else fixed.
 
 Let's visualize these effects to get a better understanding of how the predictors are related to the outcome as per the model.
 
@@ -345,7 +314,7 @@ Let's visualize these effects to get a better understanding of how the predictor
 #funtion to get model effects on transformed outcome
 plot_effect <- function(interaction, xpredictor){
   #get effects for predictor
-  effs <- effect(interaction, mod = lm.fit2, 
+  effs <- effect(interaction, mod = trans.lm.fit, 
                  xlevels = list(xpredictor=min(insurance[xpredictor]):max(insurance[xpredictor])))
   
   model.effs <- effs[c('x', 'lower', 'fit', 'upper')] %>%
@@ -386,7 +355,7 @@ Non-smokers, irrespective of their bmi, have mostly low insurance charges for an
 
 ## **Conclusion**
 
-The model we have built can be used for inference of how the different predictors influence the outcome. It is far from perfect. Their is still presence of non-linearity and non-constant variance of errors. Moreover, the outliers and leverage points should be analyzed further to find a better model. It may not (and most probably won't) give similar results when used to predict the outcome for new, unseen data. In order to use it for prediction, more concrete measures should be taken for ensuring the accuracy of the model, like cross-validation. It still helps by providing good estimations of the significant relations between the predictors and the outcome. These estimations can be used to summarize the data in a more useful and presentful way.
+The model we have built can be used for inference of how the different predictors influence the outcome. It is far from perfect. Their is still presence of non-linearity and non-constant variance of errors. Moreover, the outliers and leverage points should be analyzed to find a better model. It may not (and most probably won't) give similar results when used to predict the outcome for new, unseen data. In order to use it for prediction, more concrete measures should be taken for ensuring the accuracy of the model, like cross-validation. It still helps by providing good estimations of the significant relations between the predictors and the outcome. These estimations can be used to summarize the data in a more useful and presentful way.
 
 ***
 

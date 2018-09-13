@@ -261,7 +261,7 @@ In this post, we will look at building a linear regression model for inference."
   
   <span class="middot-divider"></span>
   <span class="article-reading-time">
-    17 min read
+    16 min read
   </span>
   
 
@@ -608,28 +608,6 @@ durbinWatsonTest(trans.lm.fit, max.lag = 5, reps=1000)</code></pre>
 <p>The p-value for none of the 5 lags is less than 0.05. Hence, we cannot reject the null hypothesis that the consecutive errors are not correlated, concluding that the consecutive errors are independent of each other.</p>
 <hr />
 </div>
-<div id="outliers" class="section level2">
-<h2><strong>Outliers</strong></h2>
-<p>Outliers are the observations which in some way are quite different from the distribution of the data. With respect to a model, an outlier is an observation whose predicted outcome is much different from the actual value of the outcome.</p>
-<p>Residual Plots (yes, again) can be used to identify outliers. We can look at the the last residual plot above. Usually, the observations with absolute standard residuals above 3 are possible outliers.</p>
-<pre class="r"><code>#finding ids of observations with absolute standard residuals of 3+, and order by value in desc order
-pot.outliers &lt;- stdres(trans.lm.fit) %&gt;%
-  tidy() %&gt;%
-  dplyr::filter(abs(x)&gt;3) %&gt;%
-  dplyr::arrange(-x)
-outlier.ids &lt;- as.numeric(pot.outliers$names)
-#print the number of identified outliers as per absolute standard residuals
-length(outlier.ids)</code></pre>
-<pre><code>[1] 51</code></pre>
-<p>51 observations have an absolute standardized residual greater than 3. That marks approximately 3.8% of the observations. This is a high percentage and further analysis should be done to identify the reason behind outliers (which is a totally different topic). For now, we will remove these outliers and build our model.</p>
-<pre class="r"><code>clean.insurance &lt;- insurance %&gt;%
-  dplyr::slice(-(outlier.ids))
-
-#fitting the model on data after removing the outliers
-lm.fit2 &lt;- update(trans.lm.fit, .~., data = clean.insurance) </code></pre>
-<p>We can’t compare the <span class="math inline">\(R^2\)</span> value of the models directly now since the model is built by removing the outliers.</p>
-<hr />
-</div>
 <div id="interpretations" class="section level2">
 <h2><strong>Interpretations</strong></h2>
 <p>Let’s look at the actual charges vs fitted values for the final model and compare it with the results from the initial model:</p>
@@ -653,20 +631,20 @@ fitted_init &lt;- predict(lm.fit, insurance, interval = &quot;confidence&quot;) 
 g1 &lt;- fitted_vs_actual(fitted_init, &quot;Initial Model&quot;)
 
 #fitted values of final model
-fitted_final &lt;- predict(lm.fit2, insurance, 
+fitted_final &lt;- predict(trans.lm.fit, insurance, 
                              interval = &quot;confidence&quot;)^(1/yTransformer) %&gt;%
   tidy()
 g2 &lt;- fitted_vs_actual(fitted_final, &quot;Final Model&quot;)
 
 #creating the two plots side-by-side
 gridExtra::grid.arrange(g1,g2, ncol = 2)</code></pre>
-<p><img src="/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
+<p><img src="/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
 <p>The initial model is able to approximate the actual charges below 17,000 USD, but as the actual charges go above 20,000 USD, the gap between actual charges and fitted values keeps increasing. As per the initial model, the actual charges near 50,000 USD are fitted as somewhere near or below 40,000 USD, and this gap keeps increasing upwards.</p>
 <p>In comparison, the fitted values in the new model are much closer to the actual charges, although there is still a lot of variation not explained by this model. It is still a major improvement from the initial model.</p>
 <p>We can look at the estimated coefficients of the predictors and their confidence intervals for interpretation on how they define the model.</p>
-<pre class="r"><code>confint(lm.fit2) %&gt;%
+<pre class="r"><code>confint(trans.lm.fit) %&gt;%
   tidy() %&gt;%
-  add_column(coefficients = lm.fit2$coefficients, .after = 2) %&gt;%
+  add_column(coefficients = trans.lm.fit$coefficients, .after = 2) %&gt;%
   knitr::kable()</code></pre>
 <table>
 <thead>
@@ -680,72 +658,72 @@ gridExtra::grid.arrange(g1,g2, ncol = 2)</code></pre>
 <tbody>
 <tr class="odd">
 <td align="left">(Intercept)</td>
-<td align="right">-2024.72245</td>
-<td align="right">-1405.66485</td>
-<td align="right">-786.60725</td>
+<td align="right">-2390.28154</td>
+<td align="right">-1481.25919</td>
+<td align="right">-572.236841</td>
 </tr>
 <tr class="even">
 <td align="left">age</td>
-<td align="right">33.02690</td>
-<td align="right">34.48948</td>
-<td align="right">35.95205</td>
+<td align="right">31.55889</td>
+<td align="right">33.69202</td>
+<td align="right">35.825159</td>
 </tr>
 <tr class="odd">
 <td align="left">bmi</td>
-<td align="right">100.66518</td>
-<td align="right">201.42433</td>
-<td align="right">302.18349</td>
+<td align="right">88.38395</td>
+<td align="right">236.34998</td>
+<td align="right">384.316015</td>
 </tr>
 <tr class="even">
 <td align="left">children</td>
-<td align="right">49.04596</td>
-<td align="right">65.86134</td>
-<td align="right">82.67673</td>
+<td align="right">46.47332</td>
+<td align="right">71.13811</td>
+<td align="right">95.802903</td>
 </tr>
 <tr class="odd">
 <td align="left">smokeryes</td>
-<td align="right">-1977.52699</td>
-<td align="right">-1726.85792</td>
-<td align="right">-1476.18886</td>
+<td align="right">-2132.65819</td>
+<td align="right">-1763.80972</td>
+<td align="right">-1394.961241</td>
 </tr>
 <tr class="even">
 <td align="left">regionnorthwest</td>
-<td align="right">-162.80104</td>
-<td align="right">-103.93644</td>
-<td align="right">-45.07185</td>
+<td align="right">-167.70823</td>
+<td align="right">-82.26111</td>
+<td align="right">3.186011</td>
 </tr>
 <tr class="odd">
 <td align="left">regionsoutheast</td>
-<td align="right">-189.04134</td>
-<td align="right">-130.27207</td>
-<td align="right">-71.50279</td>
+<td align="right">-234.48716</td>
+<td align="right">-148.75323</td>
+<td align="right">-63.019309</td>
 </tr>
 <tr class="even">
 <td align="left">regionsouthwest</td>
-<td align="right">-183.16949</td>
-<td align="right">-124.51184</td>
-<td align="right">-65.85419</td>
+<td align="right">-243.32648</td>
+<td align="right">-157.63822</td>
+<td align="right">-71.949962</td>
 </tr>
 <tr class="odd">
 <td align="left">I(bmi^1.25)</td>
-<td align="right">-101.26845</td>
-<td align="right">-67.13632</td>
-<td align="right">-33.00419</td>
+<td align="right">-129.18844</td>
+<td align="right">-79.06113</td>
+<td align="right">-28.933829</td>
 </tr>
 <tr class="even">
 <td align="left">bmi:smokeryes</td>
-<td align="right">137.81459</td>
-<td align="right">145.80964</td>
-<td align="right">153.80468</td>
+<td align="right">132.95041</td>
+<td align="right">144.72423</td>
+<td align="right">156.498040</td>
 </tr>
 </tbody>
 </table>
-<p>In the above table, the X2.5 and X97.5 mark the lower and upper bounds for the 95% confidence interval of the regression coefficients. These are calculated using the standard errors of the estimated coefficients. As an example, for <em>age</em>, the estimated coefficient is ~34.49 and the 95% confidence interval lies between ~33.03 and ~35.95. This means that as per the model, keeping everything else fixed, an increase in 1 year of age will result in an increase of 34.49 in the value of <span class="math inline">\(charges^{0.8}\)</span> (since we transformed the outcome). However, this is an estimate and hence there is a scope for variation. This variation is accounted for by the confidence interval, denoting that about 95% of the times, the change in the value of <span class="math inline">\(charges^{0.8}\)</span> will be between 33.03 and 35.95, keeping everything else fixed.</p>
+<p>In the above table, the X2.5 and X97.5 mark the lower and upper bounds for the 95% confidence interval of the regression coefficients. These are calculated using the standard errors of the estimated coefficients. As an example, for <em>age</em>, the estimated coefficient is ~33.69 and the 95% confidence interval lies between ~31.56 and ~35.83. This means that as per the model, keeping everything else fixed, an increase in 1 year of age will result in an increase of 33.69 in the value of <span class="math inline">\(charges^{0.8}\)</span> (since we transformed the outcome). However, this is an estimate and hence there is a scope for variation. This variation is accounted for by the confidence interval, denoting that about 95% of the times, the change in the value of <span class="math inline">\(charges^{0.8}\)</span> will be between 31.56 and 35.83, keeping everything else fixed.</p>
 <p>Let’s visualize these effects to get a better understanding of how the predictors are related to the outcome as per the model.</p>
 <pre class="r"><code>#funtion to get model effects on transformed outcome
 plot_effect &lt;- function(interaction, xpredictor){
   #get effects for predictor
-  effs &lt;- effect(interaction, mod = lm.fit2, 
+  effs &lt;- effect(interaction, mod = trans.lm.fit, 
                  xlevels = list(xpredictor=min(insurance[xpredictor]):max(insurance[xpredictor])))
   
   model.effs &lt;- effs[c(&#39;x&#39;, &#39;lower&#39;, &#39;fit&#39;, &#39;upper&#39;)] %&gt;%
@@ -762,7 +740,7 @@ plot_effect &lt;- function(interaction, xpredictor){
   theme_bw()+
   geom_line()+
   geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.5)</code></pre>
-<p><img src="/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-23-1.png" width="672" /></p>
+<p><img src="/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
 <p>For an average value of other predictors, insurance charges increase with increase in age.</p>
 <p>More interesting effects can be seen for the interaction between <em>bmi</em> and <em>smoker</em>.</p>
 <pre class="r"><code>plot_effect(&#39;bmi*smoker&#39;, &#39;bmi&#39;) %&gt;%
@@ -771,13 +749,13 @@ plot_effect &lt;- function(interaction, xpredictor){
   theme_bw()+
   geom_line()+
   geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.5)</code></pre>
-<p><img src="/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<p><img src="/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-22-1.png" width="672" /></p>
 <p>Non-smokers, irrespective of their bmi, have mostly low insurance charges for an average value of other predictors. Smokers with low bmi have low insurance charges, though still higher than non-smokers with any value of bmi. Moreover, as their bmi increases, the insurance charges of smokers increases rapidly.</p>
 <hr />
 </div>
 <div id="conclusion" class="section level2">
 <h2><strong>Conclusion</strong></h2>
-<p>The model we have built can be used for inference of how the different predictors influence the outcome. It is far from perfect. Their is still presence of non-linearity and non-constant variance of errors. Moreover, the outliers and leverage points should be analyzed further to find a better model. It may not (and most probably won’t) give similar results when used to predict the outcome for new, unseen data. In order to use it for prediction, more concrete measures should be taken for ensuring the accuracy of the model, like cross-validation. It still helps by providing good estimations of the significant relations between the predictors and the outcome. These estimations can be used to summarize the data in a more useful and presentful way.</p>
+<p>The model we have built can be used for inference of how the different predictors influence the outcome. It is far from perfect. Their is still presence of non-linearity and non-constant variance of errors. Moreover, the outliers and leverage points should be analyzed to find a better model. It may not (and most probably won’t) give similar results when used to predict the outcome for new, unseen data. In order to use it for prediction, more concrete measures should be taken for ensuring the accuracy of the model, like cross-validation. It still helps by providing good estimations of the significant relations between the predictors and the outcome. These estimations can be used to summarize the data in a more useful and presentful way.</p>
 <hr />
 <div id="sources" class="section level3">
 <h3><strong>Sources:</strong></h3>
