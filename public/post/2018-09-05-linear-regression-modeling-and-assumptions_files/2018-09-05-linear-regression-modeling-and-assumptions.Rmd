@@ -296,7 +296,7 @@ Let's look at the actual charges vs fitted values for the final model and compar
 
 ```{r}
 #function to plot fitted values vs actual values of charges
-fitted_vs_actual <- function(predictions){
+fitted_vs_actual <- function(predictions, title){
   ggplot(predictions, aes(x=insurance$charges, y=fit))+
   geom_point()+
   geom_smooth(aes(color = 'model'))+
@@ -305,25 +305,26 @@ fitted_vs_actual <- function(predictions){
                 color = 'ideal'))+
   labs(x="actual charges", y="fitted values") + 
   scale_color_manual('linear relation', values = c('red', 'blue')) +
-  theme(legend.position = c(0.8, 0.2))
+  theme(legend.position = c(0.8, 0.2))+
+    ggtitle(title)
 }
 
 #fitted values of initial model
 fitted_init <- predict(lm.fit, insurance, interval = "confidence") %>%
   tidy()
-g1 <- fitted_vs_actual(fitted_init)
+g1 <- fitted_vs_actual(fitted_init, "Initial Model")
 
 #fitted values of final model
 fitted_final <- predict(lm.fit2, insurance, 
                              interval = "confidence")^(1/yTransformer) %>%
   tidy()
-g2 <- fitted_vs_actual(fitted_final)
+g2 <- fitted_vs_actual(fitted_final, "Final Model")
 
 #creating the two plots side-by-side
 gridExtra::grid.arrange(g1,g2, ncol = 2)
 ```
 
-The initial model is able to approximate the actual charges below $\$$17,000, but as the actual charges go above $\$$20,000, the gap between actual charges and fitted values keeps increasing. As per the initial model, the actual charges near $\$$50,000 are fitted as somewhere near or below $\$$40,000, and this gap keeps increasing upwards.
+The initial model is able to approximate the actual charges below 17,000 USD, but as the actual charges go above 20,000 USD, the gap between actual charges and fitted values keeps increasing. As per the initial model, the actual charges near 50,000 USD are fitted as somewhere near or below 40,000 USD, and this gap keeps increasing upwards.
 
 In comparison, the fitted values in the new model are much closer to the actual charges, although there is still a lot of variation not explained by this model. It is still a major improvement from the initial model.
 

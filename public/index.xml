@@ -316,7 +316,7 @@ lm.fit2 &amp;lt;- update(trans.lm.fit, .~., data = clean.insurance) &lt;/code&gt
 &lt;h2&gt;&lt;strong&gt;Interpretations&lt;/strong&gt;&lt;/h2&gt;
 &lt;p&gt;Let’s look at the actual charges vs fitted values for the final model and compare it with the results from the initial model:&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#function to plot fitted values vs actual values of charges
-fitted_vs_actual &amp;lt;- function(predictions){
+fitted_vs_actual &amp;lt;- function(predictions, title){
   ggplot(predictions, aes(x=insurance$charges, y=fit))+
   geom_point()+
   geom_smooth(aes(color = &amp;#39;model&amp;#39;))+
@@ -325,24 +325,25 @@ fitted_vs_actual &amp;lt;- function(predictions){
                 color = &amp;#39;ideal&amp;#39;))+
   labs(x=&amp;quot;actual charges&amp;quot;, y=&amp;quot;fitted values&amp;quot;) + 
   scale_color_manual(&amp;#39;linear relation&amp;#39;, values = c(&amp;#39;red&amp;#39;, &amp;#39;blue&amp;#39;)) +
-  theme(legend.position = c(0.8, 0.2))
+  theme(legend.position = c(0.8, 0.2))+
+    ggtitle(title)
 }
 
 #fitted values of initial model
 fitted_init &amp;lt;- predict(lm.fit, insurance, interval = &amp;quot;confidence&amp;quot;) %&amp;gt;%
   tidy()
-g1 &amp;lt;- fitted_vs_actual(fitted_init)
+g1 &amp;lt;- fitted_vs_actual(fitted_init, &amp;quot;Initial Model&amp;quot;)
 
 #fitted values of final model
 fitted_final &amp;lt;- predict(lm.fit2, insurance, 
                              interval = &amp;quot;confidence&amp;quot;)^(1/yTransformer) %&amp;gt;%
   tidy()
-g2 &amp;lt;- fitted_vs_actual(fitted_final)
+g2 &amp;lt;- fitted_vs_actual(fitted_final, &amp;quot;Final Model&amp;quot;)
 
 #creating the two plots side-by-side
 gridExtra::grid.arrange(g1,g2, ncol = 2)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-20-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;The initial model is able to approximate the actual charges below $$$17,000, but as the actual charges go above $$$20,000, the gap between actual charges and fitted values keeps increasing. As per the initial model, the actual charges near $$$50,000 are fitted as somewhere near or below $$$40,000, and this gap keeps increasing upwards.&lt;/p&gt;
+&lt;p&gt;The initial model is able to approximate the actual charges below 17,000 USD, but as the actual charges go above 20,000 USD, the gap between actual charges and fitted values keeps increasing. As per the initial model, the actual charges near 50,000 USD are fitted as somewhere near or below 40,000 USD, and this gap keeps increasing upwards.&lt;/p&gt;
 &lt;p&gt;In comparison, the fitted values in the new model are much closer to the actual charges, although there is still a lot of variation not explained by this model. It is still a major improvement from the initial model.&lt;/p&gt;
 &lt;p&gt;We can look at the estimated coefficients of the predictors and their confidence intervals for interpretation on how they define the model.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;confint(lm.fit2) %&amp;gt;%
