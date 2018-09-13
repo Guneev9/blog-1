@@ -68,9 +68,7 @@ The coefficients in this linear equation denote the magnitude of additive relati
 
 Our first step is finding if there is any relationship between the outcome and the predictors.
 
-The null hypothesis would be that there is no relation between any of the predictors and the response, which would be possible when all the regression coefficients for the predictors are equal to zero. The alternate hypothesis would be that atleast one of the predictors has a relation with the outcome, that is the regression coefficient of one of the predictors is non-zero.
-
-This hypothesis is tested by computing the [F statistic](http://www.statisticshowto.com/probability-and-statistics/F statistic-value-test/){target="_blank"}. In case of no relationship between the predictor and the response, F statistic will be closer to 1. On the contrary, if the alternate hypothesis is true, the F statistic will be greater than 1. The p-value of F statistic can be used to determine whether the null hypothesis can be rejected or not.
+The null hypothesis would be that there is no relation between any of the predictors and the response, which can be tested by computing the [F statistic](http://www.statisticshowto.com/probability-and-statistics/F statistic-value-test/){target="_blank"}. The p-value of F statistic can be used to determine whether the null hypothesis can be rejected or not.
 
 We will start with fitting a multiple linear regression model using all the predictors: 
 
@@ -82,17 +80,15 @@ summary(lm.fit)
 
 A high value of F statistic, with a very low p-value (<2.2e-16), implies that the null hypothesis can be rejected. This means there is a potential relationship between the predictors and the outcome.
 
-RSE (Residual Standard Error) is the estimate of standard deviation of irreducible error (the error which can't be reduced even if knew the true regression line; hence, irreducible). In simpler words, it is the average deviation between the actual outcome and the true regression line. Hence, a large value of RSE means a high deviation from the true regression line. As such, RSE is useful in determining the lack of fit of the model to the data. RSE in our model is large (6062), indicating that the model doesn't fit the data well.
+RSE (Residual Standard Error) is the estimate of the standard deviation of irreducible error (the error which can't be reduced even if knew the true regression line; hence, irreducible). In simpler words, it is the average deviation between the actual outcome and the true regression line. A large value of RSE (6062) means a high deviation of our model from the true regression line.
 
-R-squared measures the proportion of variability in the outcome that can be explained by the predictor, and is always between 0 and 1; the higher the value, the better the model is able to explain the variability in the outcome. However, increase in number of predictors mostly results in an increased value of R-squared due to [inflation of R-squared](https://en.wikipedia.org/wiki/Coefficient_of_determination#Inflation_of_R2){target="_blank"}. [Adjusted R-squared](https://en.wikipedia.org/wiki/Coefficient_of_determination#Adjusted_R2){target="_blank"} adjusts the value of R-squared to avoid this effect. A high value of adjusted R-squared (0.7494) shows that more than 74% of the variance in the data is being explained by the model. From now on, we will use the term R-squared for adjusted R-squared.
+R-squared measures the proportion of variability in the outcome that can be explained by the model, and is always between 0 and 1; the higher the value, the better the model is able to explain the variability in the outcome. However, increase in number of predictors mostly results in an increased value of R-squared due to [inflation of R-squared](https://en.wikipedia.org/wiki/Coefficient_of_determination#Inflation_of_R2){target="_blank"}. [Adjusted R-squared](https://en.wikipedia.org/wiki/Coefficient_of_determination#Adjusted_R2){target="_blank"} adjusts the value of R-squared to avoid this effect. A high value of adjusted R-squared (0.7494) shows that more than 74% of the variance in the data is being explained by the model.
 
 The Std. Error gives us the average amount that the estimated coefficient of a predictor differs from the actual coefficient of predictor. It can be used to compute the confidence interval of an estimated coefficient, which we will see later.
 
 The _t value_ of a predictor tells us how many standard deviations its estimated coefficient is away from 0. _Pr (>|t|)_ for a predictor is the p-value for the estimated regression coefficient, which is same as saying what is the probability of seeing a t value for the regression coefficient. A very low p-value (<0.05) for a predictor can be used to infer that there is a relationsip between the predictor and the outcome.
 
-Our next step should be [validation of regression analyis](https://en.wikipedia.org/wiki/Regression_validation){target="_blank"}. This may mean validation of underlying assumptions of the model, checking the structure of model with different predictors, looking for values that have an exceptionally large impact on the regression model, looking for observations that have not been represented well enough in the model, and more. 
-
-In the rest of the post, we will look at some of these methods of model validation and improvement.
+Our next step should be [validation of regression analyis](https://en.wikipedia.org/wiki/Regression_validation){target="_blank"}. This may mean validation of underlying assumptions of the model, checking the structure of model with different predictors, looking for observations that have not been represented well enough in the model, and more. We will look at a few of these methods and assumptions.
 
 ***
 
@@ -102,7 +98,7 @@ Now that we have determined that there is a relation between the predictors and 
 
 If we look at the p-values of the estimated coefficients above, we see that not all the coefficients are statistically significant (<0.05). This means that only a subset of the predictors are related to the outcome.
 
-We can look at the individual p-values for selecting the variables. This may not be a problem when the number of predictors (7) is quite small compared to the number of observations (1338). This method won't, however, work when the number of predictors is greater than the number of observations because of the [multiple testing problem](http://www.statisticshowto.com/multiple-testing-problem/){target="_blank"}. In such cases, we would have to use the [feature/variable selection](https://en.wikipedia.org/wiki/Feature_selection){target="_blank"} methods, like forward selection, backward selection, or mixed selection. 
+We can look at the individual p-values for selecting the variables. This may not be a problem when the number of predictors (7) is quite small compared to the number of observations (1338). This method won't, however, work when the number of predictors is greater than the number of observations because of the [multiple testing problem](http://www.statisticshowto.com/multiple-testing-problem/){target="_blank"}. A better way of selecting predictors is [feature/variable selection](https://en.wikipedia.org/wiki/Feature_selection){target="_blank"} methods, like forward selection, backward selection, or mixed selection. 
 
 ![Source: Google Images](/post/2018-09-05-linear-regression-modeling-and-assumptions_files/RegressionMeme.jpg)
 
@@ -134,9 +130,7 @@ The model given by stepwise selection is same as the model we got by selecting t
 
 Multicollinearity in multiple regression is a phenomenon in which two or more predictors are highly related to each other, and hence one predictor can be used to predict the value of the other. The problem with multi-collinearity is that it can make it harder to estimate the individual effects of the predictors on the outcome. 
 
-Usually, collinearity between pairs of predictors can be detected using a correlation matrix. However, corrrelation matrix fails, for example, when more than two predictors have high collinearity as a group but don't have high correlations as pairs.
-
-A better way to detect multicollinearity is Variance Inflation Factor (VIF). VIF of any predictor is the ratio of variance of its estimated coefficient in the full model to the variance of its estimated coefficient when fit on the outcome only by itself (as in simple linear regression). A VIF of 1 indicates no presence of multicollinearity. Usually, a VIF value of above 5 or 10 is taken as an indicator of multicollinearity. The simplest way of getting rid of multicollinearity in that case is to discard the predictor with high value of VIF.
+Multicollinearity can be detected using the Variance Inflation Factor (VIF). VIF of any predictor is the ratio of variance of its estimated coefficient in the full model to the variance of its estimated coefficient when fit on the outcome only by itself (as in simple linear regression). A VIF of 1 indicates no presence of multicollinearity. Usually, a VIF value of above 5 or 10 is taken as an indicator of multicollinearity. The simplest way of getting rid of multicollinearity in that case is to discard the predictor with high value of VIF.
 
 ```{r results='asis'}
 vif(step.lm.fit) %>% 
@@ -151,9 +145,9 @@ None of the predictors in our case has a high value of VIF. Hence, we don't need
 
 ## **Is the relationship linear?**
 
-By applying linear regression, we are assuming that there is a linear relationship between the predictors and the outcome. If the underlying relationship is quite far from linear, then most of the inferences we would make would be doubtful. This also means reduced accuracy of model.
+By applying linear regression, we are assuming that there is a linear relationship between the predictors and the outcome. If the underlying relationship is quite far from linear, then most of the inferences we would make would be doubtful.
 
-The non-linearity of the model can be determined using the residual plot. [Residual](http://www.statisticshowto.com/residual/){target="_blank"} for any observation is the difference between the actual outcome and the fitted outcome as per the model. For multiple linear regression, we can plot the residuals versus the fitted values. Presence of a pattern in the residual plot would imply a problem with the linear assumption of the model.
+The non-linearity of the model can be determined using the residual plot of fitted values versus the residuals. [Residual](http://www.statisticshowto.com/residual/){target="_blank"} for any observation is the difference between the actual outcome and the fitted outcome as per the model. Presence of a pattern in the residual plot would imply a problem with the linear assumption of the model.
 
 ```{r}
 #type = "rstandard" draws a plot for standardized residuals
@@ -162,7 +156,7 @@ residualPlot(step.lm.fit, type = "rstandard")
 
 The blue line represents a smooth pattern between the fitted values and the standard residuals. The curve in our case denotes slight non-linearity in our data.
 
-The non-linearity can be further explored by looking at [Component Residual plots](https://www.r-bloggers.com/r-regression-diagnostics-part-1/){target="_blank"} (CR plots). CR plots can be created in R using the function _ceresPlots()_.
+The non-linearity can be further explored by looking at [Component Residual plots](https://www.r-bloggers.com/r-regression-diagnostics-part-1/){target="_blank"} (CR plots).
 
 ```{r}
 ceresPlots(step.lm.fit)
@@ -170,15 +164,7 @@ ceresPlots(step.lm.fit)
 
 The pink line (residual line) is modelled for the relation between the predictor and the residuals. The blue dashed line (component line) is for the line of best fit. A significant difference between the two lines for a predictor implies that the predictor and the outcome don't have a linear relationship.
 
-This kind of inconsistency can be seen in the CR plot for _bmi_. Let's take a closer look:
-
-```{r}
-ceresPlot(step.lm.fit, variable = 'bmi')
-```
-
-The difference between the component line and the residual line becomes more clear now. 
-
-One of the methods of fixing this is introducing non-linear transformation of predictors of the model. Let's try adding a non-linear transformation of _bmi_ to the model.
+This kind of inconsistency can be seen in the CR plot for _bmi_. One of the methods of fixing this is introducing non-linear transformation of predictors of the model. Let's try adding a non-linear transformation of _bmi_ to the model.
 
 ```{r}
 #update() can be used to update an existing model with new requirements
@@ -187,7 +173,7 @@ step.lm.fit.new <- update(step.lm.fit, .~.+I(bmi^1.25))
 ceresPlots(step.lm.fit.new)
 ```
 
-The CR plot of bmi no more has a difference between the residual line and the component line. As per the CR plots, the addition of a non-linear transformation of bmi to the existing model fixed the problem.
+The CR plot of bmi no more has a difference between the residual line and the component line.
 
 We can use ANOVA to check if the new model is significantly better than the previous model. A low p-value (<0.05) for the new model will mean we can conclude that it is better than the previous model:
 
@@ -195,7 +181,7 @@ We can use ANOVA to check if the new model is significantly better than the prev
 anova(step.lm.fit, step.lm.fit.new, test = "F")
 ```
 
-Since the model with non-linear transformation of _bmi_ has a sufficiently low p-value (<0.05), we can conclude that it is better than the previous model.
+Since the model with non-linear transformation of _bmi_ has a sufficiently low p-value (<0.05), we can conclude that it is better than the previous model, although the p-value is marginally.
 
 Let's look at the residual plot of this new model.
 
@@ -218,12 +204,6 @@ anova(step.lm.fit.new, lm.fit1, test = "F")
 
 Not only the relation becomes more linear with less appearance of a pattern in the residual plot, the new model is significantly better than the previous model (without interactions) as can be seen with the p-value (<2.2e-16).
 
-```{r}
-summary(lm.fit1)
-```
-
-Looking at the summary of the model, the R-squared is higher now (0.8405), with new model explaining more than 84% variance of the data, and the RSE has decreased too (4837).
-
 ***
 
 ## **Non-constant variance of error terms**
@@ -233,7 +213,6 @@ Constant variance ([homoscedasticity](https://en.wikipedia.org/wiki/Homoscedasti
 A statistical way is an extension of the Breusch-Pagan Test, available in R as _ncvTest()_ in the cars package. It assumes a null hypothesis of constant variance of errors against the alternate hypothesis that the error variance changes with the level of the response or with a linear combination of predictors.
 
 ```{r}
-# Evaluate homoscedasticity
 # non-constant error variance test
 ncvTest(lm.fit1)
 ```
@@ -247,7 +226,6 @@ yTransformer <- 0.8
 
 trans.lm.fit <- update(lm.fit1, charges^yTransformer~.)
 
-# Evaluate homoscedasticity
 # non-constant error variance test
 ncvTest(trans.lm.fit)
 
@@ -268,7 +246,7 @@ This can be fixed further by looking at relations between individual predictors 
 
 An important assumption of linear regression model is that the consecutive error terms are uncorrelated. The standard errors of the estimated regression coefficients are calculated on the basis of this assumption. If the consecutive error terms are correlated, the standard errors of the estimated regression coefficients may be much larger.
 
-We can check the auto-correlation of error terms using the [Durbin-Watson test](https://en.wikipedia.org/wiki/Durbin–Watson_statistic){target="_blank"}. The null hypothesis is that the consecutive errors have no auto-correlation. The alternate hypothesis is that the the consecutive errors have a statistically significant correlation:
+We can check the auto-correlation of error terms using the [Durbin-Watson test](https://en.wikipedia.org/wiki/Durbin–Watson_statistic){target="_blank"}. The null hypothesis is that the consecutive errors have no auto-correlation.
 
 ```{r}
 set.seed(1)
@@ -276,7 +254,7 @@ set.seed(1)
 durbinWatsonTest(trans.lm.fit, max.lag = 5, reps=1000)
 ```
 
-Here we are checking for auto-correlation of residuals for 5 different lags. The p-value for none of the lags is less than 0.05. Hence, we cannot reject the null hypothesis that the consecutive errors are not correlated, concluding that the consecutive errors are independent of each other.
+The p-value for none of the 5 lags is less than 0.05. Hence, we cannot reject the null hypothesis that the consecutive errors are not correlated, concluding that the consecutive errors are independent of each other.
 
 ***
 
@@ -284,7 +262,7 @@ Here we are checking for auto-correlation of residuals for 5 different lags. The
 
 Outliers are the observations which in some way are quite different from the distribution of the data. With respect to a model, an outlier is an observation whose predicted outcome is much different from the actual value of the outcome.
 
-Residual Plots (yes, again) can be used to identify outliers. We can look at the the last residual plot above. To make a standard comparison of residuals, we can use standardized residuals as in that plot. Usually, the observations with absolute standard residuals above 3 are possible outliers.
+Residual Plots (yes, again) can be used to identify outliers. We can look at the the last residual plot above. Usually, the observations with absolute standard residuals above 3 are possible outliers.
 
 ```{r}
 #finding ids of observations with absolute standard residuals of 3+, and order by value in desc order
@@ -307,7 +285,7 @@ lm.fit2 <- update(trans.lm.fit, .~., data = clean.insurance)
 summary(lm.fit2)
 ```
 
-We can't compare the R-squared now since the model is built by removing the outliers.
+We can't compare the R-squared of the models directly now since the model is built by removing the outliers.
 
 ***
 
@@ -316,10 +294,8 @@ We can't compare the R-squared now since the model is built by removing the outl
 Let's look at the actual charges vs fitted values for the model. Before doing that, let's look at the how the fitted values of the very first model that we created stand against the actual outcomes:
 
 ```{r}
-predictions <- predict(lm.fit, insurance, interval = "confidence") %>%
-  tidy()
-
-ggplot(predictions, aes(x=insurance$charges, y=fit))+
+fitted_vs_actual <- function(predictions){
+  ggplot(predictions, aes(x=insurance$charges, y=fit))+
   geom_point()+
   geom_smooth(aes(color = 'model'))+
   geom_line(aes(x=seq(min(insurance$charges),max(insurance$charges), length.out = 1338), 
@@ -327,7 +303,13 @@ ggplot(predictions, aes(x=insurance$charges, y=fit))+
                 color = 'ideal'))+
   labs(x="actual charges", y="fitted values") + 
   scale_color_manual('linear relation', values = c('red', 'blue')) +
-  theme(legend.position = c(0.8, 0.2)) 
+  theme(legend.position = c(0.8, 0.2))
+}
+
+predictions_init <- predict(lm.fit, insurance, interval = "confidence") %>%
+  tidy()
+
+fitted_vs_actual(predictions_init)
 ```
 
 The initial model is able to approximate the actual charges below 17,000 USD, but as the actual charges go above 20,000 USD, the gap between actual charges and fitted values keeps increasing. As per the initial model, the actual charges near 50,000 USD are fitted as somewhere near or below 40,000 USD, and this gap keeps increasing upwards.
@@ -335,25 +317,14 @@ The initial model is able to approximate the actual charges below 17,000 USD, bu
 In comparison, this is how the fitted values of the last model look against the actual outcomes:
 
 ```{r}
-predictions <- predict(lm.fit2, insurance, interval = "confidence")^(1/yTransformer) %>%
+predictions_final <- predict(lm.fit2, insurance, 
+                             interval = "confidence")^(1/yTransformer) %>%
   tidy()
 
-ggplot(predictions, aes(x=insurance$charges, y=fit))+
-  geom_point()+
-  geom_smooth(aes(color = 'model'))+
-  geom_line(aes(x=seq(min(insurance$charges),max(insurance$charges), 
-                      length.out = 1338), 
-                y=seq(min(insurance$charges),max(insurance$charges), 
-                      length.out = 1338), 
-                color = 'ideal'))+
-  labs(x="actual charges", y="fitted values") + 
-  scale_color_manual('relation', values = c('red', 'blue')) +
-  theme(legend.position = c(0.8, 0.2)) 
+fitted_vs_actual(predictions_final)
 ```
 
-This is quite an improvement from the initial model. The fitted values are closer to the actual charges, as can be seen by the gaps between the ideal relation and the modelled relation between the actual charges and fitted values.
-
-There is still a lot of scope of improvement. This model still has a lot of non-constant variance of errors, as can be seen from the varying deviations of fitted values along the line of the ideal relation.
+This is quite an improvement from the initial model. The fitted values are closer to the actual charges.
 
 We can look at the estimated coefficients of the predictors and their confidence intervals for interpretation on how they define the model.
 
@@ -369,21 +340,27 @@ In the above table, the X2.5 and X97.5 mark the lower and upper bounds for the 9
 This effect can be further viewed by plotting the effect using _effects_ function.
 
 ```{r}
-#get effects for age
-effs <- effect('age', mod = lm.fit2, 
-       xlevels = list(age=min(insurance$age):max(insurance$age)))
+plot_effect <- function(interaction, xpredictor){
+  #get effects for predictor
+  effs <- effect(interaction, mod = lm.fit2, 
+                 xlevels = list(xpredictor=min(insurance[xpredictor]):max(insurance[xpredictor])))
+  
+  model.effs <- effs[c('x', 'lower', 'fit', 'upper')] %>%
+    as.data.frame()
+  
+  model.effs$fit <- model.effs$fit^(1/yTransformer)
+  model.effs$lower <- model.effs$lower^(1/yTransformer)
+  model.effs$upper <- model.effs$upper^(1/yTransformer)
+  
+  return(model.effs)
+}
+```
 
-#create a data frame for age and the fitted values, with upper and lower confidence bands
-model.effs <- effs[c('x', 'lower', 'fit', 'upper')] %>%
-  as.data.frame()
-
-model.effs$fit <- model.effs$fit^(1/yTransformer)
-model.effs$lower <- model.effs$lower^(1/yTransformer)
-model.effs$upper <- model.effs$upper^(1/yTransformer)
-
-ggplot(model.effs, aes(x = age, y = fit)) +
+```{r}
+plot_effect('age', 'age') %>%
+  ggplot(aes(x = age, y = fit)) +
   theme_bw()+
-  geom_smooth()+
+  geom_line()+
   geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.5)
 ```
 
@@ -392,24 +369,14 @@ For an average value of other predictors, insurance charges increase with increa
 More interesting effects can be seen for the interaction between _bmi_ and _smoker_.
 
 ```{r}
-#get effects for bmi*smoker
-effs <- effect('bmi*smoker', mod = lm.fit2, 
-       xlevels = list(bmi=min(insurance$bmi):max(insurance$bmi)))
-
-#create a data frame for bmi*smoker and the fitted values, with upper and lower confidence bands
-model.effs <- effs[c('x', 'lower', 'fit', 'upper')] %>%
-  as.data.frame()
-
-model.effs$fit <- model.effs$fit^(1/yTransformer)
-model.effs$lower <- model.effs$lower^(1/yTransformer)
-model.effs$upper <- model.effs$upper^(1/yTransformer)
-
-ggplot(model.effs, aes(x = x.bmi, y = fit)) +
+plot_effect('bmi*smoker', 'bmi') %>%
+  ggplot(aes(x = x.bmi, y = fit)) +
   facet_wrap(~x.smoker)+
   theme_bw()+
-  geom_smooth(size=0.5)+
+  geom_line()+
   geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.5)
 ```
+
 
 Non-smokers, irrespective of their bmi, have mostly low insurance charges for an average value of other predictors. Smokers with low bmi have low insurance charges, though still higher than non-smokers with any value of bmi. Moreover, as their bmi increases, the insurance charges of smokers increases rapidly.
 
@@ -427,10 +394,7 @@ It still helps by providing good estimations of the significant relations betwee
 
 ### **Sources:**
 
-* [https://www.kaggle.com/mirichoi0218/insurance/home](https://www.kaggle.com/mirichoi0218/insurance/home){target="_blank"}
 * An Introduction to Statistical Learning and Reasoning
 * Wikipedia
-* [https://www.statmethods.net/stats/rdiagnostics.html](https://www.statmethods.net/stats/rdiagnostics.html){target="_blank"}
-* [https://www.statmethods.net/stats/regression.html](https://www.statmethods.net/stats/regression.html){target="_blank"}
-* [https://datascienceplus.com/how-to-detect-heteroscedasticity-and-rectify-it/](https://datascienceplus.com/how-to-detect-heteroscedasticity-and-rectify-it/){target="_blank"}
-* [http://www.statisticshowto.com/probability-and-statistics/f-statistic-value-test/](http://www.statisticshowto.com/probability-and-statistics/f-statistic-value-test/){target="_blank"}
+* [Quick-R](https://www.statmethods.net){target="_blank"}
+* [Statistics How To](http://www.statisticshowto.com){target="_blank"}
