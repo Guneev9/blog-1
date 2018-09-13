@@ -261,7 +261,7 @@ In this post, we will look at building a linear regression model for inference."
   
   <span class="middot-divider"></span>
   <span class="article-reading-time">
-    18 min read
+    17 min read
   </span>
   
 
@@ -419,7 +419,7 @@ Multiple R-squared:  0.7509,    Adjusted R-squared:  0.7494
 F-statistic: 500.8 on 8 and 1329 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>A high value of F statistic, with a very low p-value (&lt;2.2e-16), implies that the null hypothesis can be rejected. This means there is a potential relationship between the predictors and the outcome.</p>
 <p>RSE (Residual Standard Error) is the estimate of the standard deviation of irreducible error (the error which can’t be reduced even if knew the true regression line; hence, irreducible). In simpler words, it is the average deviation between the actual outcome and the true regression line. A large value of RSE (6062) means a high deviation of our model from the true regression line.</p>
-<p>R-squared measures the proportion of variability in the outcome that can be explained by the model, and is always between 0 and 1; the higher the value, the better the model is able to explain the variability in the outcome. However, increase in number of predictors mostly results in an increased value of R-squared due to <a href="https://en.wikipedia.org/wiki/Coefficient_of_determination#Inflation_of_R2" target="_blank">inflation of R-squared</a>. <a href="https://en.wikipedia.org/wiki/Coefficient_of_determination#Adjusted_R2" target="_blank">Adjusted R-squared</a> adjusts the value of R-squared to avoid this effect. A high value of adjusted R-squared (0.7494) shows that more than 74% of the variance in the data is being explained by the model.</p>
+<p>R-squared (<span class="math inline">\(R^2\)</span>) measures the proportion of variability in the outcome that can be explained by the model, and is always between 0 and 1; the higher the value, the better the model is able to explain the variability in the outcome. However, increase in number of predictors mostly results in an increased value of <span class="math inline">\(R^2\)</span> due to <a href="https://en.wikipedia.org/wiki/Coefficient_of_determination#Inflation_of_R2" target="_blank">inflation of R-squared</a>. <a href="https://en.wikipedia.org/wiki/Coefficient_of_determination#Adjusted_R2" target="_blank">Adjusted R-squared</a> adjusts the value of <span class="math inline">\(R^2\)</span> to avoid this effect. A high value of adjusted <span class="math inline">\(R^2\)</span> (0.7494) shows that more than 74% of the variance in the data is being explained by the model.</p>
 <p>The Std. Error gives us the average amount that the estimated coefficient of a predictor differs from the actual coefficient of predictor. It can be used to compute the confidence interval of an estimated coefficient, which we will see later.</p>
 <p>The <em>t value</em> of a predictor tells us how many standard deviations its estimated coefficient is away from 0. <em>Pr (&gt;|t|)</em> for a predictor is the p-value for the estimated regression coefficient, which is same as saying what is the probability of seeing a t value for the regression coefficient. A very low p-value (&lt;0.05) for a predictor can be used to infer that there is a relationsip between the predictor and the outcome.</p>
 <p>Our next step should be <a href="https://en.wikipedia.org/wiki/Regression_validation" target="_blank">validation of regression analyis</a>. This may mean validation of underlying assumptions of the model, checking the structure of model with different predictors, looking for observations that have not been represented well enough in the model, and more. We will look at a few of these methods and assumptions.</p>
@@ -446,7 +446,7 @@ step.lm.fit &lt;- stepAIC(lm.fit, direction = &quot;both&quot;, trace = FALSE)</
 <pre class="r"><code>lm.fit.sel$call</code></pre>
 <pre><code>lm(formula = charges ~ age + bmi + children + smoker + region, 
     data = insurance)</code></pre>
-<p>The model given by stepwise selection is same as the model we got by selecting the predictors with significant p-values (works in this case). You can check the summary of the new model to see if there is any improvement in the model.</p>
+<p>The model given by stepwise selection is same as the model we got by selecting the predictors with significant p-values (works in this case).</p>
 <hr />
 </div>
 <div id="are-there-any-multicollinear-features" class="section level2">
@@ -560,6 +560,10 @@ Model 2: charges ~ age + bmi + children + smoker + region + I(bmi^1.25) +
 ---
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <p>Not only the relation becomes more linear with less appearance of a pattern in the residual plot, the new model is significantly better than the previous model (without interactions) as can be seen with the p-value (&lt;2.2e-16).</p>
+<pre class="r"><code>#checking the value of adjusted r-squared of new model
+summary(lm.fit1)$adj.r.squared</code></pre>
+<pre><code>[1] 0.840469</code></pre>
+<p>The <span class="math inline">\(R^2\)</span> value of the model has also increased to more than 0.84.</p>
 <hr />
 </div>
 <div id="non-constant-variance-of-error-terms" class="section level2">
@@ -571,10 +575,9 @@ ncvTest(lm.fit1)</code></pre>
 <pre><code>Non-constant Variance Score Test 
 Variance formula: ~ fitted.values 
 Chisquare = 17.90486, Df = 1, p = 2.3223e-05</code></pre>
-<p>A very low p-value (~2.3-05) means the null hypothesis can be rejected. In other words, there is a high chance that the errors have a non-constant variance.</p>
+<p>A very low p-value (~<span class="math inline">\(2.3*10^{-5}\)</span>) means the null hypothesis can be rejected. In other words, there is a high chance that the errors have a non-constant variance.</p>
 <p>One of the methods to fix this problem is transformation of the outcome variable.</p>
 <pre class="r"><code>yTransformer &lt;- 0.8
-
 trans.lm.fit &lt;- update(lm.fit1, charges^yTransformer~.)
 
 # non-constant error variance test
@@ -583,14 +586,9 @@ ncvTest(trans.lm.fit)</code></pre>
 Variance formula: ~ fitted.values 
 Chisquare = 0.005724708, Df = 1, p = 0.93969</code></pre>
 <pre class="r"><code>residualPlot(trans.lm.fit, type = &quot;rstandard&quot;, id=T)</code></pre>
-<p><img src="/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p><img src="/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
 <p>A p-value of ~0.94 implies here that we cannot reject the null hypothesis of constant variance of error terms.</p>
-<div class="figure">
-<img src="/post/2018-09-05-linear-regression-modeling-and-assumptions_files/2d3a442e8b01577630a816aea1ba2ac8.jpeg" alt="Source: Google Images" />
-<p class="caption">Source: Google Images</p>
-</div>
-<p>However, there is a slight increase in non-linearity of the model as can be seen in the residual plot.</p>
-<p>This can be fixed further by looking at relations between individual predictors and outcome.</p>
+<p>However, there is a slight increase in non-linearity of the model as can be seen in the residual plot. This can be fixed further by looking at relations between individual predictors and outcome.</p>
 <hr />
 </div>
 <div id="correlation-of-error-terms" class="section level2">
@@ -619,63 +617,24 @@ pot.outliers &lt;- stdres(trans.lm.fit) %&gt;%
   tidy() %&gt;%
   dplyr::filter(abs(x)&gt;3) %&gt;%
   dplyr::arrange(-x)
-pot.outliers</code></pre>
-<pre><code># A tibble: 51 x 2
-   names     x
-   &lt;chr&gt; &lt;dbl&gt;
- 1 517    5.31
- 2 1301   5.11
- 3 220    4.85
- 4 1020   4.67
- 5 431    4.62
- 6 243    4.59
- 7 1207   4.48
- 8 527    4.42
- 9 1028   4.33
-10 937    4.25
-# ... with 41 more rows</code></pre>
-<pre class="r"><code>outlier.ids &lt;- as.numeric(pot.outliers$names)</code></pre>
+outlier.ids &lt;- as.numeric(pot.outliers$names)
+#print the number of identified outliers as per absolute standard residuals
+length(outlier.ids)</code></pre>
+<pre><code>[1] 51</code></pre>
 <p>51 observations have an absolute standardized residual greater than 3. That marks approximately 3.8% of the observations. This is a high percentage and further analysis should be done to identify the reason behind outliers (which is a totally different topic). For now, we will remove these outliers and build our model.</p>
 <pre class="r"><code>clean.insurance &lt;- insurance %&gt;%
   dplyr::slice(-(outlier.ids))
 
 #fitting the model on data after removing the outliers
-lm.fit2 &lt;- update(trans.lm.fit, .~., data = clean.insurance) 
-summary(lm.fit2)</code></pre>
-<pre><code>
-Call:
-lm(formula = charges^yTransformer ~ age + bmi + children + smoker + 
-    region + I(bmi^1.25) + bmi:smoker, data = clean.insurance)
-
-Residuals:
-     Min       1Q   Median       3Q      Max 
--1081.34  -137.51   -73.18    26.35  1739.12 
-
-Coefficients:
-                  Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)     -1405.6648   315.5522  -4.455 9.14e-06 ***
-age                34.4895     0.7455  46.262  &lt; 2e-16 ***
-bmi               201.4243    51.3600   3.922 9.26e-05 ***
-children           65.8613     8.5713   7.684 3.06e-14 ***
-smokeryes       -1726.8579   127.7735 -13.515  &lt; 2e-16 ***
-regionnorthwest  -103.9364    30.0050  -3.464  0.00055 ***
-regionsoutheast  -130.2721    29.9565  -4.349 1.48e-05 ***
-regionsouthwest  -124.5118    29.8996  -4.164 3.33e-05 ***
-I(bmi^1.25)       -67.1363    17.3982  -3.859  0.00012 ***
-bmi:smokeryes     145.8096     4.0753  35.779  &lt; 2e-16 ***
----
-Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-
-Residual standard error: 371.5 on 1277 degrees of freedom
-Multiple R-squared:  0.9245,    Adjusted R-squared:  0.9239 
-F-statistic:  1737 on 9 and 1277 DF,  p-value: &lt; 2.2e-16</code></pre>
-<p>We can’t compare the R-squared of the models directly now since the model is built by removing the outliers.</p>
+lm.fit2 &lt;- update(trans.lm.fit, .~., data = clean.insurance) </code></pre>
+<p>We can’t compare the <span class="math inline">\(R^2\)</span> value of the models directly now since the model is built by removing the outliers.</p>
 <hr />
 </div>
 <div id="interpretations" class="section level2">
 <h2><strong>Interpretations</strong></h2>
-<p>Let’s look at the actual charges vs fitted values for the model. Before doing that, let’s look at the how the fitted values of the very first model that we created stand against the actual outcomes:</p>
-<pre class="r"><code>fitted_vs_actual &lt;- function(predictions){
+<p>Let’s look at the actual charges vs fitted values for the final model and compare it with the results from the initial model:</p>
+<pre class="r"><code>#function to plot fitted values vs actual values of charges
+fitted_vs_actual &lt;- function(predictions){
   ggplot(predictions, aes(x=insurance$charges, y=fit))+
   geom_point()+
   geom_smooth(aes(color = &#39;model&#39;))+
@@ -687,20 +646,22 @@ F-statistic:  1737 on 9 and 1277 DF,  p-value: &lt; 2.2e-16</code></pre>
   theme(legend.position = c(0.8, 0.2))
 }
 
-predictions_init &lt;- predict(lm.fit, insurance, interval = &quot;confidence&quot;) %&gt;%
+#fitted values of initial model
+fitted_init &lt;- predict(lm.fit, insurance, interval = &quot;confidence&quot;) %&gt;%
   tidy()
+g1 &lt;- fitted_vs_actual(fitted_init)
 
-fitted_vs_actual(predictions_init)</code></pre>
-<p><img src="/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-19-1.png" width="672" /></p>
-<p>The initial model is able to approximate the actual charges below 17,000 USD, but as the actual charges go above 20,000 USD, the gap between actual charges and fitted values keeps increasing. As per the initial model, the actual charges near 50,000 USD are fitted as somewhere near or below 40,000 USD, and this gap keeps increasing upwards.</p>
-<p>In comparison, this is how the fitted values of the last model look against the actual outcomes:</p>
-<pre class="r"><code>predictions_final &lt;- predict(lm.fit2, insurance, 
+#fitted values of final model
+fitted_final &lt;- predict(lm.fit2, insurance, 
                              interval = &quot;confidence&quot;)^(1/yTransformer) %&gt;%
   tidy()
+g2 &lt;- fitted_vs_actual(fitted_final)
 
-fitted_vs_actual(predictions_final)</code></pre>
+#creating the two plots side-by-side
+gridExtra::grid.arrange(g1,g2, ncol = 2)</code></pre>
 <p><img src="/post/2018-09-05-linear-regression-modeling-and-assumptions_files/figure-html/unnamed-chunk-20-1.png" width="672" /></p>
-<p>This is quite an improvement from the initial model. The fitted values are closer to the actual charges.</p>
+<p>The initial model is able to approximate the actual charges below $$$17,000, but as the actual charges go above $$$20,000, the gap between actual charges and fitted values keeps increasing. As per the initial model, the actual charges near $$$50,000 are fitted as somewhere near or below $$$40,000, and this gap keeps increasing upwards.</p>
+<p>In comparison, the fitted values in the new model are much closer to the actual charges, although there is still a lot of variation not explained by this model. It is still a major improvement from the initial model.</p>
 <p>We can look at the estimated coefficients of the predictors and their confidence intervals for interpretation on how they define the model.</p>
 <pre class="r"><code>confint(lm.fit2) %&gt;%
   tidy() %&gt;%
@@ -779,8 +740,9 @@ fitted_vs_actual(predictions_final)</code></pre>
 </tbody>
 </table>
 <p>In the above table, the X2.5 and X97.5 mark the lower and upper bounds for the 95% confidence interval of the regression coefficients. These are calculated using the standard errors of the estimated coefficients. As an example, for <em>age</em>, the estimated coefficient is ~34.49 and the 95% confidence interval lies between ~33.03 and ~35.95. This means that as per the model, keeping everything else fixed, an increase in 1 year of age will result in an increase of 34.49 in the value of <span class="math inline">\(charges^{0.8}\)</span> (since we transformed the outcome). However, this is an estimate and hence there is a scope for variation. This variation is accounted for by the confidence interval, denoting that about 95% of the times, the change in the value of <span class="math inline">\(charges^{0.8}\)</span> will be between 33.03 and 35.95, keeping everything else fixed.</p>
-<p>This effect can be further viewed by plotting the effect using <em>effects</em> function.</p>
-<pre class="r"><code>plot_effect &lt;- function(interaction, xpredictor){
+<p>Let’s visualize these effects to get a better understanding of how the predictors are related to the outcome as per the model.</p>
+<pre class="r"><code>#funtion to get model effects on transformed outcome
+plot_effect &lt;- function(interaction, xpredictor){
   #get effects for predictor
   effs &lt;- effect(interaction, mod = lm.fit2, 
                  xlevels = list(xpredictor=min(insurance[xpredictor]):max(insurance[xpredictor])))
@@ -814,9 +776,7 @@ fitted_vs_actual(predictions_final)</code></pre>
 </div>
 <div id="conclusion" class="section level2">
 <h2><strong>Conclusion</strong></h2>
-<p>The model we have built can be used for inference of how the different predictors influence the outcome.</p>
-<p>It is far from perfect. Their is still presence of non-linearity and non-constant variance of errors. Moreover, the outliers and leverage points should be analyzed further to find a better model. It may not (and most probably won’t) give similar results when used to predict the outcome for new, unseen data. In order to use it for prediction, more concrete measures should be taken for ensuring the accuracy of the model, like cross-validation.</p>
-<p>It still helps by providing good estimations of the significant relations between the predictors and the outcome, which can themselves be used to summarize the data in a more useful and presentful way.</p>
+<p>The model we have built can be used for inference of how the different predictors influence the outcome. It is far from perfect. Their is still presence of non-linearity and non-constant variance of errors. Moreover, the outliers and leverage points should be analyzed further to find a better model. It may not (and most probably won’t) give similar results when used to predict the outcome for new, unseen data. In order to use it for prediction, more concrete measures should be taken for ensuring the accuracy of the model, like cross-validation. It still helps by providing good estimations of the significant relations between the predictors and the outcome. These estimations can be used to summarize the data in a more useful and presentful way.</p>
 <hr />
 <div id="sources" class="section level3">
 <h3><strong>Sources:</strong></h3>
