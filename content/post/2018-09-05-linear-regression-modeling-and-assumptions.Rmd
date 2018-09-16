@@ -348,7 +348,7 @@ The model we have built can be used for inference of how the different predictor
 
 ### **Sources:**
 
-* An Introduction to Statistical Learning and Reasoning
+* An Introduction to Statistical Learning, with Application in R. By James, G., Witten, D., Hastie, T., Tibshirani, R.
 * Wikipedia
 * [Quick-R](https://www.statmethods.net){target="_blank"}
 * [Statistics How To](http://www.statisticshowto.com){target="_blank"}

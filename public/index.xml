@@ -429,7 +429,7 @@ plot_effect &amp;lt;- function(interaction, xpredictor){
 &lt;div id=&#34;sources&#34; class=&#34;section level3&#34;&gt;
 &lt;h3&gt;&lt;strong&gt;Sources:&lt;/strong&gt;&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;An Introduction to Statistical Learning and Reasoning&lt;/li&gt;
+&lt;li&gt;An Introduction to Statistical Learning, with Application in R. By James, G., Witten, D., Hastie, T., Tibshirani, R.&lt;/li&gt;
 &lt;li&gt;Wikipedia&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://www.statmethods.net&#34; target=&#34;_blank&#34;&gt;Quick-R&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://www.statisticshowto.com&#34; target=&#34;_blank&#34;&gt;Statistics How To&lt;/a&gt;&lt;/li&gt;
