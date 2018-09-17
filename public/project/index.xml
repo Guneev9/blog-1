@@ -12,25 +12,15 @@
     
     
     <item>
-      <title>Asynchronous Gossip Protocol and Push-Sum</title>
-      <link>/project/gossip-protocol/</link>
-      <pubDate>Wed, 02 May 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/project/gossip-protocol/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>Twitter Engine</title>
       <link>/project/twitter-engine/</link>
       <pubDate>Wed, 02 May 2018 00:00:00 +0000</pubDate>
       
       <guid>/project/twitter-engine/</guid>
       <description>Overview The application can be seen at https://github.com/krohitm/Twitter-Simulator.
-Client-Server
-A client upon connection is able to write tweets as well as search tweets with hashtags and mentions. Tweets contain randomly generated hashtags. Every tweet contains a random mention of another user, chosen by the simulator. A client can also log itself off and upon login receive its tweets. Also, clients are able to retweet.
-Simulator
- The Simulator is a separate process and dictates what requests clients can send.</description>
+In this project, we implemented a Twitter Clone and a client tester/simulator.
+As part I of this project, we built an engine that (in part II) will be paired up with WebSockets to provide full functionality. Specific things done in this project are:
+ Implemented a Twitter like engine with the following functionality:   Register account. Send tweet. Tweets can have hashtags and mentions.</description>
     </item>
     
     <item>
@@ -40,9 +30,9 @@ Simulator
       
       <guid>/project/twitter-simulator/</guid>
       <description>Link to demo video: https://youtu.be/XlY2eoI5o-8
-Part 1 of this project can be seen at https://github.com/krohitm/Twitter-Simulator
-The part 1 of our project had all the functionalities working. In part 2 we have used the exact same server that acts as an API to the Phoenix channels (check architecture section for details). This Server that acts as API can handle all the following:
- Tweeting to followers Searching tweets - tweets, tweets with hashtags, tweets with mentions Retweet a tweet that a user receives  We have broken down the implementation into two parts:</description>
+Part I of this project can be seen at https://github.com/krohitm/Twitter-Simulator
+The part I{target=&amp;rdquo;_blank&amp;rdquo;} of our project had all the functionalities working. In part II, we have used Phoenix web framework to implement a WebSocket interface to our part I implementation. This implementation was achieved by fulfilling the following tasks:
+ Designed a JSON based API that represents all messages and their replies (including errors). Re-wrote our engine using Phoenix to implement the WebSocket interface.</description>
     </item>
     
   </channel>

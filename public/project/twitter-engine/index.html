@@ -18,10 +18,9 @@
     
   
   <meta name="description" content="Overview The application can be seen at https://github.com/krohitm/Twitter-Simulator.
-Client-Server
-A client upon connection is able to write tweets as well as search tweets with hashtags and mentions. Tweets contain randomly generated hashtags. Every tweet contains a random mention of another user, chosen by the simulator. A client can also log itself off and upon login receive its tweets. Also, clients are able to retweet.
-Simulator
- The Simulator is a separate process and dictates what requests clients can send.">
+In this project, we implemented a Twitter Clone and a client tester/simulator.
+As part I of this project, we built an engine that (in part II) will be paired up with WebSockets to provide full functionality. Specific things done in this project are:
+ Implemented a Twitter like engine with the following functionality:   Register account. Send tweet. Tweets can have hashtags and mentions.">
 
   
   <link rel="alternate" hreflang="en-us" href="/project/twitter-engine/">
@@ -97,10 +96,9 @@ Simulator
   <meta property="og:url" content="/project/twitter-engine/">
   <meta property="og:title" content="Twitter Engine | Did you say data?">
   <meta property="og:description" content="Overview The application can be seen at https://github.com/krohitm/Twitter-Simulator.
-Client-Server
-A client upon connection is able to write tweets as well as search tweets with hashtags and mentions. Tweets contain randomly generated hashtags. Every tweet contains a random mention of another user, chosen by the simulator. A client can also log itself off and upon login receive its tweets. Also, clients are able to retweet.
-Simulator
- The Simulator is a separate process and dictates what requests clients can send.">
+In this project, we implemented a Twitter Clone and a client tester/simulator.
+As part I of this project, we built an engine that (in part II) will be paired up with WebSockets to provide full functionality. Specific things done in this project are:
+ Implemented a Twitter like engine with the following functionality:   Register account. Send tweet. Tweets can have hashtags and mentions.">
   <meta property="og:locale" content="en-us">
   
   <meta property="article:published_time" content="2018-05-02T00:00:00&#43;00:00">
@@ -206,9 +204,9 @@ Simulator
         
 
         <li class="nav-item">
-          <a href="/#contact">
+          <a href="/#projects">
             
-            <span>Contact</span>
+            <span>Projects</span>
             
           </a>
         </li>
@@ -221,11 +219,13 @@ Simulator
         
         
         
+          
+        
 
         <li class="nav-item">
-          <a href="/">
+          <a href="/#contact">
             
-            <span></span>
+            <span>Contact</span>
             
           </a>
         </li>
@@ -306,9 +306,38 @@ Simulator
 
 <p>The application can be seen at <a href="https://github.com/krohitm/Twitter-Simulator" target="_blank">https://github.com/krohitm/Twitter-Simulator</a>.</p>
 
+<p>In this project, we implemented a Twitter Clone and a client tester/simulator.</p>
+
+<p>As part I of this project, we built an engine that (in part II) will be paired up with WebSockets to provide full functionality. Specific things done in this project are:</p>
+
+<ul>
+<li>Implemented a Twitter like engine with the following functionality:</li>
+</ul>
+
+<ol>
+<li>Register account.</li>
+<li>Send tweet. Tweets can have hashtags and mentions.</li>
+<li>Subscribe to user&rsquo;s tweets.</li>
+<li>Re-tweets (so that your subscribers get an interesting tweet you got by other means).</li>
+<li>Allow querying tweets subscribed to, tweets with specific hashtags, tweets in which the user is mentioned (my mentions).</li>
+<li>If the user is connected, deliver the above types of tweets live (without querying)</li>
+</ol>
+
+<ul>
+<li>Implemented a tester/simulator to test the above:</li>
+</ul>
+
+<ol>
+<li>Simulated more than 5000 users on a 64-bit i5 Macbook Pro with 8GB RAM.</li>
+<li>Simulated periods of live connection and disconnection for users</li>
+<li>Simulated a Zipf distribution on the number of subscribers. For accounts with a lot of subscribers, increased the number of tweets. Made some of these messages re-tweets.</li>
+</ol>
+
 <p><strong>Client-Server</strong></p>
 
 <p>A client upon connection is able to write tweets as well as search tweets with hashtags and mentions. Tweets contain randomly generated hashtags. Every tweet contains a random mention of another user, chosen by the simulator. A client can also log itself off and upon login receive its tweets. Also, clients are able to retweet.</p>
+
+<p>The client part (send/receive tweets) and the engine (distribute tweets) are separate processes. We used multiple independent client processes that simulate thousands of clients and a single engine process.</p>
 
 <p><strong>Simulator</strong></p>
 
@@ -368,6 +397,10 @@ At present we have 1000 actors that receive a read request from clients. The ser
 <li><p>Write Actor:
 We have kept only 2 write actors at the moment that do the job of writing data to the respective database once a tweet request has been received.</p></li>
 </ol>
+
+<h2 id="further-updates">Further Updates</h2>
+
+<p>This project was <a href="https://didyousaydata.xyz/project/twitter-simulator/" target="_blank">further updated</a>{target=&rdquo;_blank&rdquo;} to implement a WebSocket interface using Phoenix web framework.</p>
 
     </div>
 

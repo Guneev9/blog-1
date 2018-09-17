@@ -440,15 +440,6 @@ plot_effect &amp;lt;- function(interaction, xpredictor){
     </item>
     
     <item>
-      <title>Asynchronous Gossip Protocol and Push-Sum</title>
-      <link>/project/gossip-protocol/</link>
-      <pubDate>Wed, 02 May 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/project/gossip-protocol/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>Twitter Engine</title>
       <link>/project/twitter-engine/</link>
       <pubDate>Wed, 02 May 2018 00:00:00 +0000</pubDate>
@@ -460,9 +451,38 @@ plot_effect &amp;lt;- function(interaction, xpredictor){
 
 &lt;p&gt;The application can be seen at &lt;a href=&#34;https://github.com/krohitm/Twitter-Simulator&#34; target=&#34;_blank&#34;&gt;https://github.com/krohitm/Twitter-Simulator&lt;/a&gt;.&lt;/p&gt;
 
+&lt;p&gt;In this project, we implemented a Twitter Clone and a client tester/simulator.&lt;/p&gt;
+
+&lt;p&gt;As part I of this project, we built an engine that (in part II) will be paired up with WebSockets to provide full functionality. Specific things done in this project are:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Implemented a Twitter like engine with the following functionality:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Register account.&lt;/li&gt;
+&lt;li&gt;Send tweet. Tweets can have hashtags and mentions.&lt;/li&gt;
+&lt;li&gt;Subscribe to user&amp;rsquo;s tweets.&lt;/li&gt;
+&lt;li&gt;Re-tweets (so that your subscribers get an interesting tweet you got by other means).&lt;/li&gt;
+&lt;li&gt;Allow querying tweets subscribed to, tweets with specific hashtags, tweets in which the user is mentioned (my mentions).&lt;/li&gt;
+&lt;li&gt;If the user is connected, deliver the above types of tweets live (without querying)&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Implemented a tester/simulator to test the above:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Simulated more than 5000 users on a 64-bit i5 Macbook Pro with 8GB RAM.&lt;/li&gt;
+&lt;li&gt;Simulated periods of live connection and disconnection for users&lt;/li&gt;
+&lt;li&gt;Simulated a Zipf distribution on the number of subscribers. For accounts with a lot of subscribers, increased the number of tweets. Made some of these messages re-tweets.&lt;/li&gt;
+&lt;/ol&gt;
+
 &lt;p&gt;&lt;strong&gt;Client-Server&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;A client upon connection is able to write tweets as well as search tweets with hashtags and mentions. Tweets contain randomly generated hashtags. Every tweet contains a random mention of another user, chosen by the simulator. A client can also log itself off and upon login receive its tweets. Also, clients are able to retweet.&lt;/p&gt;
+
+&lt;p&gt;The client part (send/receive tweets) and the engine (distribute tweets) are separate processes. We used multiple independent client processes that simulate thousands of clients and a single engine process.&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;Simulator&lt;/strong&gt;&lt;/p&gt;
 
@@ -522,6 +542,10 @@ At present we have 1000 actors that receive a read request from clients. The ser
 &lt;li&gt;&lt;p&gt;Write Actor:
 We have kept only 2 write actors at the moment that do the job of writing data to the respective database once a tweet request has been received.&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;
+
+&lt;h2 id=&#34;further-updates&#34;&gt;Further Updates&lt;/h2&gt;
+
+&lt;p&gt;This project was &lt;a href=&#34;https://didyousaydata.xyz/project/twitter-simulator/&#34; target=&#34;_blank&#34;&gt;further updated&lt;/a&gt;{target=&amp;rdquo;_blank&amp;rdquo;} to implement a WebSocket interface using Phoenix web framework.&lt;/p&gt;
 </description>
     </item>
     
@@ -553,9 +577,17 @@ We have kept only 2 write actors at the moment that do the job of writing data t
 
 &lt;p&gt;Link to demo video: &lt;a href=&#34;https://youtu.be/XlY2eoI5o-8&#34; target=&#34;_blank&#34;&gt;https://youtu.be/XlY2eoI5o-8&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;Part 1 of this project can be seen at &lt;a href=&#34;https://github.com/krohitm/Twitter-Simulator&#34; target=&#34;_blank&#34;&gt;https://github.com/krohitm/Twitter-Simulator&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Part I of this project can be seen at &lt;a href=&#34;https://github.com/krohitm/Twitter-Simulator&#34; target=&#34;_blank&#34;&gt;https://github.com/krohitm/Twitter-Simulator&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;The part 1 of our project had all the functionalities working. In part 2 we have used the exact same server that acts as an API to the Phoenix channels (check architecture section for details). This Server that acts as API can handle all the following:&lt;/p&gt;
+&lt;p&gt;The &lt;a href=&#34;https://didyousaydata.xyz/project/twitter-engine/&#34; target=&#34;_blank&#34;&gt;part I&lt;/a&gt;{target=&amp;rdquo;_blank&amp;rdquo;} of our project had all the functionalities working. In part II, we have used Phoenix web framework to implement a WebSocket interface to our part I implementation. This implementation was achieved by fulfilling the following tasks:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Designed a JSON based API that represents all messages and their replies (including errors).&lt;/li&gt;
+&lt;li&gt;Re-wrote our engine using Phoenix to implement the WebSocket interface.&lt;/li&gt;
+&lt;li&gt;Re-wrote our client to use WebSockets.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;We have used the exact same server that acts as an API to the Phoenix channels (check &lt;a href=&#34;https://github.com/adityavhegde/Twitter-Simulator#architecture-and-notes&#34; target=&#34;_blank&#34;&gt;architecture&lt;/a&gt;{target=&amp;rdquo;_blank&amp;rdquo;} section for details). This Server that acts as API can handle all the following:&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;Tweeting to followers&lt;/li&gt;

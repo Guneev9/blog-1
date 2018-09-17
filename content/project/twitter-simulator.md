@@ -30,9 +30,15 @@ caption = "A screenshot of the UI"
 
 Link to demo video: https://youtu.be/XlY2eoI5o-8
 
-Part 1 of this project can be seen at https://github.com/krohitm/Twitter-Simulator
+Part I of this project can be seen at https://github.com/krohitm/Twitter-Simulator
 
-The part 1 of our project had all the functionalities working. In part 2 we have used the exact same server that acts as an API to the Phoenix channels (check architecture section for details). This Server that acts as API can handle all the following:
+The [part I](https://didyousaydata.xyz/project/twitter-engine/){target="_blank"} of our project had all the functionalities working. In part II, we have used Phoenix web framework to implement a WebSocket interface to our part I implementation. This implementation was achieved by fulfilling the following tasks:
+
+1. Designed a JSON based API that represents all messages and their replies (including errors).
+2. Re-wrote our engine using Phoenix to implement the WebSocket interface.
+3. Re-wrote our client to use WebSockets. 
+
+We have used the exact same server that acts as an API to the Phoenix channels (check [architecture](https://github.com/adityavhegde/Twitter-Simulator#architecture-and-notes){target="_blank"} section for details). This Server that acts as API can handle all the following:
 
 - Tweeting to followers 
 - Searching tweets - tweets, tweets with hashtags, tweets with mentions 

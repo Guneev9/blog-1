@@ -32,9 +32,30 @@ math = false
 
 The application can be seen at https://github.com/krohitm/Twitter-Simulator.
 
+In this project, we implemented a Twitter Clone and a client tester/simulator.
+
+As part I of this project, we built an engine that (in part II) will be paired up with WebSockets to provide full functionality. Specific things done in this project are: 
+
+* Implemented a Twitter like engine with the following functionality:
+
+1. Register account.
+2. Send tweet. Tweets can have hashtags and mentions.
+3. Subscribe to user's tweets.
+4. Re-tweets (so that your subscribers get an interesting tweet you got by other means).
+5. Allow querying tweets subscribed to, tweets with specific hashtags, tweets in which the user is mentioned (my mentions).
+6. If the user is connected, deliver the above types of tweets live (without querying)
+
+* Implemented a tester/simulator to test the above:
+
+8. Simulated more than 5000 users on a 64-bit i5 Macbook Pro with 8GB RAM.
+9. Simulated periods of live connection and disconnection for users
+10. Simulated a Zipf distribution on the number of subscribers. For accounts with a lot of subscribers, increased the number of tweets. Made some of these messages re-tweets.
+
 **Client-Server**
 
 A client upon connection is able to write tweets as well as search tweets with hashtags and mentions. Tweets contain randomly generated hashtags. Every tweet contains a random mention of another user, chosen by the simulator. A client can also log itself off and upon login receive its tweets. Also, clients are able to retweet.
+
+The client part (send/receive tweets) and the engine (distribute tweets) are separate processes. We used multiple independent client processes that simulate thousands of clients and a single engine process.
 
 **Simulator**
 
@@ -80,3 +101,7 @@ At present we have 1000 actors that receive a read request from clients. The ser
 
 2. Write Actor:
 We have kept only 2 write actors at the moment that do the job of writing data to the respective database once a tweet request has been received.
+
+## Further Updates
+
+This project was [further updated](https://didyousaydata.xyz/project/twitter-simulator/){target="_blank"} to implement a WebSocket interface using Phoenix web framework.
