@@ -453,7 +453,7 @@ plot_effect &amp;lt;- function(interaction, xpredictor){
 
 &lt;p&gt;In this project, we implemented a Twitter Clone and a client tester/simulator.&lt;/p&gt;
 
-&lt;p&gt;As part I of this project, we built an engine that (in part II) will be paired up with WebSockets to provide full functionality. Specific things done in this project are:&lt;/p&gt;
+&lt;p&gt;As part I of this project, we built an engine that (in &lt;a href=&#34;https://didyousaydata.xyz/project/twitter-simulator/&#34; target=&#34;_blank&#34;&gt;part II&lt;/a&gt;) will be paired up with WebSockets to provide full functionality. Specific things done in this project are:&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;Implemented a Twitter like engine with the following functionality:&lt;/li&gt;
@@ -545,7 +545,7 @@ We have kept only 2 write actors at the moment that do the job of writing data t
 
 &lt;h2 id=&#34;further-updates&#34;&gt;Further Updates&lt;/h2&gt;
 
-&lt;p&gt;This project was &lt;a href=&#34;https://didyousaydata.xyz/project/twitter-simulator/&#34; target=&#34;_blank&#34;&gt;further updated&lt;/a&gt;{target=&amp;rdquo;_blank&amp;rdquo;} to implement a WebSocket interface using Phoenix web framework.&lt;/p&gt;
+&lt;p&gt;This project was &lt;a href=&#34;https://didyousaydata.xyz/project/twitter-simulator/&#34; target=&#34;_blank&#34;&gt;further updated&lt;/a&gt; to implement a WebSocket interface using Phoenix web framework.&lt;/p&gt;
 </description>
     </item>
     
@@ -579,7 +579,7 @@ We have kept only 2 write actors at the moment that do the job of writing data t
 
 &lt;p&gt;Part I of this project can be seen at &lt;a href=&#34;https://github.com/krohitm/Twitter-Simulator&#34; target=&#34;_blank&#34;&gt;https://github.com/krohitm/Twitter-Simulator&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;The &lt;a href=&#34;https://didyousaydata.xyz/project/twitter-engine/&#34; target=&#34;_blank&#34;&gt;part I&lt;/a&gt;{target=&amp;rdquo;_blank&amp;rdquo;} of our project had all the functionalities working. In part II, we have used Phoenix web framework to implement a WebSocket interface to our part I implementation. This implementation was achieved by fulfilling the following tasks:&lt;/p&gt;
+&lt;p&gt;The &lt;a href=&#34;https://didyousaydata.xyz/project/twitter-engine/&#34; target=&#34;_blank&#34;&gt;part I&lt;/a&gt; of our project had all the functionalities working. In part II, we have used Phoenix web framework to implement a WebSocket interface to our part I implementation. This implementation was achieved by fulfilling the following tasks:&lt;/p&gt;
 
 &lt;ol&gt;
 &lt;li&gt;Designed a JSON based API that represents all messages and their replies (including errors).&lt;/li&gt;

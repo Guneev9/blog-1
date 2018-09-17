@@ -34,7 +34,7 @@ The application can be seen at https://github.com/krohitm/Twitter-Simulator.
 
 In this project, we implemented a Twitter Clone and a client tester/simulator.
 
-As part I of this project, we built an engine that (in part II) will be paired up with WebSockets to provide full functionality. Specific things done in this project are: 
+As part I of this project, we built an engine that (in [part II](https://didyousaydata.xyz/project/twitter-simulator/)) will be paired up with WebSockets to provide full functionality. Specific things done in this project are: 
 
 * Implemented a Twitter like engine with the following functionality:
 
@@ -104,4 +104,4 @@ We have kept only 2 write actors at the moment that do the job of writing data t
 
 ## Further Updates
 
-This project was [further updated](https://didyousaydata.xyz/project/twitter-simulator/){target="_blank"} to implement a WebSocket interface using Phoenix web framework.
+This project was [further updated](https://didyousaydata.xyz/project/twitter-simulator/) to implement a WebSocket interface using Phoenix web framework.

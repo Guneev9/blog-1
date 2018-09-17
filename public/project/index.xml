@@ -31,7 +31,7 @@ As part I of this project, we built an engine that (in part II) will be paired u
       <guid>/project/twitter-simulator/</guid>
       <description>Link to demo video: https://youtu.be/XlY2eoI5o-8
 Part I of this project can be seen at https://github.com/krohitm/Twitter-Simulator
-The part I{target=&amp;rdquo;_blank&amp;rdquo;} of our project had all the functionalities working. In part II, we have used Phoenix web framework to implement a WebSocket interface to our part I implementation. This implementation was achieved by fulfilling the following tasks:
+The part I of our project had all the functionalities working. In part II, we have used Phoenix web framework to implement a WebSocket interface to our part I implementation. This implementation was achieved by fulfilling the following tasks:
  Designed a JSON based API that represents all messages and their replies (including errors). Re-wrote our engine using Phoenix to implement the WebSocket interface.</description>
     </item>
     
