@@ -325,7 +325,7 @@ The part I of our project had all the functionalities working. In part II, we ha
 <li>Re-wrote our client to use WebSockets.</li>
 </ol>
 
-<p>We have used the exact same server that acts as an API to the Phoenix channels (check <a href="https://github.com/adityavhegde/Twitter-Simulator#architecture-and-notes" target="_blank">architecture</a>{target=&rdquo;_blank&rdquo;} section for details). This Server that acts as API can handle all the following:</p>
+<p>We have used the exact same server that acts as an API to the Phoenix channels (check <a href="https://github.com/adityavhegde/Twitter-Simulator#architecture-and-notes" target="_blank">architecture</a> section for details). This Server that acts as API can handle all the following:</p>
 
 <ul>
 <li>Tweeting to followers</li>
@@ -350,13 +350,9 @@ The part I of our project had all the functionalities working. In part II, we ha
 
 <p>The server is accessed by running localhost:4000 in the browser. This leads to creation of a websocket, which is basically a new user in our case. A new user can give its username(a new one), subscribe to another user, send tweets, query for its mentions, search for hashtags, query for tweets of users it has subscribed to, and retweet the tweets it can see in its feed. These features can be seen in Fig. 1. An example of application of these features can be seen in Fig. 2.</p>
 
-<p><img src="https://user-images.githubusercontent.com/13625549/34135581-905fb364-e42f-11e7-9b95-05680bb8d56b.png" alt="alt text" /></p>
+<p><img src="https://user-images.githubusercontent.com/13625549/34135581-905fb364-e42f-11e7-9b95-05680bb8d56b.png" alt="Fig. 1: Features available to the user. The user can enter a new username, send tweets, subscribe to users, search for tweets of users subscribed to, search for hashtags, search for its mentions, and retweet a tweet in its feed" /></p>
 
-<p>Fig. 1: Features available to the user. The user can enter a new username, send tweets, subscribe to users, search for tweets of users subscribed to, search for hashtags, search for its mentions, and retweet a tweet in its feed</p>
-
-<p><img src="https://user-images.githubusercontent.com/13625549/34135684-298f40fe-e430-11e7-900f-506fc2ad1cbd.png" alt="alt text" /></p>
-
-<p>Fig.2: The new user has given its username as aditya and subscribed to user rohit. It receives tweets by user rohit (hello world!), can retweet, gets results for query for tweets of followed users, gets tweet when mentioned, gets search results for mentions, and gets search results for hashtags(#wow).</p>
+<p><img src="https://user-images.githubusercontent.com/13625549/34135684-298f40fe-e430-11e7-900f-506fc2ad1cbd.png" alt="Fig.2: The new user has given its username as aditya and subscribed to user rohit. It receives tweets by user rohit (hello world!), can retweet, gets results for query for tweets of followed users, gets tweet when mentioned, gets search results for mentions, and gets search results for hashtags(#wow)" /></p>
 
 <h2 id="running-this-project"><strong>Running this project</strong></h2>
 
