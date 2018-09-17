@@ -302,7 +302,7 @@ As part I of this project, we built an engine that (in part II) will be paired u
     <div class="article-style" itemprop="articleBody">
       
 
-<h1 id="overview">Overview</h1>
+<h2 id="overview"><strong>Overview</strong></h2>
 
 <p>The application can be seen at <a href="https://github.com/krohitm/Twitter-Simulator" target="_blank">https://github.com/krohitm/Twitter-Simulator</a>.</p>
 
@@ -333,13 +333,13 @@ As part I of this project, we built an engine that (in part II) will be paired u
 <li>Simulated a Zipf distribution on the number of subscribers. For accounts with a lot of subscribers, increased the number of tweets. Made some of these messages re-tweets.</li>
 </ol>
 
-<p><strong>Client-Server</strong></p>
+<h2 id="client-server"><strong>Client-Server</strong></h2>
 
 <p>A client upon connection is able to write tweets as well as search tweets with hashtags and mentions. Tweets contain randomly generated hashtags. Every tweet contains a random mention of another user, chosen by the simulator. A client can also log itself off and upon login receive its tweets. Also, clients are able to retweet.</p>
 
 <p>The client part (send/receive tweets) and the engine (distribute tweets) are separate processes. We used multiple independent client processes that simulate thousands of clients and a single engine process.</p>
 
-<p><strong>Simulator</strong></p>
+<h2 id="simulator"><strong>Simulator</strong></h2>
 
 <ul>
 <li>The Simulator is a separate process and dictates what requests clients can send.</li>
@@ -350,7 +350,7 @@ As part I of this project, we built an engine that (in part II) will be paired u
 <li>Each user, after a certain number of tweets, logs out of the system for x seconds. During this time, the user doesn’t send out any requests. Once reconnected, the user asks server for the tweets of the users it has subscribed to.</li>
 </ul>
 
-<h1 id="running-the-project">Running the Project</h1>
+<h2 id="running-the-project"><strong>Running the Project</strong></h2>
 
 <ul>
 <li>Run epmd -daemon</li>
@@ -360,12 +360,12 @@ As part I of this project, we built an engine that (in part II) will be paired u
 where <number of users> is the number of users you want to simulate. Example: ./project simulator 10000</li>
 </ul>
 
-<h1 id="performance">Performance</h1>
+<h2 id="performance"><strong>Performance</strong></h2>
 
 <p>The tests were run on a 64-bit i5 machine with 8GB RAM.
 <img src="https://user-images.githubusercontent.com/10449636/34135026-205a432a-e42c-11e7-901b-92f75b20b2bb.png" alt="image" /></p>
 
-<h1 id="database-performance">Database performance</h1>
+<h2 id="database-performance"><strong>Database performance</strong></h2>
 
 <p>Databases are ETS tables. These tables are public to all the server processes (not the client processes, since client runs on a different node).</p>
 
@@ -376,7 +376,7 @@ This has been enabled when we create the ETS tables for tweets.</li>
 These flags allow us to take advantage or Elixir’s concurrency and handle more database reads.</li>
 </ol>
 
-<h1 id="architecture-and-notes">Architecture and Notes</h1>
+<h2 id="architecture-and-notes"><strong>Architecture and Notes</strong></h2>
 
 <p>The Server has been designed to distribute the load of incoming tweet requests.  Requests coming to the server can be of the following form:</p>
 
@@ -398,7 +398,7 @@ At present we have 1000 actors that receive a read request from clients. The ser
 We have kept only 2 write actors at the moment that do the job of writing data to the respective database once a tweet request has been received.</p></li>
 </ol>
 
-<h2 id="further-updates">Further Updates</h2>
+<h2 id="further-updates"><strong>Further Updates</strong></h2>
 
 <p>This project was <a href="https://didyousaydata.xyz/project/twitter-simulator/" target="_blank">further updated</a> to implement a WebSocket interface using Phoenix web framework.</p>
 

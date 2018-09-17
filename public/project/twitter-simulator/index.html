@@ -17,10 +17,10 @@
       
     
   
-  <meta name="description" content="Link to demo video: https://youtu.be/XlY2eoI5o-8
+  <meta name="description" content="Overview Link to demo video: https://youtu.be/XlY2eoI5o-8
 Part I of this project can be seen at https://github.com/krohitm/Twitter-Simulator
 The part I of our project had all the functionalities working. In part II, we have used Phoenix web framework to implement a WebSocket interface to our part I implementation. This implementation was achieved by fulfilling the following tasks:
- Designed a JSON based API that represents all messages and their replies (including errors). Re-wrote our engine using Phoenix to implement the WebSocket interface.">
+ Designed a JSON based API that represents all messages and their replies (including errors).">
 
   
   <link rel="alternate" hreflang="en-us" href="/project/twitter-simulator/">
@@ -95,10 +95,10 @@ The part I of our project had all the functionalities working. In part II, we ha
   <meta property="og:site_name" content="Did you say data?">
   <meta property="og:url" content="/project/twitter-simulator/">
   <meta property="og:title" content="Twitter Simulator | Did you say data?">
-  <meta property="og:description" content="Link to demo video: https://youtu.be/XlY2eoI5o-8
+  <meta property="og:description" content="Overview Link to demo video: https://youtu.be/XlY2eoI5o-8
 Part I of this project can be seen at https://github.com/krohitm/Twitter-Simulator
 The part I of our project had all the functionalities working. In part II, we have used Phoenix web framework to implement a WebSocket interface to our part I implementation. This implementation was achieved by fulfilling the following tasks:
- Designed a JSON based API that represents all messages and their replies (including errors). Re-wrote our engine using Phoenix to implement the WebSocket interface."><meta property="og:image" content="/img/twitter-simulator.png">
+ Designed a JSON based API that represents all messages and their replies (including errors)."><meta property="og:image" content="/img/twitter-simulator.png">
   <meta property="og:locale" content="en-us">
   
   <meta property="article:published_time" content="2018-04-09T00:00:00&#43;00:00">
@@ -311,6 +311,8 @@ The part I of our project had all the functionalities working. In part II, we ha
     <div class="article-style" itemprop="articleBody">
       
 
+<h2 id="overview"><strong>Overview</strong></h2>
+
 <p>Link to demo video: <a href="https://youtu.be/XlY2eoI5o-8" target="_blank">https://youtu.be/XlY2eoI5o-8</a></p>
 
 <p>Part I of this project can be seen at <a href="https://github.com/krohitm/Twitter-Simulator" target="_blank">https://github.com/krohitm/Twitter-Simulator</a></p>
@@ -338,13 +340,13 @@ The part I of our project had all the functionalities working. In part II, we ha
 <li>Simulator: A socket.js file that opens 1000 websocket connections to the server and does the job of simulating tweets, retweets and the various searches.<br /></li>
 </ol>
 
-<h2 id="simulator">Simulator:</h2>
+<h2 id="simulator"><strong>Simulator</strong>:</h2>
 
 <p>Simulator runs through the sockets in a loop. That does not mean that only one socket is occupied at a time. The server actors for tweets, retweets, search are constantly running in the background and pushing payloads to active sockets. Thus, our simulation is creating sockets which are constantly active, which is also what we are trying to achieve in our simulation.</p>
 
 <p>The simulator opens 1000 websockets to the server, each as a new user. These users are then registered, and are given subscribers according to zipf distribution, as in part 1. After this, each of these users send tweets, search for tweets, search for hashtags, and search for mentions, choosing one of these behaviors, randomly. This cycle runs infinitely for each user/websocket.</p>
 
-<h2 id="client-side">Client Side:</h2>
+<h2 id="client-side"><strong>Client Side</strong>:</h2>
 
 <p>The server is accessed by running localhost:4000 in the browser. This leads to creation of a websocket, which is basically a new user in our case. A new user can give its username(a new one), subscribe to another user, send tweets, query for its mentions, search for hashtags, query for tweets of users it has subscribed to, and retweet the tweets it can see in its feed. These features can be seen in Fig. 1. An example of application of these features can be seen in Fig. 2.</p>
 
@@ -356,11 +358,11 @@ The part I of our project had all the functionalities working. In part II, we ha
 
 <p>Fig.2: The new user has given its username as aditya and subscribed to user rohit. It receives tweets by user rohit (hello world!), can retweet, gets results for query for tweets of followed users, gets tweet when mentioned, gets search results for mentions, and gets search results for hashtags(#wow).</p>
 
-<h2 id="running-this-project">Running this project</h2>
+<h2 id="running-this-project"><strong>Running this project</strong></h2>
 
 <p>Note: please hard reload web page or turn of browser Javascript caching for changes to be visible</p>
 
-<h3 id="running-simulator">Running Simulator:</h3>
+<h3 id="running-simulator"><strong>Running Simulator</strong>:</h3>
 
 <ul>
 <li>Go to assets &gt; js &gt; app.js</li>
@@ -370,7 +372,7 @@ The part I of our project had all the functionalities working. In part II, we ha
 <li>Open a browser and run localhost:4000. This will start the given number of websockets.</li>
 </ul>
 
-<h3 id="running-individual-client">Running Individual client:</h3>
+<h3 id="running-individual-client"><strong>Running Individual client</strong>:</h3>
 
 <ul>
 <li>Go to assets &gt; js &gt;app.js</li>
@@ -387,11 +389,11 @@ The part I of our project had all the functionalities working. In part II, we ha
 <li>You can clear the screen by clicking the clear screen button.</li>
 </ul>
 
-<h3 id="performance-with-web-sockets">Performance with Web Sockets</h3>
+<h2 id="performance-with-web-sockets"><strong>Performance with Web Sockets</strong></h2>
 
 <p>We connected a maximum of 1000 sockets to the server. Additionally, we were also able to run our simulations on these sockets.</p>
 
-<h3 id="json-based-api">JSON Based API</h3>
+<h2 id="json-based-api"><strong>JSON Based API</strong></h2>
 
 <p>This is not really needed since Phoenix does this for us implicitly. There are two kinds of communication:
 Client to Server: While sending this data, we make sure it is in the JSON format

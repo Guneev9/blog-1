@@ -447,7 +447,7 @@ plot_effect &amp;lt;- function(interaction, xpredictor){
       <guid>/project/twitter-engine/</guid>
       <description>
 
-&lt;h1 id=&#34;overview&#34;&gt;Overview&lt;/h1&gt;
+&lt;h2 id=&#34;overview&#34;&gt;&lt;strong&gt;Overview&lt;/strong&gt;&lt;/h2&gt;
 
 &lt;p&gt;The application can be seen at &lt;a href=&#34;https://github.com/krohitm/Twitter-Simulator&#34; target=&#34;_blank&#34;&gt;https://github.com/krohitm/Twitter-Simulator&lt;/a&gt;.&lt;/p&gt;
 
@@ -478,13 +478,13 @@ plot_effect &amp;lt;- function(interaction, xpredictor){
 &lt;li&gt;Simulated a Zipf distribution on the number of subscribers. For accounts with a lot of subscribers, increased the number of tweets. Made some of these messages re-tweets.&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;&lt;strong&gt;Client-Server&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id=&#34;client-server&#34;&gt;&lt;strong&gt;Client-Server&lt;/strong&gt;&lt;/h2&gt;
 
 &lt;p&gt;A client upon connection is able to write tweets as well as search tweets with hashtags and mentions. Tweets contain randomly generated hashtags. Every tweet contains a random mention of another user, chosen by the simulator. A client can also log itself off and upon login receive its tweets. Also, clients are able to retweet.&lt;/p&gt;
 
 &lt;p&gt;The client part (send/receive tweets) and the engine (distribute tweets) are separate processes. We used multiple independent client processes that simulate thousands of clients and a single engine process.&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Simulator&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id=&#34;simulator&#34;&gt;&lt;strong&gt;Simulator&lt;/strong&gt;&lt;/h2&gt;
 
 &lt;ul&gt;
 &lt;li&gt;The Simulator is a separate process and dictates what requests clients can send.&lt;/li&gt;
@@ -495,7 +495,7 @@ plot_effect &amp;lt;- function(interaction, xpredictor){
 &lt;li&gt;Each user, after a certain number of tweets, logs out of the system for x seconds. During this time, the user doesn’t send out any requests. Once reconnected, the user asks server for the tweets of the users it has subscribed to.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h1 id=&#34;running-the-project&#34;&gt;Running the Project&lt;/h1&gt;
+&lt;h2 id=&#34;running-the-project&#34;&gt;&lt;strong&gt;Running the Project&lt;/strong&gt;&lt;/h2&gt;
 
 &lt;ul&gt;
 &lt;li&gt;Run epmd -daemon&lt;/li&gt;
@@ -505,12 +505,12 @@ plot_effect &amp;lt;- function(interaction, xpredictor){
 where &lt;number of users&gt; is the number of users you want to simulate. Example: ./project simulator 10000&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h1 id=&#34;performance&#34;&gt;Performance&lt;/h1&gt;
+&lt;h2 id=&#34;performance&#34;&gt;&lt;strong&gt;Performance&lt;/strong&gt;&lt;/h2&gt;
 
 &lt;p&gt;The tests were run on a 64-bit i5 machine with 8GB RAM.
 &lt;img src=&#34;https://user-images.githubusercontent.com/10449636/34135026-205a432a-e42c-11e7-901b-92f75b20b2bb.png&#34; alt=&#34;image&#34; /&gt;&lt;/p&gt;
 
-&lt;h1 id=&#34;database-performance&#34;&gt;Database performance&lt;/h1&gt;
+&lt;h2 id=&#34;database-performance&#34;&gt;&lt;strong&gt;Database performance&lt;/strong&gt;&lt;/h2&gt;
 
 &lt;p&gt;Databases are ETS tables. These tables are public to all the server processes (not the client processes, since client runs on a different node).&lt;/p&gt;
 
@@ -521,7 +521,7 @@ This has been enabled when we create the ETS tables for tweets.&lt;/li&gt;
 These flags allow us to take advantage or Elixir’s concurrency and handle more database reads.&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h1 id=&#34;architecture-and-notes&#34;&gt;Architecture and Notes&lt;/h1&gt;
+&lt;h2 id=&#34;architecture-and-notes&#34;&gt;&lt;strong&gt;Architecture and Notes&lt;/strong&gt;&lt;/h2&gt;
 
 &lt;p&gt;The Server has been designed to distribute the load of incoming tweet requests.  Requests coming to the server can be of the following form:&lt;/p&gt;
 
@@ -543,7 +543,7 @@ At present we have 1000 actors that receive a read request from clients. The ser
 We have kept only 2 write actors at the moment that do the job of writing data to the respective database once a tweet request has been received.&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h2 id=&#34;further-updates&#34;&gt;Further Updates&lt;/h2&gt;
+&lt;h2 id=&#34;further-updates&#34;&gt;&lt;strong&gt;Further Updates&lt;/strong&gt;&lt;/h2&gt;
 
 &lt;p&gt;This project was &lt;a href=&#34;https://didyousaydata.xyz/project/twitter-simulator/&#34; target=&#34;_blank&#34;&gt;further updated&lt;/a&gt; to implement a WebSocket interface using Phoenix web framework.&lt;/p&gt;
 </description>
@@ -575,6 +575,8 @@ We have kept only 2 write actors at the moment that do the job of writing data t
       <guid>/project/twitter-simulator/</guid>
       <description>
 
+&lt;h2 id=&#34;overview&#34;&gt;&lt;strong&gt;Overview&lt;/strong&gt;&lt;/h2&gt;
+
 &lt;p&gt;Link to demo video: &lt;a href=&#34;https://youtu.be/XlY2eoI5o-8&#34; target=&#34;_blank&#34;&gt;https://youtu.be/XlY2eoI5o-8&lt;/a&gt;&lt;/p&gt;
 
 &lt;p&gt;Part I of this project can be seen at &lt;a href=&#34;https://github.com/krohitm/Twitter-Simulator&#34; target=&#34;_blank&#34;&gt;https://github.com/krohitm/Twitter-Simulator&lt;/a&gt;&lt;/p&gt;
@@ -602,13 +604,13 @@ We have kept only 2 write actors at the moment that do the job of writing data t
 &lt;li&gt;Simulator: A socket.js file that opens 1000 websocket connections to the server and does the job of simulating tweets, retweets and the various searches.&lt;br /&gt;&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;h2 id=&#34;simulator&#34;&gt;Simulator:&lt;/h2&gt;
+&lt;h2 id=&#34;simulator&#34;&gt;&lt;strong&gt;Simulator&lt;/strong&gt;:&lt;/h2&gt;
 
 &lt;p&gt;Simulator runs through the sockets in a loop. That does not mean that only one socket is occupied at a time. The server actors for tweets, retweets, search are constantly running in the background and pushing payloads to active sockets. Thus, our simulation is creating sockets which are constantly active, which is also what we are trying to achieve in our simulation.&lt;/p&gt;
 
 &lt;p&gt;The simulator opens 1000 websockets to the server, each as a new user. These users are then registered, and are given subscribers according to zipf distribution, as in part 1. After this, each of these users send tweets, search for tweets, search for hashtags, and search for mentions, choosing one of these behaviors, randomly. This cycle runs infinitely for each user/websocket.&lt;/p&gt;
 
-&lt;h2 id=&#34;client-side&#34;&gt;Client Side:&lt;/h2&gt;
+&lt;h2 id=&#34;client-side&#34;&gt;&lt;strong&gt;Client Side&lt;/strong&gt;:&lt;/h2&gt;
 
 &lt;p&gt;The server is accessed by running localhost:4000 in the browser. This leads to creation of a websocket, which is basically a new user in our case. A new user can give its username(a new one), subscribe to another user, send tweets, query for its mentions, search for hashtags, query for tweets of users it has subscribed to, and retweet the tweets it can see in its feed. These features can be seen in Fig. 1. An example of application of these features can be seen in Fig. 2.&lt;/p&gt;
 
@@ -620,11 +622,11 @@ We have kept only 2 write actors at the moment that do the job of writing data t
 
 &lt;p&gt;Fig.2: The new user has given its username as aditya and subscribed to user rohit. It receives tweets by user rohit (hello world!), can retweet, gets results for query for tweets of followed users, gets tweet when mentioned, gets search results for mentions, and gets search results for hashtags(#wow).&lt;/p&gt;
 
-&lt;h2 id=&#34;running-this-project&#34;&gt;Running this project&lt;/h2&gt;
+&lt;h2 id=&#34;running-this-project&#34;&gt;&lt;strong&gt;Running this project&lt;/strong&gt;&lt;/h2&gt;
 
 &lt;p&gt;Note: please hard reload web page or turn of browser Javascript caching for changes to be visible&lt;/p&gt;
 
-&lt;h3 id=&#34;running-simulator&#34;&gt;Running Simulator:&lt;/h3&gt;
+&lt;h3 id=&#34;running-simulator&#34;&gt;&lt;strong&gt;Running Simulator&lt;/strong&gt;:&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;Go to assets &amp;gt; js &amp;gt; app.js&lt;/li&gt;
@@ -634,7 +636,7 @@ We have kept only 2 write actors at the moment that do the job of writing data t
 &lt;li&gt;Open a browser and run localhost:4000. This will start the given number of websockets.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;running-individual-client&#34;&gt;Running Individual client:&lt;/h3&gt;
+&lt;h3 id=&#34;running-individual-client&#34;&gt;&lt;strong&gt;Running Individual client&lt;/strong&gt;:&lt;/h3&gt;
 
 &lt;ul&gt;
 &lt;li&gt;Go to assets &amp;gt; js &amp;gt;app.js&lt;/li&gt;
@@ -651,11 +653,11 @@ We have kept only 2 write actors at the moment that do the job of writing data t
 &lt;li&gt;You can clear the screen by clicking the clear screen button.&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&#34;performance-with-web-sockets&#34;&gt;Performance with Web Sockets&lt;/h3&gt;
+&lt;h2 id=&#34;performance-with-web-sockets&#34;&gt;&lt;strong&gt;Performance with Web Sockets&lt;/strong&gt;&lt;/h2&gt;
 
 &lt;p&gt;We connected a maximum of 1000 sockets to the server. Additionally, we were also able to run our simulations on these sockets.&lt;/p&gt;
 
-&lt;h3 id=&#34;json-based-api&#34;&gt;JSON Based API&lt;/h3&gt;
+&lt;h2 id=&#34;json-based-api&#34;&gt;&lt;strong&gt;JSON Based API&lt;/strong&gt;&lt;/h2&gt;
 
 &lt;p&gt;This is not really needed since Phoenix does this for us implicitly. There are two kinds of communication:
 Client to Server: While sending this data, we make sure it is in the JSON format
