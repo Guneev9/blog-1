@@ -22,16 +22,6 @@ In this post, we will look at building a linear regression model for inference.<
     </item>
     
     <item>
-      <title>Exploratory Data Analysis</title>
-      <link>/post/exploratory-data-analysis/</link>
-      <pubDate>Wed, 28 Feb 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/post/exploratory-data-analysis/</guid>
-      <description>New Oxford American Dictionary defines exploration as “the action of traveling in or through an unfamiliar area in order to learn about it.” Analysis is defined as “detailed examination of the elements or structure of something, typically as a basis for discussion or interpretation.” This makes Exploratory data analysis an act of travelling through unfamiliar data for a detailed examination of its structure, for further discussion or interpretation.
-Upon reading the book “Think Stats” by Allen Downey, I loved the approach he uses for data exploration he has given in the book.</description>
-    </item>
-    
-    <item>
       <title></title>
       <link>/post/2018-09-05-linear-regression-modeling-and-assumptions/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
