@@ -1,7 +1,7 @@
 ---
 title: 'Linear regression: Modeling and Assumptions'
 author: Kumar Rohit Malhotra
-date: '2018-09-09'
+date: '2018-09-17'
 slug: linear-regression-modeling-and-assumptions
 categories:
   - data analysis

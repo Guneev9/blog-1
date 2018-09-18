@@ -14,7 +14,7 @@
     <item>
       <title>Linear regression: Modeling and Assumptions</title>
       <link>/post/linear-regression-modeling-and-assumptions/</link>
-      <pubDate>Sun, 09 Sep 2018 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 17 Sep 2018 00:00:00 +0000</pubDate>
       
       <guid>/post/linear-regression-modeling-and-assumptions/</guid>
       <description>Regression analysis is a powerful statistical process to find the relations within a dataset, with the key focus being on relationships between the independent variables (predictors) and a dependent variable (outcome). It can be used to build models for inference or prediction. Among several methods of regression analysis, linear regression sets the basis and is quite widely used for several real-world applications.

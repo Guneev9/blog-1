@@ -12,7 +12,7 @@
     <item>
       <title>Linear regression: Modeling and Assumptions</title>
       <link>/post/linear-regression-modeling-and-assumptions/</link>
-      <pubDate>Sun, 09 Sep 2018 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 17 Sep 2018 00:00:00 +0000</pubDate>
       
       <guid>/post/linear-regression-modeling-and-assumptions/</guid>
       <description>&lt;p&gt;Regression analysis is a powerful statistical process to find the relations within a dataset, with the key focus being on relationships between the independent variables (predictors) and a dependent variable (outcome). It can be used to build models for inference or prediction. Among several methods of regression analysis, linear regression sets the basis and is quite widely used for &lt;a href=&#34;https://en.wikipedia.org/wiki/Linear_regression#Applications&#34; target=&#34;_blank&#34;&gt;several real-world applications&lt;/a&gt;.&lt;/p&gt;
@@ -614,9 +614,13 @@ We have kept only 2 write actors at the moment that do the job of writing data t
 
 &lt;p&gt;The server is accessed by running localhost:4000 in the browser. This leads to creation of a websocket, which is basically a new user in our case. A new user can give its username(a new one), subscribe to another user, send tweets, query for its mentions, search for hashtags, query for tweets of users it has subscribed to, and retweet the tweets it can see in its feed. These features can be seen in Fig. 1. An example of application of these features can be seen in Fig. 2.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://user-images.githubusercontent.com/13625549/34135581-905fb364-e42f-11e7-9b95-05680bb8d56b.png&#34; alt=&#34;Fig. 1: Features available to the user. The user can enter a new username, send tweets, subscribe to users, search for tweets of users subscribed to, search for hashtags, search for its mentions, and retweet a tweet in its feed&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://user-images.githubusercontent.com/13625549/34135581-905fb364-e42f-11e7-9b95-05680bb8d56b.png&#34; alt=&#34;alt text&#34; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;https://user-images.githubusercontent.com/13625549/34135684-298f40fe-e430-11e7-900f-506fc2ad1cbd.png&#34; alt=&#34;Fig.2: The new user has given its username as aditya and subscribed to user rohit. It receives tweets by user rohit (hello world!), can retweet, gets results for query for tweets of followed users, gets tweet when mentioned, gets search results for mentions, and gets search results for hashtags(#wow)&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Fig. 1: Features available to the user. The user can enter a new username, send tweets, subscribe to users, search for tweets of users subscribed to, search for hashtags, search for its mentions, and retweet a tweet in its feed&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://user-images.githubusercontent.com/13625549/34135684-298f40fe-e430-11e7-900f-506fc2ad1cbd.png&#34; alt=&#34;alt text&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Fig.2: The new user has given its username as aditya and subscribed to user rohit. It receives tweets by user rohit (hello world!), can retweet, gets results for query for tweets of followed users, gets tweet when mentioned, gets search results for mentions, and gets search results for hashtags(#wow).&lt;/p&gt;
 
 &lt;h2 id=&#34;running-this-project&#34;&gt;&lt;strong&gt;Running this project&lt;/strong&gt;&lt;/h2&gt;
 
