@@ -15,7 +15,24 @@
       <pubDate>Mon, 17 Sep 2018 00:00:00 +0000</pubDate>
       
       <guid>/post/linear-regression-modeling-and-assumptions/</guid>
-      <description>&lt;p&gt;Regression analysis is a powerful statistical process to find the relations within a dataset, with the key focus being on relationships between the independent variables (predictors) and a dependent variable (outcome). It can be used to build models for inference or prediction. Among several methods of regression analysis, linear regression sets the basis and is quite widely used for &lt;a href=&#34;https://en.wikipedia.org/wiki/Linear_regression#Applications&#34; target=&#34;_blank&#34;&gt;several real-world applications&lt;/a&gt;.&lt;/p&gt;
+      <description>&lt;div id=&#34;TOC&#34;&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;#introduction&#34;&gt;&lt;strong&gt;Introduction&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#is-there-a-relationship-between-the-medical-charges-and-the-predictors&#34;&gt;&lt;strong&gt;Is there a relationship between the medical charges and the predictors?&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#which-variables-have-a-strong-relation-to-medical-charges&#34;&gt;&lt;strong&gt;Which variables have a strong relation to medical charges?&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#are-there-any-multicollinear-features&#34;&gt;&lt;strong&gt;Are there any multicollinear features?&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#is-the-relationship-linear&#34;&gt;&lt;strong&gt;Is the relationship linear?&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#non-constant-variance-of-error-terms&#34;&gt;&lt;strong&gt;Non-constant variance of error terms&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#correlation-of-error-terms&#34;&gt;&lt;strong&gt;Correlation of error terms&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#interpretations&#34;&gt;&lt;strong&gt;Interpretations&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#conclusion&#34;&gt;&lt;strong&gt;Conclusion&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;#sources&#34;&gt;&lt;strong&gt;Sources&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+
+&lt;div id=&#34;introduction&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;strong&gt;Introduction&lt;/strong&gt;&lt;/h2&gt;
+&lt;p&gt;Regression analysis is a powerful statistical process to find the relations within a dataset, with the key focus being on relationships between the independent variables (predictors) and a dependent variable (outcome). It can be used to build models for inference or prediction. Among several methods of regression analysis, linear regression sets the basis and is quite widely used for &lt;a href=&#34;https://en.wikipedia.org/wiki/Linear_regression#Applications&#34; target=&#34;_blank&#34;&gt;several real-world applications&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;In this post, we will look at building a linear regression model for inference. The dataset we will use is the insurance charges data obtained from &lt;a href=&#34;https://www.kaggle.com/mirichoi0218/insurance/home&#34; target=&#34;_blank&#34;&gt;Kaggle&lt;/a&gt;. This data set consists of 1,338 observations and 7 columns: age, sex, bmi, children, smoker, region and charges.&lt;/p&gt;
 &lt;p&gt;The key questions that we would be asking are:&lt;/p&gt;
 &lt;ol style=&#34;list-style-type: decimal&#34;&gt;
@@ -59,6 +76,7 @@ summary(insurance)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Multiple linear regression follows the formula :&lt;/p&gt;
 &lt;p&gt;&lt;span class=&#34;math inline&#34;&gt;\(y = {\beta_0}+ {\beta_1}x_1+{\beta_2}x_2+...\)&lt;/span&gt;&lt;/p&gt;
 &lt;p&gt;The coefficients in this linear equation denote the magnitude of additive relation between the predictor and the response. In simpler words, keeping everything else fixed, a unit change in &lt;span class=&#34;math inline&#34;&gt;\(x_1\)&lt;/span&gt; will lead to change of &lt;span class=&#34;math inline&#34;&gt;\({\beta_1}\)&lt;/span&gt; in the outcome, and so on.&lt;/p&gt;
+&lt;/div&gt;
 &lt;div id=&#34;is-there-a-relationship-between-the-medical-charges-and-the-predictors&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;&lt;strong&gt;Is there a relationship between the medical charges and the predictors?&lt;/strong&gt;&lt;/h2&gt;
 &lt;p&gt;Our first step is finding if there is any relationship between the outcome and the predictors.&lt;/p&gt;
@@ -426,15 +444,15 @@ plot_effect &amp;lt;- function(interaction, xpredictor){
 &lt;h2&gt;&lt;strong&gt;Conclusion&lt;/strong&gt;&lt;/h2&gt;
 &lt;p&gt;The model we have built can be used for inference of how the different predictors influence the outcome. It is far from perfect. Their is still presence of non-linearity and non-constant variance of errors. Moreover, the outliers and leverage points should be analyzed to find a better model. It may not (and most probably won’t) give similar results when used to predict the outcome for new, unseen data. In order to use it for prediction, more concrete measures should be taken for ensuring the accuracy of the model, like cross-validation. It still helps by providing good estimations of the significant relations between the predictors and the outcome. These estimations can be used to summarize the data in a more useful and presentful way.&lt;/p&gt;
 &lt;hr /&gt;
-&lt;div id=&#34;sources&#34; class=&#34;section level3&#34;&gt;
-&lt;h3&gt;&lt;strong&gt;Sources:&lt;/strong&gt;&lt;/h3&gt;
+&lt;/div&gt;
+&lt;div id=&#34;sources&#34; class=&#34;section level2&#34;&gt;
+&lt;h2&gt;&lt;strong&gt;Sources&lt;/strong&gt;&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;An Introduction to Statistical Learning, with Application in R. By James, G., Witten, D., Hastie, T., Tibshirani, R.&lt;/li&gt;
 &lt;li&gt;Wikipedia&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;https://www.statmethods.net&#34; target=&#34;_blank&#34;&gt;Quick-R&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&#34;http://www.statisticshowto.com&#34; target=&#34;_blank&#34;&gt;Statistics How To&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;/div&gt;
 &lt;/div&gt;
 </description>
     </item>

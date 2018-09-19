@@ -3,6 +3,9 @@ title: 'Linear regression: Modeling and Assumptions'
 author: Kumar Rohit Malhotra
 date: '2018-09-17'
 slug: linear-regression-modeling-and-assumptions
+output:
+  blogdown::html_page:
+    toc: true
 categories:
   - data analysis
 tags:
@@ -15,6 +18,8 @@ tags:
 ```{r setup, include=FALSE, message=FALSE, echo=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message=FALSE, comment='')
 ```
+
+## **Introduction**
 
 Regression analysis is a powerful statistical process to find the relations within a dataset, with the key focus being on relationships between the independent variables (predictors) and a dependent variable (outcome). It can be used to build models for inference or prediction. Among several methods of regression analysis, linear regression sets the basis and is quite widely used for [several real-world applications](https://en.wikipedia.org/wiki/Linear_regression#Applications){target="_blank"}. 
 
@@ -346,7 +351,7 @@ The model we have built can be used for inference of how the different predictor
 
 ***
 
-### **Sources:**
+## **Sources**
 
 * An Introduction to Statistical Learning, with Application in R. By James, G., Witten, D., Hastie, T., Tibshirani, R.
 * Wikipedia

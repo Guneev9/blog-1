@@ -3,6 +3,9 @@ title: 'Linear regression: Modeling and Assumptions'
 author: Kumar Rohit Malhotra
 date: '2018-09-17'
 slug: linear-regression-modeling-and-assumptions
+output:
+  blogdown::html_page:
+    toc: true
 categories:
   - data analysis
 tags:
@@ -13,7 +16,23 @@ tags:
 ---
 
 
+<div id="TOC">
+<ul>
+<li><a href="#introduction"><strong>Introduction</strong></a></li>
+<li><a href="#is-there-a-relationship-between-the-medical-charges-and-the-predictors"><strong>Is there a relationship between the medical charges and the predictors?</strong></a></li>
+<li><a href="#which-variables-have-a-strong-relation-to-medical-charges"><strong>Which variables have a strong relation to medical charges?</strong></a></li>
+<li><a href="#are-there-any-multicollinear-features"><strong>Are there any multicollinear features?</strong></a></li>
+<li><a href="#is-the-relationship-linear"><strong>Is the relationship linear?</strong></a></li>
+<li><a href="#non-constant-variance-of-error-terms"><strong>Non-constant variance of error terms</strong></a></li>
+<li><a href="#correlation-of-error-terms"><strong>Correlation of error terms</strong></a></li>
+<li><a href="#interpretations"><strong>Interpretations</strong></a></li>
+<li><a href="#conclusion"><strong>Conclusion</strong></a></li>
+<li><a href="#sources"><strong>Sources</strong></a></li>
+</ul>
+</div>
 
+<div id="introduction" class="section level2">
+<h2><strong>Introduction</strong></h2>
 <p>Regression analysis is a powerful statistical process to find the relations within a dataset, with the key focus being on relationships between the independent variables (predictors) and a dependent variable (outcome). It can be used to build models for inference or prediction. Among several methods of regression analysis, linear regression sets the basis and is quite widely used for <a href="https://en.wikipedia.org/wiki/Linear_regression#Applications" target="_blank">several real-world applications</a>.</p>
 <p>In this post, we will look at building a linear regression model for inference. The dataset we will use is the insurance charges data obtained from <a href="https://www.kaggle.com/mirichoi0218/insurance/home" target="_blank">Kaggle</a>. This data set consists of 1,338 observations and 7 columns: age, sex, bmi, children, smoker, region and charges.</p>
 <p>The key questions that we would be asking are:</p>
@@ -58,6 +77,7 @@ summary(insurance)</code></pre>
 <p>Multiple linear regression follows the formula :</p>
 <p><span class="math inline">\(y = {\beta_0}+ {\beta_1}x_1+{\beta_2}x_2+...\)</span></p>
 <p>The coefficients in this linear equation denote the magnitude of additive relation between the predictor and the response. In simpler words, keeping everything else fixed, a unit change in <span class="math inline">\(x_1\)</span> will lead to change of <span class="math inline">\({\beta_1}\)</span> in the outcome, and so on.</p>
+</div>
 <div id="is-there-a-relationship-between-the-medical-charges-and-the-predictors" class="section level2">
 <h2><strong>Is there a relationship between the medical charges and the predictors?</strong></h2>
 <p>Our first step is finding if there is any relationship between the outcome and the predictors.</p>
@@ -425,13 +445,13 @@ plot_effect &lt;- function(interaction, xpredictor){
 <h2><strong>Conclusion</strong></h2>
 <p>The model we have built can be used for inference of how the different predictors influence the outcome. It is far from perfect. Their is still presence of non-linearity and non-constant variance of errors. Moreover, the outliers and leverage points should be analyzed to find a better model. It may not (and most probably won’t) give similar results when used to predict the outcome for new, unseen data. In order to use it for prediction, more concrete measures should be taken for ensuring the accuracy of the model, like cross-validation. It still helps by providing good estimations of the significant relations between the predictors and the outcome. These estimations can be used to summarize the data in a more useful and presentful way.</p>
 <hr />
-<div id="sources" class="section level3">
-<h3><strong>Sources:</strong></h3>
+</div>
+<div id="sources" class="section level2">
+<h2><strong>Sources</strong></h2>
 <ul>
 <li>An Introduction to Statistical Learning, with Application in R. By James, G., Witten, D., Hastie, T., Tibshirani, R.</li>
 <li>Wikipedia</li>
 <li><a href="https://www.statmethods.net" target="_blank">Quick-R</a></li>
 <li><a href="http://www.statisticshowto.com" target="_blank">Statistics How To</a></li>
 </ul>
-</div>
 </div>
