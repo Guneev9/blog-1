@@ -6,7 +6,6 @@ slug: linear-regression-modeling-and-assumptions
 output:
   blogdown::html_page:
     toc: true
-    code_folding: hide
 categories:
   - data analysis
 tags:
@@ -48,7 +47,7 @@ insurance <- read.csv('~/Documents/CodeWork/medicalCost/insurance.csv')
 summary(insurance)
 ```
 
-Some simple observations that can be taken from the summary are:
+Some simple observations that can be made from the summary are:
 
 1. The age of participants varies from 18 to 64.
 2. Around 49.48% of participants are female.
@@ -79,9 +78,9 @@ summary(lm.fit)
 
 A high value of F statistic, with a very low p-value (<2.2e-16), implies that the null hypothesis can be rejected. This means there is a potential relationship between the predictors and the outcome.
 
-RSE (Residual Standard Error) is the estimate of the standard deviation of irreducible error (the error which can't be reduced even if knew the true regression line; hence, irreducible). In simpler words, it is the average deviation between the actual outcome and the true regression line. A large value of RSE (6062) means a high deviation of our model from the true regression line.
+RSE (Residual Standard Error) is the estimate of the standard deviation of irreducible error (the error which can't be reduced even if we knew the true regression line; hence, irreducible). In simpler words, it is the average deviation between the actual outcome and the true regression line. A large value of RSE (6062) means a high deviation of our model from the true regression line.
 
-R-squared ($R^2$) measures the proportion of variability in the outcome that can be explained by the model, and is always between 0 and 1; the higher the value, the better the model is able to explain the variability in the outcome. However, increase in number of predictors mostly results in an increased value of $R^2$ due to [inflation of R-squared](https://en.wikipedia.org/wiki/Coefficient_of_determination#Inflation_of_R2){target="_blank"}. [Adjusted R-squared](https://en.wikipedia.org/wiki/Coefficient_of_determination#Adjusted_R2){target="_blank"} adjusts the value of $R^2$ to avoid this effect. A high value of adjusted $R^2$ (0.7494) shows that more than 74% of the variance in the data is being explained by the model.
+R-squared ($R^2$) measures the proportion of variability in the outcome that can be explained by the model, and is [almost always between 0 and 1](https://stats.stackexchange.com/questions/12900/when-is-r-squared-negative){target="_blank"}; the higher the value, the better the model is able to explain the variability in the outcome. However, increase in number of predictors mostly results in an increased value of $R^2$ due to [inflation of R-squared](https://en.wikipedia.org/wiki/Coefficient_of_determination#Inflation_of_R2){target="_blank"}. [Adjusted R-squared](https://en.wikipedia.org/wiki/Coefficient_of_determination#Adjusted_R2){target="_blank"} adjusts the value of $R^2$ to avoid this effect. A high value of adjusted $R^2$ (0.7494) shows that more than 74% of the variance in the data is being explained by the model.
 
 The Std. Error gives us the average amount that the estimated coefficient of a predictor differs from the actual coefficient of predictor. It can be used to compute the confidence interval of an estimated coefficient, which we will see later.
 
@@ -358,3 +357,5 @@ The model we have built can be used for inference of how the different predictor
 * Wikipedia
 * [Quick-R](https://www.statmethods.net){target="_blank"}
 * [Statistics How To](http://www.statisticshowto.com){target="_blank"}
+* [StackExchange](https://stats.stackexchange.com/questions/12900/when-is-r-squared-negative#){target="_blank"}
+* [Stack Overflow](https://stackoverflow.com){target="_blank"}
