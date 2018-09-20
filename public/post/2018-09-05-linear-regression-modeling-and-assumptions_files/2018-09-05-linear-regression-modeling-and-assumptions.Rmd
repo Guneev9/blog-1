@@ -86,7 +86,7 @@ The Std. Error gives us the average amount that the estimated coefficient of a p
 
 The _t value_ of a predictor tells us how many standard deviations its estimated coefficient is away from 0. _Pr (>|t|)_ for a predictor is the p-value for the estimated regression coefficient, which is same as saying what is the probability of seeing a t value for the regression coefficient. A very low p-value (<0.05) for a predictor can be used to infer that there is a relationsip between the predictor and the outcome.
 
-Our next step should be [validation of regression analyis](https://en.wikipedia.org/wiki/Regression_validation){target="_blank"}. This may mean validation of underlying assumptions of the model, checking the structure of model with different predictors, looking for observations that have not been represented well enough in the model, and more. We will look at a few of these methods and assumptions.
+Our next step should be [validation of regression analysis](https://en.wikipedia.org/wiki/Regression_validation){target="_blank"}. This may mean validation of underlying assumptions of the model, checking the structure of model with different predictors, looking for observations that have not been represented well enough in the model, and more. We will look at a few of these methods and assumptions.
 
 ***
 
