@@ -1,3 +1,6 @@
+**Introduction**
+----------------
+
 Regression analysis is a powerful statistical process to find the relations within a dataset, with the key focus being on relationships between the independent variables (predictors) and a dependent variable (outcome). It can be used to build models for inference or prediction. Among several methods of regression analysis, linear regression sets the basis and is quite widely used for <a href="https://en.wikipedia.org/wiki/Linear_regression#Applications" target="_blank">several real-world applications</a>.
 
 In this post, we will look at building a linear regression model for inference. The dataset we will use is the insurance charges data obtained from <a href="https://www.kaggle.com/mirichoi0218/insurance/home" target="_blank">Kaggle</a>. This data set consists of 1,338 observations and 7 columns: age, sex, bmi, children, smoker, region and charges.
@@ -8,22 +11,15 @@ The key questions that we would be asking are:
 2.  How valid is the model we have built?
 3.  What can we do to improve the model?
 
-![Source : Google Images](/post/2018-09-05-linear-regression-modeling-and-assumptions_files/2120406.jpg)
+<img src="/post/2018-09-05-linear-regression-modeling-and-assumptions_files/2120406.jpg" alt="Source : Google Images" width="350" height="350" />
 
-We start with importing the required libraries and data:
+We start with importing the main required libraries and data:
 
 ``` r
 library(magrittr)
-library(purrr)
-library(MASS)
 library(car)
 library(broom)
 library(ggplot2)
-library(psych)
-library(caret)
-library(tidyr)
-library(effects)
-library(tibble)
 ```
 
 ``` r
@@ -46,7 +42,7 @@ summary(insurance)
                      3rd Qu.:16640  
                      Max.   :63770  
 
-Some simple observations that can be taken from the summary are:
+Some simple observations that can be made from the summary are:
 
 1.  The age of participants varies from 18 to 64.
 2.  Around 49.48% of participants are female.
@@ -104,15 +100,15 @@ summary(lm.fit)
 
 A high value of F statistic, with a very low p-value (&lt;2.2e-16), implies that the null hypothesis can be rejected. This means there is a potential relationship between the predictors and the outcome.
 
-RSE (Residual Standard Error) is the estimate of the standard deviation of irreducible error (the error which can't be reduced even if knew the true regression line; hence, irreducible). In simpler words, it is the average deviation between the actual outcome and the true regression line. A large value of RSE (6062) means a high deviation of our model from the true regression line.
+RSE (Residual Standard Error) is the estimate of the standard deviation of irreducible error (the error which can't be reduced even if we knew the true regression line; hence, irreducible). In simpler words, it is the average deviation between the actual outcome and the true regression line. A large value of RSE (6062) means a high deviation of our model from the true regression line.
 
-R-squared (*R*<sup>2</sup>) measures the proportion of variability in the outcome that can be explained by the model, and is always between 0 and 1; the higher the value, the better the model is able to explain the variability in the outcome. However, increase in number of predictors mostly results in an increased value of *R*<sup>2</sup> due to <a href="https://en.wikipedia.org/wiki/Coefficient_of_determination#Inflation_of_R2" target="_blank">inflation of R-squared</a>. <a href="https://en.wikipedia.org/wiki/Coefficient_of_determination#Adjusted_R2" target="_blank">Adjusted R-squared</a> adjusts the value of *R*<sup>2</sup> to avoid this effect. A high value of adjusted *R*<sup>2</sup> (0.7494) shows that more than 74% of the variance in the data is being explained by the model.
+R-squared (*R*<sup>2</sup>) measures the proportion of variability in the outcome that can be explained by the model, and is <a href="https://stats.stackexchange.com/questions/12900/when-is-r-squared-negative" target="_blank">almost always between 0 and 1</a>; the higher the value, the better the model is able to explain the variability in the outcome. However, increase in number of predictors mostly results in an increased value of *R*<sup>2</sup> due to <a href="https://en.wikipedia.org/wiki/Coefficient_of_determination#Inflation_of_R2" target="_blank">inflation of R-squared</a>. <a href="https://en.wikipedia.org/wiki/Coefficient_of_determination#Adjusted_R2" target="_blank">Adjusted R-squared</a> adjusts the value of *R*<sup>2</sup> to avoid this effect. A high value of adjusted *R*<sup>2</sup> (0.7494) shows that more than 74% of the variance in the data is being explained by the model.
 
 The Std. Error gives us the average amount that the estimated coefficient of a predictor differs from the actual coefficient of predictor. It can be used to compute the confidence interval of an estimated coefficient, which we will see later.
 
 The *t value* of a predictor tells us how many standard deviations its estimated coefficient is away from 0. *Pr (&gt;|t|)* for a predictor is the p-value for the estimated regression coefficient, which is same as saying what is the probability of seeing a t value for the regression coefficient. A very low p-value (&lt;0.05) for a predictor can be used to infer that there is a relationsip between the predictor and the outcome.
 
-Our next step should be <a href="https://en.wikipedia.org/wiki/Regression_validation" target="_blank">validation of regression analyis</a>. This may mean validation of underlying assumptions of the model, checking the structure of model with different predictors, looking for observations that have not been represented well enough in the model, and more. We will look at a few of these methods and assumptions.
+Our next step should be <a href="https://en.wikipedia.org/wiki/Regression_validation" target="_blank">validation of regression analysis</a>. This may mean validation of underlying assumptions of the model, checking the structure of model with different predictors, looking for observations that have not been represented well enough in the model, and more. We will look at a few of these methods and assumptions.
 
 ------------------------------------------------------------------------
 
@@ -125,8 +121,6 @@ If we look at the p-values of the estimated coefficients above, we see that not 
 
 We can look at the individual p-values for selecting the variables. This may not be a problem when the number of predictors (7) is quite small compared to the number of observations (1338). This method won't, however, work when the number of predictors is greater than the number of observations because of the <a href="http://www.statisticshowto.com/multiple-testing-problem/" target="_blank">multiple testing problem</a>. A better way of selecting predictors is <a href="https://en.wikipedia.org/wiki/Feature_selection" target="_blank">feature/variable selection</a> methods, like forward selection, backward selection, or mixed selection.
 
-![Source: Google Images](/post/2018-09-05-linear-regression-modeling-and-assumptions_files/RegressionMeme.jpg)
-
 Before jumping on to feature selection using any of these methods, let us try linear regression using the features with significant p-values only.
 
 ``` r
@@ -137,7 +131,7 @@ We will compare this to <a href="https://www.stat.ubc.ca/~rollin/teach/643w04/le
 
 ``` r
 #selecting direction = "both" for mixed selection
-step.lm.fit <- stepAIC(lm.fit, direction = "both", trace = FALSE)
+step.lm.fit <- MASS::stepAIC(lm.fit, direction = "both", trace = FALSE)
 ```
 
 Let's compare the two models :
@@ -182,7 +176,7 @@ vif(step.lm.fit) %>%
 
 None of the predictors in our case has a high value of VIF. Hence, we don't need to worry about multicollinearity in our case.
 
-![Source: Google Images](/post/2018-09-05-linear-regression-modeling-and-assumptions_files/multicollinearity%20meme.jpg)
+<img src="/post/2018-09-05-linear-regression-modeling-and-assumptions_files/multicollinearity%20meme.jpg" alt="Source: Google Images" width="350" height="350" />
 
 ------------------------------------------------------------------------
 
@@ -198,7 +192,7 @@ The non-linearity of the model can be determined using the residual plot of fitt
 residualPlot(step.lm.fit, type = "rstandard")
 ```
 
-![](2018-09-05-linear-regression-modeling-and-assumptions_files/figure-markdown_github/unnamed-chunk-198-1.png)
+![](2018-09-05-linear-regression-modeling-and-assumptions_files/figure-markdown_github/unnamed-chunk-30-1.png)
 
 The blue line represents a smooth pattern between the fitted values and the standard residuals. The curve in our case denotes slight non-linearity in our data.
 
@@ -208,7 +202,7 @@ The non-linearity can be further explored by looking at <a href="https://www.r-b
 ceresPlots(step.lm.fit)
 ```
 
-![](2018-09-05-linear-regression-modeling-and-assumptions_files/figure-markdown_github/unnamed-chunk-199-1.png)
+![](2018-09-05-linear-regression-modeling-and-assumptions_files/figure-markdown_github/unnamed-chunk-31-1.png)
 
 The pink line (residual line) is modelled for the relation between the predictor and the residuals. The blue dashed line (component line) is for the line of best fit. A significant difference between the two lines for a predictor implies that the predictor and the outcome don't have a linear relationship.
 
@@ -221,7 +215,7 @@ step.lm.fit.new <- update(step.lm.fit, .~.+I(bmi^1.25))
 ceresPlots(step.lm.fit.new)
 ```
 
-![](2018-09-05-linear-regression-modeling-and-assumptions_files/figure-markdown_github/unnamed-chunk-200-1.png)
+![](2018-09-05-linear-regression-modeling-and-assumptions_files/figure-markdown_github/unnamed-chunk-32-1.png)
 
 The CR plot of bmi no more has a difference between the residual line and the component line.
 
@@ -249,11 +243,11 @@ Let's look at the residual plot of this new model.
 residualPlot(step.lm.fit.new, type = "rstandard")
 ```
 
-![](2018-09-05-linear-regression-modeling-and-assumptions_files/figure-markdown_github/unnamed-chunk-202-1.png)
+![](2018-09-05-linear-regression-modeling-and-assumptions_files/figure-markdown_github/unnamed-chunk-34-1.png)
 
 Looking at the residual plot of the new model, there is not much change in the overall pattern of the standard residuals.
 
-![Source: Google Images](/post/2018-09-05-linear-regression-modeling-and-assumptions_files/multiple-regression-more-like-multiple-depression.jpg)
+<img src="/post/2018-09-05-linear-regression-modeling-and-assumptions_files/multiple-regression-more-like-multiple-depression.jpg" alt="Source: Google Images" width="350" height="350" />
 
 Another method of fixing the problem of non-linearity is introducing an <a href="https://en.wikipedia.org/wiki/Interaction_(statistics)#In_regression" target="_blank">interaction</a> between some predictors. A person who smokes and has a high bmi may have higher charges as compared to a person who has lower bmi and is a non-smoker. Let's update the model to introduce an interaction between *bmi* and *smoker*, and see if that makes a difference:
 
@@ -263,7 +257,7 @@ lm.fit1 <- update(step.lm.fit.new, ~ .+bmi*smoker)
 residualPlot(lm.fit1, type = "rstandard", id=TRUE)
 ```
 
-![](2018-09-05-linear-regression-modeling-and-assumptions_files/figure-markdown_github/unnamed-chunk-203-1.png)
+![](2018-09-05-linear-regression-modeling-and-assumptions_files/figure-markdown_github/unnamed-chunk-35-1.png)
 
 ``` r
 anova(step.lm.fit.new, lm.fit1, test = "F")
@@ -329,11 +323,9 @@ ncvTest(trans.lm.fit)
 residualPlot(trans.lm.fit, type = "rstandard", id=T)
 ```
 
-![](2018-09-05-linear-regression-modeling-and-assumptions_files/figure-markdown_github/unnamed-chunk-206-1.png)
+![](2018-09-05-linear-regression-modeling-and-assumptions_files/figure-markdown_github/unnamed-chunk-38-1.png)
 
-A p-value of ~0.94 implies here that we cannot reject the null hypothesis of constant variance of error terms.
-
-However, there is a slight increase in non-linearity of the model as can be seen in the residual plot. This can be fixed further by looking at relations between individual predictors and outcome.
+A p-value of ~0.94 implies here that we cannot reject the null hypothesis of constant variance of error terms. However, there is a slight increase in non-linearity of the model as can be seen in the residual plot. This can be fixed further by looking at relations between individual predictors and outcome.
 
 ------------------------------------------------------------------------
 
@@ -378,7 +370,7 @@ fitted_vs_actual <- function(predictions, title){
                 color = 'ideal'))+
   labs(x="actual charges", y="fitted values") + 
   scale_color_manual('linear relation', values = c('red', 'blue')) +
-  theme(legend.position = c(0.8, 0.2))+
+  theme(legend.position = c(0.25, 0.8))+
     ggtitle(title)
 }
 
@@ -397,7 +389,7 @@ g2 <- fitted_vs_actual(fitted_final, "Final Model")
 gridExtra::grid.arrange(g1,g2, ncol = 2)
 ```
 
-![](2018-09-05-linear-regression-modeling-and-assumptions_files/figure-markdown_github/unnamed-chunk-208-1.png)
+![](2018-09-05-linear-regression-modeling-and-assumptions_files/figure-markdown_github/unnamed-chunk-40-1.png)
 
 The initial model is able to approximate the actual charges below 17,000 USD, but as the actual charges go above 20,000 USD, the gap between actual charges and fitted values keeps increasing. As per the initial model, the actual charges near 50,000 USD are fitted as somewhere near or below 40,000 USD, and this gap keeps increasing upwards.
 
@@ -408,7 +400,7 @@ We can look at the estimated coefficients of the predictors and their confidence
 ``` r
 confint(trans.lm.fit) %>%
   tidy() %>%
-  add_column(coefficients = trans.lm.fit$coefficients, .after = 2) %>%
+  tibble::add_column(coefficients = trans.lm.fit$coefficients, .after = 2) %>%
   knitr::kable()
 ```
 
@@ -433,7 +425,7 @@ Let's visualize these effects to get a better understanding of how the predictor
 #funtion to get model effects on transformed outcome
 plot_effect <- function(interaction, xpredictor){
   #get effects for predictor
-  effs <- effect(interaction, mod = trans.lm.fit, 
+  effs <- effects::effect(interaction, mod = trans.lm.fit, 
                  xlevels = list(xpredictor=min(insurance[xpredictor]):max(insurance[xpredictor])))
   
   model.effs <- effs[c('x', 'lower', 'fit', 'upper')] %>%
@@ -455,11 +447,9 @@ plot_effect('age', 'age') %>%
   geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.5)
 ```
 
-![](2018-09-05-linear-regression-modeling-and-assumptions_files/figure-markdown_github/unnamed-chunk-211-1.png)
+![](2018-09-05-linear-regression-modeling-and-assumptions_files/figure-markdown_github/unnamed-chunk-43-1.png)
 
-For an average value of other predictors, insurance charges increase with increase in age.
-
-More interesting effects can be seen for the interaction between *bmi* and *smoker*.
+For an average value of other predictors, insurance charges increase with increase in age. More interesting effects can be seen for the interaction between *bmi* and *smoker*:
 
 ``` r
 plot_effect('bmi*smoker', 'bmi') %>%
@@ -470,7 +460,7 @@ plot_effect('bmi*smoker', 'bmi') %>%
   geom_ribbon(aes(ymin = lower, ymax = upper), alpha = 0.5)
 ```
 
-![](2018-09-05-linear-regression-modeling-and-assumptions_files/figure-markdown_github/unnamed-chunk-212-1.png)
+![](2018-09-05-linear-regression-modeling-and-assumptions_files/figure-markdown_github/unnamed-chunk-44-1.png)
 
 Non-smokers, irrespective of their bmi, have mostly low insurance charges for an average value of other predictors. Smokers with low bmi have low insurance charges, though still higher than non-smokers with any value of bmi. Moreover, as their bmi increases, the insurance charges of smokers increases rapidly.
 
@@ -483,9 +473,12 @@ The model we have built can be used for inference of how the different predictor
 
 ------------------------------------------------------------------------
 
-### **Sources:**
+**Sources**
+-----------
 
--   An Introduction to Statistical Learning and Reasoning
+-   An Introduction to Statistical Learning, with Application in R. By James, G., Witten, D., Hastie, T., Tibshirani, R.
 -   Wikipedia
 -   <a href="https://www.statmethods.net" target="_blank">Quick-R</a>
 -   <a href="http://www.statisticshowto.com" target="_blank">Statistics How To</a>
+-   <a href="https://stats.stackexchange.com/questions/12900/when-is-r-squared-negative#" target="_blank">StackExchange</a>
+-   <a href="https://stackoverflow.com" target="_blank">Stack Overflow</a>

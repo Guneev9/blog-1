@@ -35,7 +35,7 @@ selected = true
 #projects = ["example-external-project"]
 
 # Links (optional).
-#url_pdf = "http://eprints.soton.ac.uk/352095/1/Cushen-IMV2013.pdf"
+url_pdf = "http://openaccess.thecvf.com/content_cvpr_2018_workshops/papers/w36/Malhotra_Autonomous_Detection_of_CVPR_2018_paper.pdf"
 #url_preprint = "http://eprints.soton.ac.uk/352095/1/Cushen-IMV2013.pdf"
 #url_code = "#"
 #url_dataset = "#"
