@@ -13,7 +13,7 @@ image_preview = "Most_variant_features-2.png"
 
 # Tags: can be used for filtering projects.
 # Example: `tags = ["machine-learning", "deep-learning"]`
-tags = ["machine-learning", "feature-selection", "python", "cancer-detection"]
+tags = ["machine-learning", "feature-selection", "cancer-detection", "python", "scikit-learn"]
 
 # Optional external URL for project (replaces project detail page).
 #external_link = ""
@@ -62,20 +62,46 @@ There were two major challenges in this project:
 1. High number of features
 2. Low number of samples
 
-These two challenges go side-by-side in this scenario. Probe ids of a series metrix file essentialy denote the genes whose expression value has been recorded. As such, they are the features of the datasets. In case of Lung Cancer Dataset (GSE19804), we had as many as 54,675 probe ids. On the other hand, there are only 120 samples in this dataset. This is a very low number of observations as compared to the number of features; a ratio of less than 0.002.
-Lung Cancer, Breast Cancer : > 54,000 features, < 150 samples
-Pancreatic and Biliary Tract Cancer : 2555 features, 450 samples
+These two challenges go side-by-side in this scenario. Probe ids of a series metrix file essentialy denote the genes whose expression value has been recorded. As such, they are the features of the datasets. As an extreme example, the Lung Cancer Dataset (GSE19804) had 54,675 probe ids, while there were only 120 samples in this dataset. This is a very low number of observations as compared to the number of features; a ratio of less than 0.002. Similar is the case for the Breast Cancer Dataset (GSE27562). Other datasets, though not as extreme, suffer from a similar problem of higher number of features as compared to the number fo observations.
 
 ## **Actions**
 
-Tried variety of methods for feature selection and model depending on the data:
-High Variance features distinguish cancer and normal in case of Lung Cancer
-Doesn’t work for others
-Tried different feature selection methods including class overlap score, Chi-square, ANOVA-F
-Tried different machine learning models including KNN, Naive Bayes, CART
+In order to get rid of the [curse of dimensionality](https://en.wikipedia.org/wiki/Curse_of_dimensionality#Machine_learning), we tried variety of methods for feature selection and model, depending on the data. A simple example of this the Lung Cancer Dataset (GSE19804). A plot of the features with high variance in this dataset looked like this:
+
+![GSE19804: Features with high variance - parallel visualization](https://raw.githubusercontent.com/krohitm/Cancer-Prediction-and-Classification-via-Gene-Expression/master/KNeighborsClassifier/GSE19804_results/Most_variant_features.png)
+
+The y-axis denotes the expression values of the genes. It is quite clear from the plot how the expression values of genes are different for the healthy samples and the ones with cancer. While the expression values of genes of cancer patient are all over the place, those of the healthy sample are concentrated at particular locations.  
+
+This distinction is more clear in the radial visualization of these 8 genes:
+
+![GSE19804: Features with high variance - radial visualization](https://raw.githubusercontent.com/krohitm/Cancer-Prediction-and-Classification-via-Gene-Expression/master/KNeighborsClassifier/GSE19804_results/radviz_most_variant.png)
+
+This plot displays relative expression values of the 8 genes. The higher the normalized value of expression, the closer the observation is to the gene. It can be seen how the genes of a healthy person form a cluster, while those of a cancer patient are spread over. As such, simply selecting the features with high variance may work in this case.
+
+This method doesn't work in other cases though. Take an example of the NCI60 Dataset (GSE32474):
+
+![GSE32474: Features with high variance - parallel visualization](https://raw.githubusercontent.com/krohitm/Cancer-Prediction-and-Classification-via-Gene-Expression/master/KNeighborsClassifier/GSE32474_results/Most_variant_features.png)
+
+The expression values of the genes are crossing over for different cancer types and hence it is not easy to distinguish them.
+
+Because of different distributions of the datasets, we tried different methods for feature selection. These methods were class-overlap score, standard deviation by mean ratio, ANOVA – F value and $\chi^2$ (Chi-square)  statistics. Additionally, we tried different machine learning models, including KNN, Naive Bayes and Decision Trees. These were combined with the feature selection methods to get the best results, making the selection by trial and error. 
 
 ## **Results**
 
-Fairly good results with around 100 features
-All results are using stratified repeated random sub-sampling validation
-Each cell has (F1 score, number of features)
+We ran our experiments using stratified random sub-sampling validation. The stratified approach was taken to avoid the effects of unbalanced classes in the datasets. Random sub-sampling was done, instead of k-fold cross validation, since the number of samples in the datasets are quite low. These validations were repeated 10 times for each combination, and the average results were noted. F1 score was used as the metric to measure the performance.
+
+The results for the five datasets can be seen below.
+
+![](img/CC_results.png)
+![](img/CC_results_2.png)
+![](img/CC_results_3.png)
+![](img/CC_results_4.png)
+![](img/CC_results_5.png)
+
+Each cell in a table has (F1 score, number of features). 
+Around 100 features gave the best results in most of the cases. 
+
+## **Further scope**
+
+
+Complete report of the project can be seen [here](https://docs.google.com/document/d/17PdU_me1FKvm-pUoQZRY--Ui-48OkeSdrztHt4jrnaE/edit?usp=sharing)
