@@ -17,8 +17,7 @@
       <pubDate>Thu, 20 Sep 2018 00:00:00 +0000</pubDate>
       
       <guid>/project/cancer-classification/</guid>
-      <description>Overview Cancer classification, one of the vital areas of medical sciences, traditionally uses the physical attributes and the symptoms of the patient to gain a deeper understanding of the patient’s condition. Because causation and spread of cancer is more related to the genes, it is equally important to study the gene expression data.
-Therefore, in this project, we examine the Gene Expression data for various types of cancer and classify each cancer into its subtypes.</description>
+      <description>Overview Cancer classification is one of the vital areas of medical sciences. In this project, we examine the Gene Expression data for various types of cancer and classify each cancer into its subtypes. We gather the samples from GEO datasets and select the best features using the class-overlap score, standard deviation by mean ratio, ANOVA – F value and $\chi^2$ (Chi-square) statistics. We then run the following classifiers: K Nearest Neighbors, Naïve Bayes and Decision Trees.</description>
     </item>
     
     <item>

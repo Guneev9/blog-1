@@ -33,12 +33,12 @@ filter_default = 0
   tag = "*"
 
 [[filter]]
-  name = "Distributed Systems"
-  tag = ".distributed-systems"
-
-[[filter]]
   name = "Machine Learning"
   tag = ".machine-learning"
+  
+[[filter]]
+  name = "Distributed Systems"
+  tag = ".distributed-systems"
 
 +++
 

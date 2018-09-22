@@ -19,40 +19,87 @@
 
 &lt;h2 id=&#34;overview&#34;&gt;&lt;strong&gt;Overview&lt;/strong&gt;&lt;/h2&gt;
 
-&lt;p&gt;Cancer classification, one of the vital areas of medical sciences, traditionally uses the physical attributes and the symptoms of the patient to gain a deeper understanding of the patient’s condition. Because causation and spread of cancer is more related to the genes, it is equally important to study the gene expression data.&lt;/p&gt;
-
-&lt;p&gt;Therefore, in this project, we examine the Gene Expression data for various types of cancer and classify each cancer into its subtypes. We gather the samples from GEO datasets and select the best features using the class-overlap score, standard deviation by mean ratio, ANOVA – F value and χ2  statistics. We then run the following classifiers: K Nearest Neighbors, Naïve Bayes and Decision Trees. We then check the accuracy of a classifier against a feature selection method for all combinations and observe a feature selection – classifier pair that gives a better accuracy for a particular dataset.&lt;/p&gt;
+&lt;p&gt;Cancer classification is one of the vital areas of medical sciences. In this project, we examine the Gene Expression data for various types of cancer and classify each cancer into its subtypes. We gather the samples from GEO datasets and select the best features using the class-overlap score, standard deviation by mean ratio, ANOVA – F value and $\chi^2$ (Chi-square)  statistics. We then run the following classifiers: K Nearest Neighbors, Naïve Bayes and Decision Trees. We then checked the accuracy of a classifier against a feature selection method for all combinations and observe a feature selection – classifier pair that gives a better accuracy for a particular dataset.&lt;/p&gt;
 
 &lt;h2 id=&#34;background&#34;&gt;&lt;strong&gt;Background&lt;/strong&gt;&lt;/h2&gt;
 
-&lt;p&gt;Early discovery of cancer is an important step in determining the treatment of a patient. Gene expression data can be used to predict the presence of cancer.&lt;/p&gt;
+&lt;p&gt;Early discovery of cancer is an important step in determining the treatment of a patient. Gene expression data can be used to predict the presence of cancer. Traditional way of cancer classification uses the physical attributes and the symptoms of the patient to gain a deeper understanding of the patient’s condition. Because causation and spread of cancer is more related to the genes, it is equally important to study the gene expression data.&lt;/p&gt;
 
 &lt;h2 id=&#34;goal&#34;&gt;&lt;strong&gt;Goal&lt;/strong&gt;&lt;/h2&gt;
 
-&lt;p&gt;Use Gene Expression Omnibus (GEO) datasets from the NCBI to build models that can predict the presence of cancer and identify the severity of the cancer:&lt;/p&gt;
+&lt;p&gt;Our goal was to use Gene Expression Omnibus (GEO) datasets to build models that can predict the presence of cancer and identify the severity of the cancer. These datasets are freely and publicly available from the &lt;a href=&#34;https://www.ncbi.nlm.nih.gov/gds&#34; target=&#34;_blank&#34;&gt;NCBI&lt;/a&gt;. Each dataset has the gene expression data for various samples, with rows of a matrix file denoting the probe id and the columns denoting the samples. We took five GEO datasets, which have been briefly explained below :&lt;/p&gt;
 
-&lt;p&gt;Lung Cancer, Breast Cancer, Leukemia, Pancreatic and Biliary Tract Cancer&lt;/p&gt;
+&lt;h3 id=&#34;gse19804-lung-cancer-dataset-https-www-ncbi-nlm-nih-gov-geo-query-acc-cgi-acc-gse19804&#34;&gt;&lt;a href=&#34;https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE19804&#34; target=&#34;_blank&#34;&gt;GSE19804 (Lung Cancer Dataset)&lt;/a&gt;:&lt;/h3&gt;
+
+&lt;p&gt;GSE19804 is a lung cancer dataset having 120 samples, with 60 lung cancer tissue samples and 60 normal tissue samples, with 54, 675 probe sets.&lt;/p&gt;
+
+&lt;h3 id=&#34;gse27562-breast-cancer-dataset-https-www-ncbi-nlm-nih-gov-geo-query-acc-cgi-acc-gse27562&#34;&gt;&lt;a href=&#34;https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE27562&#34; target=&#34;_blank&#34;&gt;GSE27562 (Breast Cancer Dataset)&lt;/a&gt;:&lt;/h3&gt;
+
+&lt;p&gt;GSE27562 is a breast cancer dataset having 31 normal samples, 57 malignant breast cancer samples, and 37 benign breast cancer samples, with 54, 675 probe sets. There are 15 gastrointestinal tumor and and 7 brain tumor samples, which we have excluded from the datasets as a part of the experiments. We have also excluded 15 breast cancer samples following surgery, since there is no information about them having shown any signs of cancer after surgery.&lt;/p&gt;
+
+&lt;h3 id=&#34;gse32474-nci60-dataset-https-www-ncbi-nlm-nih-gov-geo-query-acc-cgi-acc-gse32474&#34;&gt;&lt;a href=&#34;https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE32474&#34; target=&#34;_blank&#34;&gt;GSE32474 (NCI60 Dataset)&lt;/a&gt;:&lt;/h3&gt;
+
+&lt;p&gt;GSE32474 dataset contains 9 types of different tumors. It has 18 samples for leukemia, 15 samples for breast cancer, 21 samples for ovarian cancer, 21 samples for colon cancer, 26 samples for melanoma, 18 samples for central nervous system, 23 samples for renal cancer and 26 samples for non-small lung cancer, with 54, 675 probe sets. We have excluded 6 prostate samples, since it is not enough for classification.&lt;/p&gt;
+
+&lt;h3 id=&#34;gse33315-leukemia-dataset-http-www-ncbi-nlm-nih-gov-geo-query-acc-cgi-acc-gse33315&#34;&gt;&lt;a href=&#34;http://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE33315&#34; target=&#34;_blank&#34;&gt;GSE33315 (Leukemia Dataset)&lt;/a&gt;:&lt;/h3&gt;
+
+&lt;p&gt;GSE33315 dataset contains 7 types of leukemia cancer. It has 115 samples of type hyperdiploid, 40 samples of TCF3-PBX1, 99 samples of ETV_RUNX1, 30 samples of MLL, 23 samples of PH , 23 samples of hypodiploid and 83 samples of T-ALL, with 22,283 probe sets. We have excluded 4 CD34 and 4 CD10CD19 samples, since that is too less for classification. We have also excluded 153 samples having no known karyotype to focus on leukemia.&lt;/p&gt;
+
+&lt;h3 id=&#34;gse59856-pancreatic-and-biliary-tract-cancer-https-www-ncbi-nlm-nih-gov-geo-query-acc-cgi-acc-gse59856&#34;&gt;&lt;a href=&#34;https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE59856&#34; target=&#34;_blank&#34;&gt;GSE59856 (Pancreatic and Biliary Tract Cancer)&lt;/a&gt;:&lt;/h3&gt;
+
+&lt;p&gt;GSE59856 dataset contains 100 pancreatic cancer samples, 98 biliary tract samples, 50 colon cancer samples, 50 stomach cancer samples, 50 esophagus cancer samples, 52 liver cancer samples, 150 healthy samples, with 2555 probe sets.&lt;/p&gt;
 
 &lt;h2 id=&#34;challenges&#34;&gt;&lt;strong&gt;Challenges&lt;/strong&gt;&lt;/h2&gt;
 
-&lt;p&gt;High number of features
-Low number of samples
-Lung Cancer, Breast Cancer : &amp;gt; 54,000 features, &amp;lt; 150 samples
-Pancreatic and Biliary Tract Cancer : 2555 features, 450 samples&lt;/p&gt;
+&lt;p&gt;There were two major challenges in this project:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;High number of features&lt;/li&gt;
+&lt;li&gt;Low number of samples&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;These two challenges go side-by-side in this scenario. Probe ids of a series metrix file essentialy denote the genes whose expression value has been recorded. As such, they are the features of the datasets. As an extreme example, the Lung Cancer Dataset (GSE19804) had 54,675 probe ids, while there were only 120 samples in this dataset. This is a very low number of observations as compared to the number of features; a ratio of less than 0.002. Similar is the case for the Breast Cancer Dataset (GSE27562). Other datasets, though not as extreme, suffer from a similar problem of higher number of features as compared to the number fo observations.&lt;/p&gt;
 
 &lt;h2 id=&#34;actions&#34;&gt;&lt;strong&gt;Actions&lt;/strong&gt;&lt;/h2&gt;
 
-&lt;p&gt;Tried variety of methods for feature selection and model depending on the data:
-High Variance features distinguish cancer and normal in case of Lung Cancer
-Doesn’t work for others
-Tried different feature selection methods including class overlap score, Chi-square, ANOVA-F
-Tried different machine learning models including KNN, Naive Bayes, CART&lt;/p&gt;
+&lt;p&gt;In order to get rid of the &lt;a href=&#34;https://en.wikipedia.org/wiki/Curse_of_dimensionality#Machine_learning&#34; target=&#34;_blank&#34;&gt;curse of dimensionality&lt;/a&gt;, we tried variety of methods for feature selection and model, depending on the data. A simple example of this the Lung Cancer Dataset (GSE19804). A plot of the features with high variance in this dataset looked like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/krohitm/Cancer-Prediction-and-Classification-via-Gene-Expression/master/KNeighborsClassifier/GSE19804_results/Most_variant_features.png&#34; alt=&#34;GSE19804: Features with high variance - parallel visualization&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The y-axis denotes the expression values of the genes. It is quite clear from the plot how the expression values of genes are different for the healthy samples and the ones with cancer. While the expression values of genes of cancer patient are all over the place, those of the healthy sample are concentrated at particular locations.&lt;/p&gt;
+
+&lt;p&gt;This distinction is more clear in the radial visualization of these 8 genes:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/krohitm/Cancer-Prediction-and-Classification-via-Gene-Expression/master/KNeighborsClassifier/GSE19804_results/radviz_most_variant.png&#34; alt=&#34;GSE19804: Features with high variance - radial visualization&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This plot displays relative expression values of the 8 genes. The higher the normalized value of expression, the closer the observation is to the gene. It can be seen how the genes of a healthy person form a cluster, while those of a cancer patient are spread over. As such, simply selecting the features with high variance may work in this case.&lt;/p&gt;
+
+&lt;p&gt;This method doesn&amp;rsquo;t work in other cases though. Take an example of the NCI60 Dataset (GSE32474):&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;https://raw.githubusercontent.com/krohitm/Cancer-Prediction-and-Classification-via-Gene-Expression/master/KNeighborsClassifier/GSE32474_results/Most_variant_features.png&#34; alt=&#34;GSE32474: Features with high variance - parallel visualization&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The expression values of the genes are crossing over for different cancer types and hence it is not easy to distinguish them.&lt;/p&gt;
+
+&lt;p&gt;Because of different distributions of the datasets, we tried different methods for feature selection. These methods were class-overlap score, standard deviation by mean ratio, ANOVA – F value and $\chi^2$ (Chi-square)  statistics. Additionally, we tried different machine learning models, including KNN, Naive Bayes and Decision Trees. These were combined with the feature selection methods to get the best results, making the selection by trial and error.&lt;/p&gt;
 
 &lt;h2 id=&#34;results&#34;&gt;&lt;strong&gt;Results&lt;/strong&gt;&lt;/h2&gt;
 
-&lt;p&gt;Fairly good results with around 100 features
-All results are using stratified repeated random sub-sampling validation
-Each cell has (F1 score, number of features)&lt;/p&gt;
+&lt;p&gt;We ran our experiments using stratified random sub-sampling validation. The stratified approach was taken to avoid the effects of unbalanced classes in the datasets. Random sub-sampling was done, instead of k-fold cross validation, since the number of samples in the datasets are quite low. These validations were repeated 10 times for each combination, and the average results were noted. F1 score was used as the metric to measure the performance.&lt;/p&gt;
+
+&lt;p&gt;The results for the five datasets can be seen below.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;img/CC_results.png&#34; alt=&#34;&#34; /&gt;
+&lt;img src=&#34;img/CC_results_2.png&#34; alt=&#34;&#34; /&gt;
+&lt;img src=&#34;img/CC_results_3.png&#34; alt=&#34;&#34; /&gt;
+&lt;img src=&#34;img/CC_results_4.png&#34; alt=&#34;&#34; /&gt;
+&lt;img src=&#34;img/CC_results_5.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Each cell in a table has (F1 score, number of features).
+Around 100 features gave the best results in most of the cases.&lt;/p&gt;
+
+&lt;h2 id=&#34;further-scope&#34;&gt;&lt;strong&gt;Further scope&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;p&gt;Complete report of the project can be seen &lt;a href=&#34;https://docs.google.com/document/d/17PdU_me1FKvm-pUoQZRY--Ui-48OkeSdrztHt4jrnaE/edit?usp=sharing&#34; target=&#34;_blank&#34;&gt;here&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
