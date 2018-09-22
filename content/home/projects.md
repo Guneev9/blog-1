@@ -32,13 +32,13 @@ filter_default = 0
   name = "All"
   tag = "*"
 
-#[[filter]]
-#  name = "Distributed Systems"
-#  tag = ".distributed-systems"
+[[filter]]
+  name = "Distributed Systems"
+  tag = ".distributed-systems"
 
-#[[filter]]
-#  name = "Other"
-#  tag = ".demo"
+[[filter]]
+  name = "Machine Learning"
+  tag = ".machine-learning"
 
 +++
 
