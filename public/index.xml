@@ -59,14 +59,63 @@ names(salesdata) = c(&amp;#39;sales&amp;#39;, &amp;#39;tv&amp;#39;, &amp;#39;soc
 # Plotting and basic stats
 splom(salesdata)&lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;&lt;img src=&#34;/post/2018-10-16-practical-significance-looking-beyond-p-value_files/figure-html/unnamed-chunk-2-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;summary(salesdata)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;     sales             tv         socialMedia        radio      
- Min.   :33934   Min.   :54906   Min.   :35172   Min.   :52072  
- 1st Qu.:46584   1st Qu.:66961   1st Qu.:46225   1st Qu.:65903  
- Median :49820   Median :70901   Median :49618   Median :69518  
- Mean   :49901   Mean   :70639   Mean   :49703   Mean   :69451  
- 3rd Qu.:53529   3rd Qu.:74194   3rd Qu.:53221   3rd Qu.:72973  
- Max.   :65770   Max.   :87670   Max.   :69830   Max.   :84702  &lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;summary(salesdata) %&amp;gt;%
+  knitr::kable()&lt;/code&gt;&lt;/pre&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr class=&#34;header&#34;&gt;
+&lt;th&gt;&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;sales&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;tv&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;socialMedia&lt;/th&gt;
+&lt;th align=&#34;center&#34;&gt;radio&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;Min. :33934&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;Min. :54906&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;Min. :35172&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;Min. :52072&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;1st Qu.:46584&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;1st Qu.:66961&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;1st Qu.:46225&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;1st Qu.:65903&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;Median :49820&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;Median :70901&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;Median :49618&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;Median :69518&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;Mean :49901&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;Mean :70639&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;Mean :49703&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;Mean :69451&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;odd&#34;&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;3rd Qu.:53529&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;3rd Qu.:74194&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;3rd Qu.:53221&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;3rd Qu.:72973&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr class=&#34;even&#34;&gt;
+&lt;td&gt;&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;Max. :65770&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;Max. :87670&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;Max. :69830&lt;/td&gt;
+&lt;td align=&#34;center&#34;&gt;Max. :84702&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
 &lt;p&gt;Now we have a dataset for sales, with 3 independent features: tv, socialMedia, and radio. We have generated 1,000 observations. Each observation consists of data for a particular market. The 3 features give us the amount spent in USDs in different methods of advertising. The sales column has the corresponding sales in that market.&lt;/p&gt;
 &lt;p&gt;Now that we have the data, let’s build a linear regression model taking all 3 features.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;model &amp;lt;- lm(sales~., data = salesdata)
@@ -99,7 +148,7 @@ F-statistic:  1240 on 3 and 996 DF,  p-value: &amp;lt; 2.2e-16&lt;/code&gt;&lt;/
 &lt;p&gt;&lt;strong&gt;Hold on!&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;Statistical significance means that you can conclude that an effect exists. It is a mathematical definition. It does not know anything about the subject area and what makes up an important effect.&lt;/p&gt;
 &lt;p&gt;Let’s go back to looking at the coefficient of radio. The low p-value means the effect is significant. Its coefficient is approximately 0.069. This means an extra &lt;span class=&#34;math inline&#34;&gt;\(\$10,000\)&lt;/span&gt; invested in radio advertising is related to a sale of around 690 more units. The question that arises at this point is this: &lt;strong&gt;Is that extra investment worth it?&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;Suppose this data is for a particular car model, for which sale of each car results in a profit of &lt;span class=&#34;math inline&#34;&gt;\(\$1,000\)&lt;/span&gt;. An increase in &lt;span class=&#34;math inline&#34;&gt;\(\$10,000\)&lt;/span&gt; of spending on radio advertising would be related to a sale of around &lt;span class=&#34;math inline&#34;&gt;\(690\)&lt;/span&gt; more cars. Sale of &lt;span class=&#34;math inline&#34;&gt;\(690\)&lt;/span&gt; more cars would mean an extra profit of &lt;span class=&#34;math inline&#34;&gt;\(\$690,000\)&lt;/span&gt;. That is an net profit of &lt;span class=&#34;math inline&#34;&gt;\(\$680,000\)&lt;/span&gt; on that extra spending. That is &lt;span class=&#34;math inline&#34;&gt;\(68\)&lt;/span&gt; times the extra money invested in radio advertising.&lt;/p&gt;
+&lt;p&gt;Suppose this data is for a particular car model, for which sale of each car results in a profit of &lt;span class=&#34;math inline&#34;&gt;\(\$1,000\)&lt;/span&gt;. An increase in &lt;span class=&#34;math inline&#34;&gt;\(\$10,000\)&lt;/span&gt; of spending on radio advertising would be related to a sale of around &lt;span class=&#34;math inline&#34;&gt;\(690\)&lt;/span&gt; more cars. Sale of &lt;span class=&#34;math inline&#34;&gt;\(690\)&lt;/span&gt; more cars would mean an extra profit of &lt;span class=&#34;math inline&#34;&gt;\(\$690,000\)&lt;/span&gt;. That is a net profit of &lt;span class=&#34;math inline&#34;&gt;\(\$680,000\)&lt;/span&gt; on that extra spending. That is &lt;span class=&#34;math inline&#34;&gt;\(68\)&lt;/span&gt; times the extra money invested in radio advertising.&lt;/p&gt;
 &lt;div class=&#34;figure&#34;&gt;
 &lt;img src=&#34;/post/2018-10-16-practical-significance-looking-beyond-p-value_files/Rplot.png&#34; /&gt;
 
@@ -112,7 +161,7 @@ F-statistic:  1240 on 3 and 996 DF,  p-value: &amp;lt; 2.2e-16&lt;/code&gt;&lt;/
 &lt;h3&gt;&lt;strong&gt;Identify the effect needed for practical importance&lt;/strong&gt;&lt;/h3&gt;
 &lt;p&gt;A simple solution would be understanding how much effect is important to you. Suppose you were checking if more spending on radio advertising leads to more sales. Additionally, you want to know if spending more on radio advertising leads to at least a net profit of &lt;span class=&#34;math inline&#34;&gt;\(5\)&lt;/span&gt;X on that extra spending.&lt;/p&gt;
 &lt;p&gt;As per the model, an increase in spending on radio advertising is related to an increase in the sales.&lt;/p&gt;
-&lt;p&gt;In the first example, there is an net profit of &lt;span class=&#34;math inline&#34;&gt;\(68\)&lt;/span&gt;X on the extra investment. As such, statistical significance is of practical importance in this case.&lt;/p&gt;
+&lt;p&gt;In the first example, there is a net profit of &lt;span class=&#34;math inline&#34;&gt;\(68\)&lt;/span&gt;X on the extra investment. As such, statistical significance is of practical importance in this case.&lt;/p&gt;
 &lt;p&gt;In the second example, spending more on radio advertising is not related to profit. In fact, more spending on radio advertising leads to a net loss of &lt;span class=&#34;math inline&#34;&gt;\(0.31\)&lt;/span&gt;X times on that extra spending. Thus, in spite of the effect being significant, it is of no practical importance.&lt;/p&gt;
 &lt;/div&gt;
 &lt;div id=&#34;use-confidence-intervals&#34; class=&#34;section level3&#34;&gt;
