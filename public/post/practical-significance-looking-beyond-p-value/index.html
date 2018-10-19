@@ -348,13 +348,11 @@
 <div id="what-is-the-need-to-look-beyond-p-value" class="section level2">
 <h2><strong>What is the need to look beyond p-value?</strong></h2>
 <p>In my last post, I mentioned how we can use p-values to select important variables in a linear model. In general, this sounds like an easy basis of testing a hypothesis, but that is not where the story ends.</p>
-<p>In a practical setting, you need to look beyond mere p-value of an experiment. To understand, let us walk through an example. We will generate our own dataset for this example.</p>
+<p>In a practical setting, you need to look beyond mere p-value of an experiment. To understand why, let us walk through an example. We will generate our own dataset for this example.</p>
 <pre class="r"><code>library(dplyr)
 library(lattice) # for splom
-library(ggplot2)
-library(plotly)</code></pre>
-<pre class="r"><code># Using a correlation matrix (let&#39;s assume that all variables
-# have unit variance
+library(ggplot2)</code></pre>
+<pre class="r"><code># Correlation matrix
 M = matrix(c(1, 0.7, 0.7, 0.4,
              0.7, 1, 0.25, 0.3,
              0.7, 0.25, 1, 0.3,
@@ -371,9 +369,9 @@ nobs = 1000
 # Random variables that follow an M correlation matrix
 r = t(L) %*% matrix(rnorm(nvars*nobs, mean = 50000, sd = 5000), nrow=nvars, 
                     ncol=nobs)
-r = t(r)
- 
-salesdata = as.data.frame(r)
+
+salesdata = t(r) %&gt;%
+  as.data.frame()
 names(salesdata) = c(&#39;sales&#39;, &#39;tv&#39;, &#39;socialMedia&#39;, &#39;radio&#39;)
  
 # Plotting and basic stats
@@ -388,7 +386,7 @@ splom(salesdata)</code></pre>
  3rd Qu.:53529   3rd Qu.:74194   3rd Qu.:53221   3rd Qu.:72973  
  Max.   :65770   Max.   :87670   Max.   :69830   Max.   :84702  </code></pre>
 <p>Now we have a dataset for sales, with 3 independent features: tv, socialMedia, and radio. We have generated 1,000 observations. Each observation consists of data for a particular market. The 3 features give us the amount spent in USDs in different methods of advertising. The sales column has the corresponding sales in that market.</p>
-<p>Now that we have the data, let’s build a linear model taking all 3 features.</p>
+<p>Now that we have the data, let’s build a linear regression model taking all 3 features.</p>
 <pre class="r"><code>model &lt;- lm(sales~., data = salesdata)
 summary(model)</code></pre>
 <pre><code>
@@ -411,83 +409,63 @@ Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&
 Residual standard error: 2389 on 996 degrees of freedom
 Multiple R-squared:  0.7888,    Adjusted R-squared:  0.7882 
 F-statistic:  1240 on 3 and 996 DF,  p-value: &lt; 2.2e-16</code></pre>
-<p>All 3 features have a low p-value as per our model. Wonderful! Also, the coefficients of all 3 features are positive. This means investing more in these media is related to increase in sales. Let’s throw our money into advertising of all sorts then.</p>
+<p>All 3 features have a low p-value as per our model. Wonderful! Also, the coefficients of all 3 features are positive. This means investing more in these methods is related to an increase in sales.</p>
 <div class="figure">
-<img src="/post/2018-10-16-practical-significance-looking-beyond-p-value_files/images.jpeg" alt="Source : Google Images" width="350" height="350" />
-<p class="caption">Source : Google Images</p>
+<img src="/post/2018-10-16-practical-significance-looking-beyond-p-value_files/images.jpeg" width="350" height="350" />
+
 </div>
 <p><strong>Hold on!</strong></p>
 <p>Statistical significance means that you can conclude that an effect exists. It is a mathematical definition. It does not know anything about the subject area and what makes up an important effect.</p>
 <p>Let’s go back to looking at the coefficient of radio. The low p-value means the effect is significant. Its coefficient is approximately 0.069. This means an extra <span class="math inline">\(\$10,000\)</span> invested in radio advertising is related to a sale of around 690 more units. The question that arises at this point is this: <strong>Is that extra investment worth it?</strong></p>
-<p>Suppose this data is for a particular car model, for which sale of each car results in a profit of <span class="math inline">\(\$1,000\)</span>. An increase in <span class="math inline">\(\$10,000\)</span> of spending in radio advertising would be related to a sale of around <span class="math inline">\(690\)</span> more cars. Sale of <span class="math inline">\(690\)</span> more cars would mean a profit of <span class="math inline">\(\$690,000\)</span>. That is a net profit of <span class="math inline">\(\$680,000 (\$690,000 - \$10,000)\)</span>. That is 68 times the extra money invested in radio advertising.</p>
-<p>Consider a different scenario where this data is for the sales of a particular watch, for which sale of each watch results in a profit of <span class="math inline">\(\$10\)</span>. An increase in <span class="math inline">\(\$10,000\)</span> in radio advertising would mean a sale of around <span class="math inline">\(690\)</span> more watches. Sale of <span class="math inline">\(690\)</span> more watches would mean a profit of <span class="math inline">\(\$6,900\)</span>. That is a net loss of <span class="math inline">\(\$3,100\)</span>.</p>
-<pre class="r"><code>#funtion to get model effects on transformed outcome
-plot_effect &lt;- function(predictor){
-  #get effects for predictor
-  effs &lt;- effects::effect(predictor, mod = model, 
-                 xlevels = list(xpredictor=min(salesdata[predictor]):max(salesdata[predictor])))
-  
-  model.effs &lt;- effs[c(&#39;x&#39;, &#39;lower&#39;, &#39;fit&#39;, &#39;upper&#39;)] %&gt;%
-    as.data.frame()
-  
-  model.effs$fit &lt;- model.effs$fit
-  model.effs$lower &lt;- model.effs$lower
-  model.effs$upper &lt;- model.effs$upper
-  
-  return(model.effs)
-}</code></pre>
-<pre class="r"><code>g2 &lt;- plot_effect(&#39;radio&#39;) %&gt;%
-  ggplot() +
-  geom_line(aes(x=radio, y=fit*10-radio))+
-  theme_minimal()
-g2</code></pre>
-<p><img src="/post/2018-10-16-practical-significance-looking-beyond-p-value_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>Suppose this data is for a particular car model, for which sale of each car results in a profit of <span class="math inline">\(\$1,000\)</span>. An increase in <span class="math inline">\(\$10,000\)</span> of spending on radio advertising would be related to a sale of around <span class="math inline">\(690\)</span> more cars. Sale of <span class="math inline">\(690\)</span> more cars would mean an extra profit of <span class="math inline">\(\$690,000\)</span>. That is an net profit of <span class="math inline">\(\$680,000\)</span> on that extra spending. That is <span class="math inline">\(68\)</span> times the extra money invested in radio advertising.</p>
+<div class="figure">
+<img src="/post/2018-10-16-practical-significance-looking-beyond-p-value_files/Rplot.png" />
+
+</div>
+<p>Consider a different scenario where this data is for the sales of a particular watch. Sale of each watch results in a profit of <span class="math inline">\(\$10\)</span>. An increase in <span class="math inline">\(\$10,000\)</span> of spending on radio advertising would mean a sale of around <span class="math inline">\(690\)</span> more watches. Sale of <span class="math inline">\(690\)</span> more watches would mean an extra profit of <span class="math inline">\(\$6,900\)</span>. That is a net loss of <span class="math inline">\(\$3,100\)</span> on that extra spending.</p>
 </div>
 <div id="how-do-we-check-the-practical-importance-of-the-statistically-significant-result" class="section level2">
 <h2><strong>How do we check the practical importance of the statistically significant result?</strong></h2>
 <div id="identify-the-effect-needed-for-practical-importance" class="section level3">
 <h3><strong>Identify the effect needed for practical importance</strong></h3>
-<p>A simple solution would be understanding how much effect is important to you. Suppose you were checking if more spending in radio advertising leads to more sales. Additionally, you want to know if spending more on radio advertising leads to at least a net profit of <span class="math inline">\(5\%\)</span>.</p>
-<p>As per the model, an increase in spending on radio advertising is related to an increase in sales.</p>
-<p>In first example, there is a net profit of <span class="math inline">\(6,800\%\)</span> on the extra investment. As such, statistical significance is of practical importance in this case.</p>
-<p>In the second example, spending more on radio advertising is not related to profit. In fact, more spending on radio advertising leads to a net loss of <span class="math inline">\(31\%\)</span>. Thus, inspite of the effect being significant, it is of no practical importance.</p>
+<p>A simple solution would be understanding how much effect is important to you. Suppose you were checking if more spending on radio advertising leads to more sales. Additionally, you want to know if spending more on radio advertising leads to at least a net profit of <span class="math inline">\(5\)</span>X on that extra spending.</p>
+<p>As per the model, an increase in spending on radio advertising is related to an increase in the sales.</p>
+<p>In the first example, there is an net profit of <span class="math inline">\(68\)</span>X on the extra investment. As such, statistical significance is of practical importance in this case.</p>
+<p>In the second example, spending more on radio advertising is not related to profit. In fact, more spending on radio advertising leads to a net loss of <span class="math inline">\(0.31\)</span>X times on that extra spending. Thus, in spite of the effect being significant, it is of no practical importance.</p>
 </div>
 <div id="use-confidence-intervals" class="section level3">
 <h3><strong>Use Confidence Intervals</strong></h3>
-<p>The coefficient you have is a point estimate of the true coefficient. Since it is an estimate, there is a scope of error. This uncertainty occurs because we have sampled our dataset from some distributions. They do not represent the complete distribution, or in other words, the population. The standard error for that estimated coefficient gives that scope of error. It is the average difference between the estimated coefficient and the true coefficient. For a different dataset with similar distributions, the estimate of coefficients may be different.</p>
-<p>You can use the standard errors to compute the <a href="https://www.slideshare.net/RizwanSa/confidence-intervals-basic-concepts-and-overview" target="_blank">confidence intervals</a>. A <span class="math inline">\(95\%\)</span> confidence interval is a range for which we are 95% confident that it has the true coefficient. In our case, we can use the function confint() to find the <span class="math inline">\(95\%\)</span> confidence interval.</p>
+<p>The coefficient you have is a point estimate of the true coefficient. Since it is an estimate, there is a scope of error. This uncertainty occurs because we have sampled our dataset from some distributions. They do not represent the complete distribution, or in other words, the population. The standard error for that estimated coefficient gives that scope of error. It is the average difference between the estimated coefficient and the true coefficient. For a different dataset with similar distributions, the estimated coefficients may be different.</p>
+<p>You can use the standard errors to compute the <a href="https://www.slideshare.net/RizwanSa/confidence-intervals-basic-concepts-and-overview" target="_blank">confidence intervals</a>. A <span class="math inline">\(95\%\)</span> confidence interval is a range for which we are <span class="math inline">\(95\%\)</span> confident that it has the true coefficient. In R, we can use the function <em>confint()</em> to find the <span class="math inline">\(95\%\)</span> confidence interval.</p>
 <pre class="r"><code>confint(model)</code></pre>
 <pre><code>                    2.5 %        97.5 %
 (Intercept) -2.380331e+04 -1.867165e+04
 tv           5.316057e-01  5.925002e-01
 socialMedia  5.043114e-01  5.652431e-01
 radio        3.879204e-02  1.010260e-01</code></pre>
-<p>The <span class="math inline">\(95\%\)</span> confidence interval of radio is [0.038, 0.101]. In other words, we can say with <span class="math inline">\(95\%\)</span> confidence that the true coefficient for radio lies between <span class="math inline">\(0.038\)</span> and <span class="math inline">\(0.101\)</span>. For each increase in <span class="math inline">\(\$10,000\)</span> spent on radio advertising, there would be an average increase in sales from <span class="math inline">\(380\)</span> to <span class="math inline">\(1,010\)</span> units.</p>
-<p>This is a wide range, but why is that a problem? Let me show that through the previous examples.</p>
-<p>Going back to the previous example of profit, the estimated profit was <span class="math inline">\(\$690,000\)</span>. As per the confidence interval, this may range from <span class="math inline">\(\$380,000 (380*\$1,000)\)</span> to <span class="math inline">\(\$1,010,000 (1,010*\$1000)\)</span>. This means the net profit may range from <span class="math inline">\(\$370,000\)</span> to <span class="math inline">\(\$1,000,000\)</span>. In a general sense, the profit may range from <span class="math inline">\(3,800\%\)</span> to <span class="math inline">\(10,000\%\)</span>. The amount of uncertainty is huge enough that it might not be a good idea to invest more in radio advertising.</p>
-<pre class="r"><code>g1 &lt;- plot_effect(&#39;radio&#39;) %&gt;%
-  ggplot(aes(x=radio, y=fit*1000-radio)) +
-  geom_line()+
-  geom_ribbon(aes(ymin = lower*1000-radio, ymax = upper*1000-radio), alpha = 0.5)+
-  theme_minimal()
-g1</code></pre>
-<p><img src="/post/2018-10-16-practical-significance-looking-beyond-p-value_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>The <span class="math inline">\(95\%\)</span> confidence interval for radio’s coefficient is [0.038, 0.101]. In other words, we can say with <span class="math inline">\(95\%\)</span> confidence that the true coefficient for radio lies between <span class="math inline">\(0.038\)</span> and <span class="math inline">\(0.101\)</span>. An increase in <span class="math inline">\(\$10,000\)</span> spent on radio advertising would mean an average increase in sales from <span class="math inline">\(380\)</span> to <span class="math inline">\(1,010\)</span> units.</p>
+<p>This is a wide range, but why is that a problem?</p>
+<div class="figure">
+<img src="/post/2018-10-16-practical-significance-looking-beyond-p-value_files/CI.png" />
+
+</div>
+<p>Going back to the previous example of cars, the estimated extra profit was <span class="math inline">\(\$690,000\)</span>. As per the confidence interval of [0.038, 0.101], this may range from <span class="math inline">\(\$380,000\)</span> to <span class="math inline">\(\$1,010,000\)</span>. This means the net profit may range from <span class="math inline">\(\$370,000\)</span> to <span class="math inline">\(\$1,000,000\)</span> on the extra spending. In a general sense, the net profit may range from <span class="math inline">\(37\)</span>X to <span class="math inline">\(100\)</span>X on any extra spending on radio advertisement. The amount of uncertainty is quite huge. It might be a better idea to invest in a different method instead with less uncertainty.</p>
 </div>
 </div>
 <div id="conclusion" class="section level2">
 <h2><strong>Conclusion</strong></h2>
+<p>A p-value is a good starting point to check the importance of an effect. That’s what it is though – a starting point. Once we know of a significant effect, we need to look further into its practical importance.</p>
 </div>
 <div id="sources" class="section level2">
 <h2><strong>Sources</strong></h2>
 <ul>
-<li><ul>
 <li>An Introduction to Statistical Learning, with Application in R. By James, G., Witten, D., Hastie, T., Tibshirani, R.</li>
-</ul></li>
-<li><a href="https://www.r-bloggers.com/simulating-data-following-a-given-covariance-structure/" class="uri">https://www.r-bloggers.com/simulating-data-following-a-given-covariance-structure/</a></li>
+<li><a href="https://www.r-bloggers.com/simulating-data-following-a-given-covariance-structure/" target="_blank">R Bloggers</a></li>
 <li><a href="http://statisticsbyjim.com/hypothesis-testing/practical-statistical-significance/" target="_blank">Statistics by Jim</a></li>
 <li><a href="https://stats.stackexchange.com/" target="_blank">Stack Exchange</a></li>
 <li><a href="https://stackoverflow.com" target="_blank">Stack Overflow</a></li>
 <li><a href="https://www.slideshare.net/RizwanSa/confidence-intervals-basic-concepts-and-overview" target="_blank">Slideshare</a></li>
+<li>Images: Google Images</li>
 </ul>
 </div>
 

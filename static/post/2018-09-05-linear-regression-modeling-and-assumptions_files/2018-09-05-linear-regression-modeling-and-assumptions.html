@@ -401,9 +401,9 @@ plot_effect &lt;- function(interaction, xpredictor){
   model.effs &lt;- effs[c(&#39;x&#39;, &#39;lower&#39;, &#39;fit&#39;, &#39;upper&#39;)] %&gt;%
     as.data.frame()
   
-  model.effs$fit &lt;- model.effs$fit^(1/yTransformer)
-  model.effs$lower &lt;- model.effs$lower^(1/yTransformer)
-  model.effs$upper &lt;- model.effs$upper^(1/yTransformer)
+  model.effs$fit &lt;- effs$fit^(1/yTransformer)
+  model.effs$lower &lt;- effs$lower^(1/yTransformer)
+  model.effs$upper &lt;- effs$upper^(1/yTransformer)
   
   return(model.effs)
 }</code></pre>

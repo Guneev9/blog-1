@@ -314,9 +314,9 @@ plot_effect <- function(interaction, xpredictor){
   model.effs <- effs[c('x', 'lower', 'fit', 'upper')] %>%
     as.data.frame()
   
-  model.effs$fit <- model.effs$fit^(1/yTransformer)
-  model.effs$lower <- model.effs$lower^(1/yTransformer)
-  model.effs$upper <- model.effs$upper^(1/yTransformer)
+  model.effs$fit <- effs$fit^(1/yTransformer)
+  model.effs$lower <- effs$lower^(1/yTransformer)
+  model.effs$upper <- effs$upper^(1/yTransformer)
   
   return(model.effs)
 }
