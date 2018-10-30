@@ -10,6 +10,20 @@
     <atom:link href="/" rel="self" type="application/rss+xml" />
     
     <item>
+      <title>Global Terrorism Analysis</title>
+      <link>/project/global-terrorism-analysis/</link>
+      <pubDate>Mon, 29 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/project/global-terrorism-analysis/</guid>
+      <description>
+
+&lt;h2 id=&#34;overview&#34;&gt;&lt;strong&gt;Overview&lt;/strong&gt;&lt;/h2&gt;
+
+&lt;iframe scrolling=&#34;yes&#34; frameborder=&#34;no&#34;  src=&#34;http://krohitm.shinyapps.io/gtd_app/&#34;&gt; &lt;/iframe&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Practical Significance: Looking beyond p-value</title>
       <link>/post/practical-significance-looking-beyond-p-value/</link>
       <pubDate>Tue, 16 Oct 2018 00:00:00 +0000</pubDate>
