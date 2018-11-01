@@ -21,7 +21,7 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message=FALSE, comment='')
 
 ## **What is the need to look beyond p-value?**
 
-In my last post, I mentioned how we can use p-values to select important variables in a linear model. In general, this sounds like an easy basis of testing a hypothesis, but that is not where the story ends. 
+In my [last post](http://didyousaydata.xyz/post/linear-regression-modeling-and-assumptions/){target="blank"}, I mentioned how we can use p-values to select important variables in a linear model. In general, this sounds like an easy basis of testing a hypothesis, but that is not where the story ends. 
 
 In a practical setting, you need to look beyond mere p-value of an experiment. To understand why, let us walk through an example. We will generate our own dataset for this example.
 
@@ -113,7 +113,7 @@ This is a wide range, but why is that a problem?
 
 ![](/post/2018-10-16-practical-significance-looking-beyond-p-value_files/CI.png)
 
-Going back to the previous example of cars, the estimated extra profit was $\$690,000$. As per the confidence interval of [0.038, 0.101], this may range from $\$380,000$ to $\$1,010,000$. This means the net profit may range from $\$370,000$ to $\$1,000,000$ on the extra spending. In a general sense, the net profit may range from $37$X to $100$X on any extra spending on radio advertisement. The amount of uncertainty is quite huge. It might be a better idea to invest in a different method instead with less uncertainty.
+Going back to the previous example of cars, the estimated extra profit was $\$690,000$. As per the confidence interval of [0.038, 0.101], this may range from $\$380,000$ to $\$1,010,000$. This means the net profit may range from $\$370,000$ to $\$1,000,000$ on the extra spending. In a general sense, the net profit may range from $37$X to $100$X on any extra spending on radio advertisement in that case. The amount of uncertainty is quite huge. It might be a better idea to invest in a different method instead with less uncertainty.
 
 ## **Conclusion**
 

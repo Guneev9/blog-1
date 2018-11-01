@@ -92,11 +92,11 @@ We ran our experiments using stratified random sub-sampling validation. The stra
 
 The results for the five datasets can be seen below.
 
-![](img/CC_results.png)
-![](img/CC_results_2.png)
-![](img/CC_results_3.png)
-![](img/CC_results_4.png)
-![](img/CC_results_5.png)
+![](https://raw.github.com/krohitm/Cancer-Prediction-and-Classification-via-Gene-Expression/master/results/CC_results.png)
+![](https://raw.github.com/krohitm/Cancer-Prediction-and-Classification-via-Gene-Expression/master/results/CC_results_2.png)
+![](https://raw.github.com/krohitm/Cancer-Prediction-and-Classification-via-Gene-Expression/master/results/CC_results_3.png)
+![](https://raw.github.com/krohitm/Cancer-Prediction-and-Classification-via-Gene-Expression/master/results/CC_results_4.png)
+![](https://raw.github.com/krohitm/Cancer-Prediction-and-Classification-via-Gene-Expression/master/results/CC_results_5.png)
 
 Each cell in a table has (F1 score, number of features). 
 Around 100 features gave the best results in most of the cases. 
