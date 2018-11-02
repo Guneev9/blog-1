@@ -1,7 +1,7 @@
 ---
 title: 'Practical Significance: Looking beyond p-value'
 author: Kumar Rohit Malhotra
-date: '2018-10-16'
+date: '2018-11-01'
 slug: practical-significance-looking-beyond-p-value
 output:
   blogdown::html_page:
