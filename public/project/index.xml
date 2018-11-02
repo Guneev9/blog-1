@@ -6,19 +6,10 @@
     <description>Recent content in Projects on Did you say data?</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 29 Oct 2018 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 20 Sep 2018 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/project/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>Global Terrorism Analysis</title>
-      <link>/project/global-terrorism-analysis/</link>
-      <pubDate>Mon, 29 Oct 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/project/global-terrorism-analysis/</guid>
-      <description> Overview  </description>
-    </item>
     
     <item>
       <title>Cancer Classification via Gene Expression</title>

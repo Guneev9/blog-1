@@ -10,20 +10,6 @@
     <atom:link href="/" rel="self" type="application/rss+xml" />
     
     <item>
-      <title>Global Terrorism Analysis</title>
-      <link>/project/global-terrorism-analysis/</link>
-      <pubDate>Mon, 29 Oct 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/project/global-terrorism-analysis/</guid>
-      <description>
-
-&lt;h2 id=&#34;overview&#34;&gt;&lt;strong&gt;Overview&lt;/strong&gt;&lt;/h2&gt;
-
-&lt;iframe scrolling=&#34;yes&#34; frameborder=&#34;no&#34;  src=&#34;http://krohitm.shinyapps.io/gtd_app/&#34;&gt; &lt;/iframe&gt;
-</description>
-    </item>
-    
-    <item>
       <title>Practical Significance: Looking beyond p-value</title>
       <link>/post/practical-significance-looking-beyond-p-value/</link>
       <pubDate>Tue, 16 Oct 2018 00:00:00 +0000</pubDate>
@@ -43,7 +29,7 @@
 
 &lt;div id=&#34;what-is-the-need-to-look-beyond-p-value&#34; class=&#34;section level2&#34;&gt;
 &lt;h2&gt;&lt;strong&gt;What is the need to look beyond p-value?&lt;/strong&gt;&lt;/h2&gt;
-&lt;p&gt;In my last post, I mentioned how we can use p-values to select important variables in a linear model. In general, this sounds like an easy basis of testing a hypothesis, but that is not where the story ends.&lt;/p&gt;
+&lt;p&gt;In my &lt;a href=&#34;http://didyousaydata.xyz/post/linear-regression-modeling-and-assumptions/&#34; target=&#34;blank&#34;&gt;last post&lt;/a&gt;, I mentioned how we can use p-values to select important variables in a linear model. In general, this sounds like an easy basis of testing a hypothesis, but that is not where the story ends.&lt;/p&gt;
 &lt;p&gt;In a practical setting, you need to look beyond mere p-value of an experiment. To understand why, let us walk through an example. We will generate our own dataset for this example.&lt;/p&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;library(dplyr)
 library(lattice) # for splom
@@ -194,7 +180,7 @@ radio        3.879204e-02  1.010260e-01&lt;/code&gt;&lt;/pre&gt;
 &lt;img src=&#34;/post/2018-10-16-practical-significance-looking-beyond-p-value_files/CI.png&#34; /&gt;
 
 &lt;/div&gt;
-&lt;p&gt;Going back to the previous example of cars, the estimated extra profit was &lt;span class=&#34;math inline&#34;&gt;\(\$690,000\)&lt;/span&gt;. As per the confidence interval of [0.038, 0.101], this may range from &lt;span class=&#34;math inline&#34;&gt;\(\$380,000\)&lt;/span&gt; to &lt;span class=&#34;math inline&#34;&gt;\(\$1,010,000\)&lt;/span&gt;. This means the net profit may range from &lt;span class=&#34;math inline&#34;&gt;\(\$370,000\)&lt;/span&gt; to &lt;span class=&#34;math inline&#34;&gt;\(\$1,000,000\)&lt;/span&gt; on the extra spending. In a general sense, the net profit may range from &lt;span class=&#34;math inline&#34;&gt;\(37\)&lt;/span&gt;X to &lt;span class=&#34;math inline&#34;&gt;\(100\)&lt;/span&gt;X on any extra spending on radio advertisement. The amount of uncertainty is quite huge. It might be a better idea to invest in a different method instead with less uncertainty.&lt;/p&gt;
+&lt;p&gt;Going back to the previous example of cars, the estimated extra profit was &lt;span class=&#34;math inline&#34;&gt;\(\$690,000\)&lt;/span&gt;. As per the confidence interval of [0.038, 0.101], this may range from &lt;span class=&#34;math inline&#34;&gt;\(\$380,000\)&lt;/span&gt; to &lt;span class=&#34;math inline&#34;&gt;\(\$1,010,000\)&lt;/span&gt;. This means the net profit may range from &lt;span class=&#34;math inline&#34;&gt;\(\$370,000\)&lt;/span&gt; to &lt;span class=&#34;math inline&#34;&gt;\(\$1,000,000\)&lt;/span&gt; on the extra spending. In a general sense, the net profit may range from &lt;span class=&#34;math inline&#34;&gt;\(37\)&lt;/span&gt;X to &lt;span class=&#34;math inline&#34;&gt;\(100\)&lt;/span&gt;X on any extra spending on radio advertisement in that case. The amount of uncertainty is quite huge. It might be a better idea to invest in a different method instead with less uncertainty.&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div id=&#34;conclusion&#34; class=&#34;section level2&#34;&gt;
@@ -295,11 +281,11 @@ radio        3.879204e-02  1.010260e-01&lt;/code&gt;&lt;/pre&gt;
 
 &lt;p&gt;The results for the five datasets can be seen below.&lt;/p&gt;
 
-&lt;p&gt;&lt;img src=&#34;img/CC_results.png&#34; alt=&#34;&#34; /&gt;
-&lt;img src=&#34;img/CC_results_2.png&#34; alt=&#34;&#34; /&gt;
-&lt;img src=&#34;img/CC_results_3.png&#34; alt=&#34;&#34; /&gt;
-&lt;img src=&#34;img/CC_results_4.png&#34; alt=&#34;&#34; /&gt;
-&lt;img src=&#34;img/CC_results_5.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://raw.github.com/krohitm/Cancer-Prediction-and-Classification-via-Gene-Expression/master/results/CC_results.png&#34; alt=&#34;&#34; /&gt;
+&lt;img src=&#34;https://raw.github.com/krohitm/Cancer-Prediction-and-Classification-via-Gene-Expression/master/results/CC_results_2.png&#34; alt=&#34;&#34; /&gt;
+&lt;img src=&#34;https://raw.github.com/krohitm/Cancer-Prediction-and-Classification-via-Gene-Expression/master/results/CC_results_3.png&#34; alt=&#34;&#34; /&gt;
+&lt;img src=&#34;https://raw.github.com/krohitm/Cancer-Prediction-and-Classification-via-Gene-Expression/master/results/CC_results_4.png&#34; alt=&#34;&#34; /&gt;
+&lt;img src=&#34;https://raw.github.com/krohitm/Cancer-Prediction-and-Classification-via-Gene-Expression/master/results/CC_results_5.png&#34; alt=&#34;&#34; /&gt;&lt;/p&gt;
 
 &lt;p&gt;Each cell in a table has (F1 score, number of features).
 Around 100 features gave the best results in most of the cases.&lt;/p&gt;

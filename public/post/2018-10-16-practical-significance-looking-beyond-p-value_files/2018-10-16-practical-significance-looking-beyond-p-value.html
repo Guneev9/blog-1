@@ -13,7 +13,7 @@
 
 <div id="what-is-the-need-to-look-beyond-p-value" class="section level2">
 <h2><strong>What is the need to look beyond p-value?</strong></h2>
-<p>In my last post, I mentioned how we can use p-values to select important variables in a linear model. In general, this sounds like an easy basis of testing a hypothesis, but that is not where the story ends.</p>
+<p>In my <a href="http://didyousaydata.xyz/post/linear-regression-modeling-and-assumptions/" target="blank">last post</a>, I mentioned how we can use p-values to select important variables in a linear model. In general, this sounds like an easy basis of testing a hypothesis, but that is not where the story ends.</p>
 <p>In a practical setting, you need to look beyond mere p-value of an experiment. To understand why, let us walk through an example. We will generate our own dataset for this example.</p>
 <pre class="r"><code>library(dplyr)
 library(lattice) # for splom
@@ -164,7 +164,7 @@ radio        3.879204e-02  1.010260e-01</code></pre>
 <img src="/post/2018-10-16-practical-significance-looking-beyond-p-value_files/CI.png" />
 
 </div>
-<p>Going back to the previous example of cars, the estimated extra profit was <span class="math inline">\(\$690,000\)</span>. As per the confidence interval of [0.038, 0.101], this may range from <span class="math inline">\(\$380,000\)</span> to <span class="math inline">\(\$1,010,000\)</span>. This means the net profit may range from <span class="math inline">\(\$370,000\)</span> to <span class="math inline">\(\$1,000,000\)</span> on the extra spending. In a general sense, the net profit may range from <span class="math inline">\(37\)</span>X to <span class="math inline">\(100\)</span>X on any extra spending on radio advertisement. The amount of uncertainty is quite huge. It might be a better idea to invest in a different method instead with less uncertainty.</p>
+<p>Going back to the previous example of cars, the estimated extra profit was <span class="math inline">\(\$690,000\)</span>. As per the confidence interval of [0.038, 0.101], this may range from <span class="math inline">\(\$380,000\)</span> to <span class="math inline">\(\$1,010,000\)</span>. This means the net profit may range from <span class="math inline">\(\$370,000\)</span> to <span class="math inline">\(\$1,000,000\)</span> on the extra spending. In a general sense, the net profit may range from <span class="math inline">\(37\)</span>X to <span class="math inline">\(100\)</span>X on any extra spending on radio advertisement in that case. The amount of uncertainty is quite huge. It might be a better idea to invest in a different method instead with less uncertainty.</p>
 </div>
 </div>
 <div id="conclusion" class="section level2">

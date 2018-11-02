@@ -40,9 +40,9 @@ filter_default = 0
   name = "Distributed Systems"
   tag = ".distributed-systems"
   
-[[filter]]
-  name = "R"
-  tag = ".R"
+#[[filter]]
+#  name = "R"
+#  tag = ".R"
 
 +++
 
